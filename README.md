@@ -1,50 +1,43 @@
-Funkcijski zahtjevi
-//TODO
+# EduHub
+# Opis projekta
+Ovaj projekt je reultat timskog rada u sklopu projeknog zadatka kolegija Programsko inženjerstvo na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu.
 
-Nefunkcijski zahtjevi
-//TODO
+Cilj projekta je razviti programsku podršku za stvaranje web aplikacije ”EduHub“ kojom će se olakšati komunikacija među sudionicima u srednjoškolskom obrazovanju. Omogućava se pregled podataka o svim upisanim učenicima i njihovim obavezama, rasporedu sati u nastavi i praktičnom radu, zauzeću postojećih resursa škole (ljudski i materijalni –
+oprema i prostor) i daje informacije o obrazovnom sadržaju svih kolegija, nastavnih i nenastavnih aktivnosti u školi.
 
-Struktura (inicijalno)
+# Funkcijski zahtjevi
+1. Neregistrirani korisnik (inicijator) može: 
+    * registrirati se to jest stvoriti novi korisnički račun 
+    * upisati se u 1. razred
+2. Registrirani korisnik (inicijator) može:
+    * prijaviti se
+    * odjaviti se
+    * pregledati raspored sati
+    * pregledati dostupne resurse
+    * pregledati sadržaj kolegija i aktivnosti
+    * komunicirati s ostalim korisnicima
+3. Nastavnik (inicijator) može:
+    * Dodati nastavne materijale
+4. Djelatnici studentske službe i ravnatelj (inicijatori) mogu:
+    * pregledati izvještaje
+5. Baza podataka (sudionik):
+    * pohranjuje podatke o korisnicima
+    * pohranjuje podatke o nastavnim materijalima, njihovim pregledima i pristupima
+6. Poslužitelj vremenske prognoze (sudionik):
+    * poslužuje potrebne podatke vezane za prognozu
+7. Poslužitelj elektroničke pošte (sudionik):
+    * aplikaciji omogućuje slanje elektroničke pošte korisnicima
+8. Poslužitelj navigacije (sudionik):
+    * aplikaciji omogućuje prikaz navigacije korisnicima 
 
-README.md -> opis projekta
-.env -> varijable okoline
-docker-compose.yml -> pokretanje multi-container Docker aplikacija
-.github/ -> specifične konfiguracije za GitHub
+# Tehnologije
+# Članovi tima
+Batinić Lana  
+Bilješko Marija    
+Ivančić Ante  
+Odobašić Borna  
+Rožić Donatela  
+Stolar Maja  
+Vrdoljak Katarina
+# Kontribucije
 
-backend/
-  src/main/java/com/eduhub/
-    controllers/ -> REST API
-    services/ -> Business logic
-    repositories/ -> repozitoriji baze podataka
-    models -> entiteti
-    utils -> utility klase
-  src/main/resources
-    application.properties -> Spring Boot config
-  src/test/java/com/eduhub -> testni slučaji
-  build.gradle -> build datoteka
-  Dockerfile -> Docker konfiguracija za backend
-
-frontend/
-  public/ -> public stavke
-  src/
-    components/ -> ponovno iskoristive komponente
-    pages -> stranice aplikacije
-    services -> API pozivi backendu
-    context -> context API
-    hooks
-    styles -> CSS
-    App.js
-    index.js 
-  package.json
-  Dockerfile -> Docker konfiguracija za frontend
-
-database/
-  migrations/ -> SQL skripte za schemu baze podataka
-  seeds/ -> podaci za inicijalnu bazu
-  db_config.sql //
-
-docs/
-  architecture.md
-  api.md
-  setup.md
-  design/ -> Figma...
