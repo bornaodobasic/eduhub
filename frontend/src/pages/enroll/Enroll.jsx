@@ -4,10 +4,6 @@ import './Enroll.css';
 const Enroll = () => {
     return (
         <div className="outer-enroll-container">
-            <div className="enroll">
-                UPIS U PRVI RAZRED SREDNJE ŠKOLE
-            </div>
-
             <div className="enroll-container">
                 <form className="login-form">
                     <div className="form-group">
@@ -17,10 +13,19 @@ const Enroll = () => {
                         <input type="text" placeholder="prezime" required />
                     </div>
                     <div className="form-group">
+                        <input type="text" placeholder="OIB" required />
+                    </div>
+                    <div className="form-group">
                         <input type="text" placeholder="datum rodenja" required />
                     </div>
                     <div className="form-group">
-                        <input type="text" placeholder="OIB" required />
+                        <input type="text" placeholder="spol" required/>
+                    </div>
+                    <div className="form-group">
+                        <input type="text" placeholder="email" required/>
+                    </div>
+                    <div className="form-group">
+                        <input type="text" placeholder="lozinka" required/>
                     </div>
                     <div className="form-group">
                         <select required defaultValue="">
