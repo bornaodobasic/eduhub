@@ -1,5 +1,8 @@
-package main.java.fer.progi.backend.domain;
+package fer.progi.backend.domain;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class Ucenik {
 
 
