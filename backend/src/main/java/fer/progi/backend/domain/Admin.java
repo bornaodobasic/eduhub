@@ -22,4 +22,7 @@ public class Admin {
 	private String email;
 	private String lozinka;
 	
+	private String provjera;
+	
+	//provjeravam
 }

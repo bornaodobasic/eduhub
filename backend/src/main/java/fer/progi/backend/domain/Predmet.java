@@ -24,4 +24,5 @@ public class Predmet {
     //@JoinColumn(name = "sifSmjer")
 	private Smjer smjer;
 	
+	//jel se vidi promjena
 }

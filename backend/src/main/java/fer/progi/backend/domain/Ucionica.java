@@ -12,4 +12,6 @@ public class Ucionica {
 	private String oznakaUc;
 	
 	private int kapacitet;
+	
+	
 }
