@@ -72,7 +72,9 @@ h1 {
   background-color: #f2f2f2;
 }
 
-button {
+.approve-btn {
+  background-color: #4CAF50;
+  color: white;
   padding: 5px 10px;
   border: none;
   cursor: pointer;
@@ -80,14 +82,14 @@ button {
   font-size: 1rem;
 }
 
-.approve-btn {
-  background-color: #4CAF50;
-  color: white;
-}
-
 .reject-btn {
   background-color: #f44336;
   color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 1rem;
 }
 
 .approve-btn:hover {
@@ -97,8 +99,6 @@ button {
 .reject-btn:hover {
   background-color: #e53935;
 }
-
-
 
 .pagination button {
   padding: 10px 20px;
@@ -113,7 +113,6 @@ button {
 .pagination button:hover {
   background-color: #ccc;
 }
-
 
 .modal {
   position: fixed;

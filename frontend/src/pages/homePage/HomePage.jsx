@@ -28,6 +28,7 @@ const HomePage = () => {
             <div className="square-button"id="administrator" onClick={() => handleRoleSelect('administrator')}>ADMINISTRATOR</div>
         </div>
     </div>
+
   );
 };
 
