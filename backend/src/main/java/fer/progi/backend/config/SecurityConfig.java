@@ -1,5 +1,3 @@
-
-
 package fer.progi.backend.config;
 
 import org.springframework.context.annotation.Bean;
@@ -17,7 +15,9 @@ public class SecurityConfig {
         http
             .csrf().disable()  // Disable CSRF for simplicity
             .authorizeRequests()
-            .requestMatchers("/h2-console/**").permitAll()  // Allow access to H2 Console
+            .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/ucenici/**").permitAll()// Allow access to H2 Console
+                .requestMatchers("/ucionice/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .headers().frameOptions().sameOrigin();  // Allow frames (needed for H2 Console)
