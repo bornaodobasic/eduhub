@@ -17,7 +17,7 @@ public class Razred {
 	
 	@Id
 	@Size(min=2, max=2)
-	private String razred;
+	private String nazRazred;
 	
 	@ManyToOne
 	private Smjer smjer;

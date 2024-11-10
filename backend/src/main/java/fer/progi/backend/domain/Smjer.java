@@ -17,7 +17,7 @@ public class Smjer {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int sifSmjer;
+    private Integer sifSmjer;
     
     private String nazivSmjer;
     

@@ -1,10 +1,13 @@
 package fer.progi.backend.domain;
 
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import lombok.Data;
 
 @Entity
@@ -13,7 +16,7 @@ public class Nastavnik {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int sifNastavnik;
+	private Integer sifNastavnik;
 	
 	private String imeNastavnik;
 	private String prezimeNastavnik;
@@ -21,4 +24,8 @@ public class Nastavnik {
 	@Column(unique=true)
 	private String email;
 	private String lozinka;
+	
+	@ManyToMany(mappedBy = "nastavnici")
+	private Set<Predmet> predmeti;
+	
 }

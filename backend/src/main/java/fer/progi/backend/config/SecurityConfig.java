@@ -18,6 +18,11 @@ public class SecurityConfig {
             .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/ucenici/**").permitAll()// Allow access to H2 Console
                 .requestMatchers("/ucionice/**").permitAll()
+                .requestMatchers("/razredi/**").permitAll()
+                .requestMatchers("/aktivnosti/**").permitAll()
+                .requestMatchers("/smjerovi/**").permitAll()
+                .requestMatchers("/predmeti/**").permitAll()
+                .requestMatchers("/nastavnici/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .headers().frameOptions().sameOrigin();  // Allow frames (needed for H2 Console)
