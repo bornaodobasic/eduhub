@@ -24,4 +24,9 @@ public class SmjerServiceJpa implements SmjerService {
     public Smjer dodajSmjer(Smjer smjer) {
         return smjerRepo.save(smjer);
     }
+
+	@Override
+	public Smjer findBySifSmjer(Integer sifSmjer) {
+		return smjerRepo.findBySifSmjer(sifSmjer).orElseThrow(() -> new RuntimeException("Smjer nije pronađen"));
+	}
 }

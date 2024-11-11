@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fer.progi.backend.domain.Predmet;
+import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.service.PredmetService;
 
 @RestController
@@ -27,8 +28,13 @@ public class PredmetController {
 	}
 	
 	@PostMapping("")
-    public Predmet dodajPredmet(@RequestBody Predmet predmet) {
-        return predmetService.dodajPredmet(predmet);
+    public ResponseEntity<String> addPredmet(@RequestBody Predmet predmet) {
+        try {
+            predmetService.addPredmet(predmet);
+            return ResponseEntity.ok("Predmet je uspješno dodan");
+        } catch(RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 	
 	@PostMapping("/{sifPredmet}/nastavnici/{sifNastavnik}")

@@ -24,6 +24,7 @@ public class UcenikServiceJpa implements UcenikService {
 
     @Autowired
     private UcenikRepository ucenikRepo;
+    
 	@Autowired
 	private RazredService razredService;
     

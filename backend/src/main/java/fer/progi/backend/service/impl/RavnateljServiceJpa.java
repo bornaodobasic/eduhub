@@ -10,7 +10,6 @@ import fer.progi.backend.domain.Ravnatelj;
 import fer.progi.backend.service.RavnateljService;
 
 
-
 @Service
 public class RavnateljServiceJpa implements RavnateljService{
 	

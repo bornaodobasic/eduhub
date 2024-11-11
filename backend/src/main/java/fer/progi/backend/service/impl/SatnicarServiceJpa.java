@@ -10,8 +10,7 @@ import fer.progi.backend.domain.Satnicar;
 import fer.progi.backend.service.SatnicarService;
 
 @Service
-public class SatnicarServiceJpa implements SatnicarService{
-	
+public class SatnicarServiceJpa implements SatnicarService{	
 		
 		@Autowired
 		private SatnicarRepository satnicarRepo;

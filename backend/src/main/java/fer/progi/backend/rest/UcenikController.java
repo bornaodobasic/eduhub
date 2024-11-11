@@ -29,16 +29,16 @@ public class UcenikController {
 //        return ucenikService.dodajUcenika(ucenik);
 //    }
     
-   // @PostMapping("/{oib}/aktivnosti/{sifAktivnost}")
-//	public ResponseEntity<String> dodajAktivnostUceniku(
-//			@PathVariable String oib, @PathVariable Integer sifAktivnost) {
-//		try {
-//			ucenikService.dodajAktivnostUceniku(oib, sifAktivnost);
-//			return ResponseEntity.ok("Učeniku uspješno dodana aktivnost");
-//		} catch(RuntimeException e) {
-//			return ResponseEntity.status(404).body(e.getMessage());
-//		}
-//	}
+	/*
+	 * @PostMapping("/{oib}/aktivnosti/{sifAktivnost}") public
+	 * ResponseEntity<String> dodajAktivnostUceniku(
+	 * 
+	 * @PathVariable String oib, @PathVariable Integer sifAktivnost) { try {
+	 * ucenikService.dodajAktivnostUceniku(oib, sifAktivnost); return
+	 * ResponseEntity.ok("Učeniku uspješno dodana aktivnost"); }
+	 * catch(RuntimeException e) { return
+	 * ResponseEntity.status(404).body(e.getMessage()); } }
+	 */
     
     /*@PostMapping("")
     public ResponseEntity<String> dodajAktivnostUceniku(@RequestBody Ucenik ucenik) {

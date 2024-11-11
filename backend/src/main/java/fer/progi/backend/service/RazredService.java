@@ -8,7 +8,9 @@ public interface RazredService {
 	
 	List<Razred> listAll();
 	
-	Razred dodajRazred(Razred razred);
+	Razred addRazred(Razred razred);
+	
+	//Razred dodajRazred(Razred razred);
 
 	Razred findByNazRazred(String nazRazred);
 

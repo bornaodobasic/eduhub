@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface RazredRepository extends JpaRepository<Razred, String>{
 
     Optional<Razred> findByNazRazred(String nazRazred);
+    
+    int countByNazRazred(String nazRazred);
 }

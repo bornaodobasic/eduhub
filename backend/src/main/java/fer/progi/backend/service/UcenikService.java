@@ -16,5 +16,6 @@ public interface UcenikService {
     //void dodajAktivnostUcenikuV2(Ucenik ucenik);
 
     Ucenik addUcenik(Ucenik ucenik);
+    
     Set<Aktivnost> findByIds(Set<Integer> sifreAktivnosti);
 }

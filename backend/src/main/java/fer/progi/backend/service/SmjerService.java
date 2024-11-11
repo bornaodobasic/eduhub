@@ -9,4 +9,6 @@ public interface SmjerService {
 	List<Smjer> listAll();
 
 	Smjer dodajSmjer(Smjer smjer);
+	
+	Smjer findBySifSmjer(Integer sifSmjer);
 }

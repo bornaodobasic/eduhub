@@ -3,6 +3,7 @@ package fer.progi.backend.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,12 @@ public class RazredController {
     }
 
     @PostMapping("")
-    public Razred dodajRazred(@RequestBody Razred razred) {
-        return razredService.dodajRazred(razred);
+    public ResponseEntity<String> dodajRazred(@RequestBody Razred razred) {
+    	try {
+            razredService.addRazred(razred);
+            return ResponseEntity.ok("Razred je uspješno dodan");
+        } catch(RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }

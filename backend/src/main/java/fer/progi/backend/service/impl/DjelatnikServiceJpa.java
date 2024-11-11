@@ -9,10 +9,6 @@ import fer.progi.backend.dao.DjelatnikRepository;
 import fer.progi.backend.domain.Djelatnik;
 import fer.progi.backend.service.DjelatnikService;
 
-
-
-
-
 @Service
 public class DjelatnikServiceJpa implements DjelatnikService{
 	
