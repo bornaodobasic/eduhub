@@ -10,4 +10,6 @@ public interface RazredService {
 	
 	Razred dodajRazred(Razred razred);
 
+	Razred findByNazRazred(String nazRazred);
+
 }

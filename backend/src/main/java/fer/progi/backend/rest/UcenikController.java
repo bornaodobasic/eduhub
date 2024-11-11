@@ -40,7 +40,7 @@ public class UcenikController {
 //		}
 //	}
     
-    @PostMapping("")
+    /*@PostMapping("")
     public ResponseEntity<String> dodajAktivnostUceniku(@RequestBody Ucenik ucenik) {
 		try {
 			ucenikService.dodajAktivnostUcenikuV2(ucenik);
@@ -48,6 +48,16 @@ public class UcenikController {
 		} catch(RuntimeException e) {
 			return ResponseEntity.status(404).body(e.getMessage());
 		}
-	}
+	}*/
+
+    @PostMapping("")
+    public ResponseEntity<String> addUcenik(@RequestBody Ucenik ucenik) {
+        try {
+            ucenikService.addUcenik(ucenik);
+            return ResponseEntity.ok("Učenik je uspješno dodan");
+        } catch(RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 
 }

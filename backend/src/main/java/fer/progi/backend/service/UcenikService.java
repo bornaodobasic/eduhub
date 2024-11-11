@@ -9,11 +9,12 @@ import java.util.Set;
 public interface UcenikService {
     List<Ucenik> listAll();
 
-    Ucenik dodajUcenika(Ucenik ucenik);
+    //Ucenik dodajUcenika(Ucenik ucenik);
     
-    void dodajAktivnostUceniku(String oib, Integer sifAktivnost);
+    //void dodajAktivnostUceniku(String oib, Integer sifAktivnost);
     
-    void dodajAktivnostUcenikuV2(Ucenik ucenik);
-    
+    //void dodajAktivnostUcenikuV2(Ucenik ucenik);
+
+    Ucenik addUcenik(Ucenik ucenik);
     Set<Aktivnost> findByIds(Set<Integer> sifreAktivnosti);
 }

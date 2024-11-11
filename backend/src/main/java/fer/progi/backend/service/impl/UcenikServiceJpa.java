@@ -6,9 +6,12 @@ import fer.progi.backend.dao.UcenikRepository;
 import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.domain.Razred;
 import fer.progi.backend.domain.Ucenik;
+import fer.progi.backend.service.RazredService;
+import fer.progi.backend.service.RequestDeniedException;
 import fer.progi.backend.service.UcenikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.HashSet;
 import java.util.List;
@@ -17,11 +20,12 @@ import java.util.Set;
 @Service
 public class UcenikServiceJpa implements UcenikService {
 
+	private static final String OIB_FORMAT = "[0-9]{11}";
+
     @Autowired
     private UcenikRepository ucenikRepo;
-    
-    @Autowired
-	private RazredRepository razredRepo;
+	@Autowired
+	private RazredService razredService;
     
     @Autowired
 	private AktivnostRepository aktivnostRepo;
@@ -31,29 +35,25 @@ public class UcenikServiceJpa implements UcenikService {
         return ucenikRepo.findAll();
     }
 
-    @Override
-    public Ucenik dodajUcenika(Ucenik ucenik) {
-        
-    	Razred razred = razredRepo.findById(ucenik.getRazred().getNazRazred()).orElseThrow(() -> new IllegalArgumentException("krivi razred"));
-    	ucenik.setRazred(razred);
-    	
-        return ucenikRepo.save(ucenik);
-    }
+	public Ucenik addUcenik(Ucenik ucenik) {
 
-	@Override
-	public void dodajAktivnostUceniku(String oib, Integer sifAktivnost) {
-		Ucenik ucenik = ucenikRepo.findById(oib).orElseThrow(() -> new IllegalArgumentException("krivi ucenik"));
-		Aktivnost aktivnost = aktivnostRepo.findById(sifAktivnost).orElseThrow(() -> new IllegalArgumentException("kriva aktivnost"));
-		
-		ucenik.getAktivnosti().add(aktivnost);
-		ucenikRepo.save(ucenik);
-		
-	}
-	
-	public void dodajAktivnostUcenikuV2(Ucenik ucenik) {
+		String oib = ucenik.getOib();
+		Assert.hasText(oib, "OIB mora biti dan");
+		Assert.isTrue(oib.matches(OIB_FORMAT),
+				"OIB mora imati 11 znakova"
+		);
+		if (ucenikRepo.countByOib(ucenik.getOib()) > 0)
+			throw new RequestDeniedException(
+					"Ucenik koji ima OIB " + ucenik.getOib() + " vec postoji!"
+			);
+		//Razred razred = razredRepo.findById(ucenik.getRazred().getNazRazred()).orElseThrow(() -> new RuntimeException("Razred nije pronađen"));
+		Razred razred = razredService.findByNazRazred(ucenik.getRazred().getNazRazred());
 		Set<Aktivnost> aktivnosti = findByIds(ucenik.getSifreAktivnost());
+
+		ucenik.setRazred(razred);
 		ucenik.setAktivnosti(aktivnosti);
-		ucenikRepo.save(ucenik);
+
+		return ucenikRepo.save(ucenik);
 	}
 	
 	public Set<Aktivnost> findByIds(Set<Integer> sifreAktivnosti) {
@@ -65,4 +65,5 @@ public class UcenikServiceJpa implements UcenikService {
 		
 		return aktivnosti;
 	}
+
 }

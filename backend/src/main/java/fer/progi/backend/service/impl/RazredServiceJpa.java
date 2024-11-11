@@ -34,6 +34,11 @@ public class RazredServiceJpa implements RazredService{
 		
 		return razredRepo.save(razred);
 	}
+
+	public Razred findByNazRazred(String nazRazred) {
+		return razredRepo.findByNazRazred(nazRazred)
+				.orElseThrow(() -> new RuntimeException("Razred nije pronađen"));
+	}
 	
 	
 }
