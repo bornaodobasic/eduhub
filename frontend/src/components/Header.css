@@ -1,0 +1,30 @@
+.header {
+    background-color: #555;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.header-logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    background-color: white;
+}
+
+.header-nazivSkole {
+    flex-grow: 1;
+    font-size: 18px;
+}
+
+.header-ikonica {
+    background-color: white;
+    color: #555;
+    padding: 10px;
+    border-radius: 50%;
+    font-weight: bold;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+}

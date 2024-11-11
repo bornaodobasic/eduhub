@@ -1,6 +1,7 @@
 html, body {
     height: 100%;
     margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,7 +17,6 @@ html, body {
     padding: 30px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
     width: 100%; 
-    max-width: 550px;
     min-width: 400px; 
     box-sizing: border-box;
 }
@@ -65,4 +65,14 @@ button:hover {
 input::placeholder {
     font-size: 16px; 
     color: #9C9C9C; 
+}
+
+@media (max-width: 768px) {
+
+.login-container{
+    min-width: 280px; 
+    padding: 22px;
+}
+
+
 }

@@ -22,3 +22,14 @@
     min-width: 300px;
     box-sizing: border-box;
 }
+
+
+@media (max-width: 768px) {
+
+    .login-container{
+        min-width: 280spx; 
+        padding: 22px;
+    }
+    
+    }
+    
