@@ -5,6 +5,7 @@ import fer.progi.backend.service.AktivnostService;
 import fer.progi.backend.service.UcenikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class UcenikController {
     private AktivnostService aktivnostService;
 
     @GetMapping("")
+    @Secured("ROLE_GUEST")
     public List<Ucenik> listUcenika() {
         return ucenikService.listAll();
     }

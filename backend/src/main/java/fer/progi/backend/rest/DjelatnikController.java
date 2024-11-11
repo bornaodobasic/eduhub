@@ -4,6 +4,7 @@ package fer.progi.backend.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,8 @@ public class DjelatnikController {
 		return DjelatnikService.listAll();
 	}
 	
-	@PostMapping("")
+	@PostMapping("/add")
+	@Secured("ROLE_administrator")
 	public Djelatnik dodajDjelatnik(@RequestBody Djelatnik djelatnik) {
 		return DjelatnikService.dodajDjelatnik(djelatnik);
 	}
