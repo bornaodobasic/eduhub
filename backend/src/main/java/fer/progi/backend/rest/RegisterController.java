@@ -36,5 +36,29 @@ public class RegisterController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zahtjev nije poslan!");
         }
     }
+    
+    @PostMapping("/ravnatelj")
+    @Secured("ROLE_GUEST")
+    public ResponseEntity<?> sendToAdmin(@RequestBody RegisterRavnateljDTO registerRavnateljDTO) {
+        boolean success = adminService.addRavnateljToTempDB(registerRavnateljDTO);
+
+        if (success) {
+            return ResponseEntity.ok("Zahtjev uspješno poslan adminu");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zahtjev nije poslan!");
+        }
+    }
+    
+    @PostMapping("/satnicar")
+    @Secured("ROLE_GUEST")
+    public ResponseEntity<?> sendToAdmin(@RequestBody RegisterSatnicarDTO registerSatnicarDTO) {
+        boolean success = adminService.addSatnicarToTempDB(registerSatnicarDTO);
+
+        if (success) {
+            return ResponseEntity.ok("Zahtjev uspješno poslan adminu");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zahtjev nije poslan!");
+        }
+    }
 
 }
