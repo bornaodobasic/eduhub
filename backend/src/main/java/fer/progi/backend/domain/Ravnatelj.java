@@ -13,7 +13,7 @@ public class Ravnatelj {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int sifRavnatelj;
+	private Integer sifRavnatelj;
 	
 	private String imeRavnatelj;
 	private String prezimeRavnatelj;

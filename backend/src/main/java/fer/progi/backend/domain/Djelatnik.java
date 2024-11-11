@@ -13,7 +13,7 @@ public class Djelatnik {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int sifDjel;
+	private Integer sifDjel;
 	
 	private String imeDjel;
 	private String prezimeDjel;

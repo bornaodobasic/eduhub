@@ -23,6 +23,13 @@ public class SecurityConfig {
                 .requestMatchers("/smjerovi/**").permitAll()
                 .requestMatchers("/predmeti/**").permitAll()
                 .requestMatchers("/nastavnici/**").permitAll()
+                .requestMatchers("/admini/**").permitAll()
+                .requestMatchers("/ravnatelji/**").permitAll()
+                .requestMatchers("/djelatnici/**").permitAll()
+                .requestMatchers("/satnicari/**").permitAll()
+                
+                
+                
             .anyRequest().authenticated()
             .and()
             .headers().frameOptions().sameOrigin();  // Allow frames (needed for H2 Console)

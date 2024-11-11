@@ -13,7 +13,7 @@ public class Admin {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int sifAdmin;
+	private Integer sifAdmin;
 	
 	private String imeAdmin;
 	private String prezimeAdmin;
@@ -23,7 +23,7 @@ public class Admin {
 	private String email;
 	private String lozinka;
 	
-	private String donatelaProvjerava;
+	
 	
 	
 }
