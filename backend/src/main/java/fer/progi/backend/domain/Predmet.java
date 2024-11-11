@@ -1,5 +1,6 @@
 package fer.progi.backend.domain;
 
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -32,6 +33,8 @@ public class Predmet {
 			joinColumns = @JoinColumn(name = "sifPredmet"),
 			inverseJoinColumns = @JoinColumn(name = "sifNastavnik"))
 	private Set<Nastavnik> nastavnici;
+
+	
 	
 
 }

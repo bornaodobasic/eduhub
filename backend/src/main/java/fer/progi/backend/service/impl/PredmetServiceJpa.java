@@ -1,5 +1,6 @@
 package fer.progi.backend.service.impl;
 
+import fer.progi.backend.domain.Predmet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import fer.progi.backend.dao.NastavnikRepository;
 import fer.progi.backend.dao.PredmetRepository;
 import fer.progi.backend.dao.SmjerRepository;
 import fer.progi.backend.domain.Nastavnik;
-import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Smjer;
 import fer.progi.backend.service.PredmetService;
 
