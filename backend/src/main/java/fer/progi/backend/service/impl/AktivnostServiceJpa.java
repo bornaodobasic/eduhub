@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import fer.progi.backend.dao.AktivnostRepository;
 import fer.progi.backend.domain.Aktivnost;
+import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.service.AktivnostService;
 
 @Service
@@ -36,4 +37,14 @@ public class AktivnostServiceJpa implements AktivnostService{
 		
 		return aktivnosti;
 	}
+
+	@Override
+	public Aktivnost findBySifAktivnost(Integer sifAktivnost) {
+		return aktivnostRepo.findById(sifAktivnost)
+				.orElseThrow(() -> new RuntimeException("Aktivnost nije pronađena"));
+	}
+
+
+	
+	
 }

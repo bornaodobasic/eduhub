@@ -25,6 +25,12 @@ public class NastavnikServiceJpa implements NastavnikService{
 		public Nastavnik dodajNastavnik(Nastavnik nastavnik) {
 			return nastavnikRepo.save(nastavnik);
 		}
+
+		@Override
+		public Nastavnik findBySifNastavnik(Integer sifNastavnik) {
+			return nastavnikRepo.findById(sifNastavnik)
+					.orElseThrow(() -> new RuntimeException("Nije pronađen nastavnik"));
+		}
 		
 		
 }

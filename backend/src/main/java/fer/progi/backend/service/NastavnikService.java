@@ -10,4 +10,6 @@ public interface NastavnikService {
 	
 	Nastavnik dodajNastavnik(Nastavnik nastavnik);
 
+	Nastavnik findBySifNastavnik(Integer sifNastavnik);
+
 }

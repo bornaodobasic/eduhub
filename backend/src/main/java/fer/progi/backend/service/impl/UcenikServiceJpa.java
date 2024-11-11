@@ -6,6 +6,7 @@ import fer.progi.backend.dao.UcenikRepository;
 import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.domain.Razred;
 import fer.progi.backend.domain.Ucenik;
+import fer.progi.backend.service.AktivnostService;
 import fer.progi.backend.service.RazredService;
 import fer.progi.backend.service.RequestDeniedException;
 import fer.progi.backend.service.UcenikService;
@@ -30,6 +31,9 @@ public class UcenikServiceJpa implements UcenikService {
     
     @Autowired
 	private AktivnostRepository aktivnostRepo;
+    
+    @Autowired
+   	private AktivnostService aktivnostService;
 
     @Override
     public List<Ucenik> listAll() {
@@ -60,7 +64,9 @@ public class UcenikServiceJpa implements UcenikService {
 	public Set<Aktivnost> findByIds(Set<Integer> sifreAktivnosti) {
 		Set<Aktivnost> aktivnosti = new HashSet<>();
 		for(Integer id : sifreAktivnosti) {
-			Aktivnost aktivnost = aktivnostRepo.findById(id).orElseThrow(() -> new RuntimeException("Aktivnost nije pronađena"));
+			//Aktivnost aktivnost = aktivnostRepo.findById(id).orElseThrow(() -> new RuntimeException("Aktivnost nije pronađena"));
+			Aktivnost aktivnost = aktivnostService.findBySifAktivnost(id);
+
 			aktivnosti.add(aktivnost);
 		}
 		

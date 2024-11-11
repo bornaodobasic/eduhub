@@ -12,4 +12,8 @@ public interface AktivnostService {
 	Aktivnost dodajAktivnost(Aktivnost aktivnost);
 	
 	Set<Aktivnost> findByIds(Set<Integer> sifreAktivnosti);
+
+	Aktivnost findBySifAktivnost(Integer id);
+
+	
 }
