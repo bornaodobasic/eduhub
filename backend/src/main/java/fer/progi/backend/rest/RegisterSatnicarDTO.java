@@ -1,7 +1,8 @@
 package fer.progi.backend.rest;
 
-import jakarta.persistence.Column;
+import lombok.Data;
 
+@Data
 public class RegisterSatnicarDTO {
 	private String imeSatnicar;
 	private String prezimeSatnicar;

@@ -1,8 +1,9 @@
 package fer.progi.backend.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+import lombok.Data;
 
+@Data
 public class TempSatnicar {
 	
 	private String imeSatnicar;

@@ -4,15 +4,25 @@ import java.util.List;
 import java.util.Optional;
 
 import fer.progi.backend.dao.NastavnikRepository;
+import fer.progi.backend.dao.RavnateljRepository;
+import fer.progi.backend.dao.SatnicarRepository;
 import fer.progi.backend.dao.TempNastavnikRepository;
+import fer.progi.backend.dao.TempRavnateljRepository;
+import fer.progi.backend.dao.TempSatnicarRepository;
 import fer.progi.backend.dao.TempUcenikRepository;
 import fer.progi.backend.domain.Nastavnik;
+import fer.progi.backend.domain.Ravnatelj;
+import fer.progi.backend.domain.Satnicar;
 import fer.progi.backend.domain.TempDjelatnik;
 import fer.progi.backend.domain.TempNastavnik;
+import fer.progi.backend.domain.TempRavnatelj;
+import fer.progi.backend.domain.TempSatnicar;
 import fer.progi.backend.domain.TempUcenik;
 import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.rest.RegisterDjelatnikDTO;
 import fer.progi.backend.rest.RegisterNastavnikDTO;
+import fer.progi.backend.rest.RegisterRavnateljDTO;
+import fer.progi.backend.rest.RegisterSatnicarDTO;
 import fer.progi.backend.rest.RegisterUcenikDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +37,6 @@ import fer.progi.backend.service.AdminService;
 
 @Service
 public class AdminServiceJpa implements AdminService{
-	
 		
 		@Autowired
 		private AdminRepository adminRepo;
@@ -49,6 +58,18 @@ public class AdminServiceJpa implements AdminService{
 		
 		@Autowired
 		private fer.progi.backend.dao.TempDjelatnikRepository tempDjelatnikRepo;
+		
+		@Autowired
+		private TempRavnateljRepository tempRavnateljRepo;
+			
+		@Autowired
+		private TempSatnicarRepository tempSatnicarRepo;
+		
+		@Autowired
+		private RavnateljRepository ravnateljRepo;
+		
+		@Autowired
+		private SatnicarRepository satnicarRepo;
 
 		@Autowired
 		private PasswordEncoder passwordEncoder;
@@ -153,7 +174,8 @@ public class AdminServiceJpa implements AdminService{
 
 		
 		
- //Djelatnik-----------------------------------------------------------------------------------------------------------------------------------
+		//Djelatnik-----------------------------------------------------------------------------------------------------------------------------------
+		
 		public List<TempDjelatnik> dohvatiSveZahtjeveDjelatnika() {
 		    return tempDjelatnikRepo.findAll();
 		}
@@ -196,8 +218,99 @@ public class AdminServiceJpa implements AdminService{
 		public Optional<TempDjelatnik> dohvatiZahtjevDjelatnikaPoId(String email) {
 		    return tempDjelatnikRepo.findById(email);
 		}
-
-
 		
+		//Ravnatelj---------------------------------------------------------------------------------------------------------------------------------
+
+		public List<TempRavnatelj> dohvatiSveZahtjeveRavnatelja() {
+			return tempRavnateljRepo.findAll();
+		}
+
+		@Override
+		public boolean addRavnateljToTempDB(RegisterRavnateljDTO registerRavnateljDTO) {
+			TempRavnatelj tempRavnatelj = new TempRavnatelj();
+			tempRavnatelj.setImeRavnatelj(registerRavnateljDTO.getImeRavnatelj());
+			tempRavnatelj.setPrezimeRavnatelj(registerRavnateljDTO.getPrezimeRavnatelj());
+			tempRavnatelj.setEmail(registerRavnateljDTO.getEmail());
+			tempRavnatelj.setLozinka(passwordEncoder.encode(registerRavnateljDTO.getLozinka()));
+
+			TempRavnatelj saved = tempRavnateljRepo.save(tempRavnatelj);
+
+			return saved != null;
+		}
+		
+		public boolean odobriRavnatelja(TempRavnatelj tempRavnatelj) {
+			Ravnatelj ravnatelj = new Ravnatelj();
+			ravnatelj.setImeRavnatelj(tempRavnatelj.getImeRavnatelj());
+			ravnatelj.setPrezimeRavnatelj(tempRavnatelj.getPrezimeRavnatelj());
+			ravnatelj.setEmail(tempRavnatelj.getEmail());
+			ravnatelj.setLozinka(tempRavnatelj.getLozinka());
+
+			ravnateljRepo.save(ravnatelj);
+			tempRavnateljRepo.delete(tempRavnatelj);
+
+			return true;
+		}
+		
+		public boolean odbaciRavnatelja(String email) {
+			Optional<TempRavnatelj> tempRavnatelj = tempRavnateljRepo.findById(email);
+			if (tempRavnatelj.isPresent()) {
+				tempRavnateljRepo.delete(tempRavnatelj.get());
+				return true;
+			}
+			return false;
+		}
+
+		public Optional<TempRavnatelj> dohvatiZahtjevRavnateljaPoId(String email) {
+			return tempRavnateljRepo.findById(email);
+		}
+
+		//Satnicar----------------------------------------------------------------------------------------------------------------------------------------
+		
+		public List<TempSatnicar> dohvatiSveZahtjeveSatnicara() {
+			return tempSatnicarRepo.findAll();
+		}
+
+		@Override
+		public boolean addSatnicarToTempDB(RegisterSatnicarDTO registerSatnicarDTO) {
+			TempSatnicar tempSatnicar = new TempSatnicar();
+			tempSatnicar.setImeSatnicar(registerSatnicarDTO.getImeSatnicar());
+			tempSatnicar.setPrezimeSatnicar(registerSatnicarDTO.getPrezimeSatnicar());
+			tempSatnicar.setEmail(registerSatnicarDTO.getEmail());
+			tempSatnicar.setLozinka(passwordEncoder.encode(registerSatnicarDTO.getLozinka()));
+
+			TempSatnicar saved = tempSatnicarRepo.save(tempSatnicar);
+
+			return saved != null;
+		}
+
+
+		public boolean odobriSatnicara(TempSatnicar tempSatnicar) {
+			Satnicar satnicar  = new Satnicar();
+			satnicar.setImeSatnicar(tempSatnicar.getImeSatnicar());
+			satnicar.setPrezimeSatnicar(tempSatnicar.getPrezimeSatnicar());
+			satnicar.setEmail(tempSatnicar.getEmail());
+			satnicar.setLozinka(tempSatnicar.getLozinka());
+
+			satnicarRepo.save(satnicar);
+			tempSatnicarRepo.delete(tempSatnicar);
+
+			return true;
+		}
+
+
+		public boolean odbaciSatnicara(String email) {
+			Optional<TempSatnicar> tempSatnicar = tempSatnicarRepo.findById(email);
+			if (tempSatnicar.isPresent()) {
+				tempSatnicarRepo.delete(tempSatnicar.get());
+				return true;
+			}
+			return false;
+		}
+
+
+		public Optional<TempSatnicar> dohvatiZahtjevSatnicaraPoId(String email) {
+			return tempSatnicarRepo.findById(email);
+		}
+
 		
 }

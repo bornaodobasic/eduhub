@@ -6,9 +6,13 @@ import java.util.Optional;
 import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.TempDjelatnik;
 import fer.progi.backend.domain.TempNastavnik;
+import fer.progi.backend.domain.TempRavnatelj;
+import fer.progi.backend.domain.TempSatnicar;
 import fer.progi.backend.domain.TempUcenik;
 import fer.progi.backend.rest.RegisterDjelatnikDTO;
 import fer.progi.backend.rest.RegisterNastavnikDTO;
+import fer.progi.backend.rest.RegisterRavnateljDTO;
+import fer.progi.backend.rest.RegisterSatnicarDTO;
 import fer.progi.backend.rest.RegisterUcenikDTO;
 
 
@@ -50,5 +54,29 @@ public interface AdminService {
 	boolean odbaciDjelatnika(String email);
 	
 	Optional<TempDjelatnik> dohvatiZahtjevDjelatnikaPoId(String email);
+	
+	//Ravnatelj-------------------------------------------------------------------------------------------
+	
+	boolean addRavnateljToTempDB(RegisterRavnateljDTO registerRavnateljDTO);
+	
+	List<TempRavnatelj> dohvatiSveZahtjeveRavnatelja();
+	
+	boolean odobriRavnatelja(TempRavnatelj tempRavnatelj);
+
+	boolean odbaciRavnatelja(String email);
+	
+	//Satnicar---------------------------------------------------------------------------------------------
+	
+	boolean addSatnicarToTempDB(RegisterSatnicarDTO registerSatnicarDTO);
+	
+	List<TempSatnicar> dohvatiSveZahtjeveSatnicara();
+	
+	boolean odobriSatnicara(TempSatnicar tempSatnicar);
+	
+	boolean odbaciSatnicara(String email);
+
+	Optional<TempRavnatelj> dohvatiZahtjevRavnateljaPoId(String email);
+
+	Optional<TempSatnicar> dohvatiZahtjevSatnicaraPoId(String email);
 
 }
