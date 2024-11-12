@@ -1,6 +1,7 @@
 package fer.progi.backend.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,11 @@ public class DjelatnikServiceJpa implements DjelatnikService{
 		@Override
 		public Djelatnik dodajDjelatnik(Djelatnik djelatnik) {
 			return djelatnikRepo.save(djelatnik);
+		}
+
+		@Override
+		public Optional<Djelatnik> pronadiDjelatnikaPoEmail(String email) {
+			return Optional.ofNullable(djelatnikRepo.findByEmail(email));
 		}
 		
 		

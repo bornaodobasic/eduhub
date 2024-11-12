@@ -7,12 +7,14 @@ import fer.progi.backend.dao.*;
 import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Ravnatelj;
 import fer.progi.backend.domain.Satnicar;
+import fer.progi.backend.domain.TempAdmin;
 import fer.progi.backend.domain.TempDjelatnik;
 import fer.progi.backend.domain.TempNastavnik;
 import fer.progi.backend.domain.TempRavnatelj;
 import fer.progi.backend.domain.TempSatnicar;
 import fer.progi.backend.domain.TempUcenik;
 import fer.progi.backend.domain.Ucenik;
+import fer.progi.backend.rest.RegisterAdminDTO;
 import fer.progi.backend.rest.RegisterDjelatnikDTO;
 import fer.progi.backend.rest.RegisterNastavnikDTO;
 import fer.progi.backend.rest.RegisterRavnateljDTO;
@@ -33,6 +35,9 @@ public class AdminServiceJpa implements AdminService{
 		
 		@Autowired
 		private AdminRepository adminRepo;
+		
+		@Autowired
+		private TempAdminRepository tempAdminRepo;
 		
 		@Autowired
 		private TempUcenikRepository tempUcenikRepo;
@@ -76,7 +81,60 @@ public class AdminServiceJpa implements AdminService{
 		public Admin dodajAdmin(Admin admin) {
 			return adminRepo.save(admin);
 		}
+		
+		@Override
+		public Optional<Admin> pronadiAdminaPoEmail(String email) {
+			return Optional.ofNullable(adminRepo.findByEmail(email));
+		}
+		
+		//Admin--------------------------------------------------------------------------------------
+		
+		public List<TempAdmin> dohvatiSveZahtjeveAdmina() {
+		    return tempAdminRepo.findAll();
+		}
 
+		@Override
+		public boolean addAdminToTempDB(RegisterAdminDTO registerAdminDTO) {
+		    TempAdmin tempAdmin = new TempAdmin();
+		    tempAdmin.setImeAdmin(registerAdminDTO.getImeAdmin());
+		    tempAdmin.setPrezimeAdmin(registerAdminDTO.getPrezimeAdmin());
+		    tempAdmin.setEmail(registerAdminDTO.getEmail());
+		    tempAdmin.setLozinka(passwordEncoder.encode(registerAdminDTO.getLozinka()));
+
+		    TempAdmin saved = tempAdminRepo.save(tempAdmin);
+
+		    return saved != null;
+		}
+
+		public boolean odobriAdmina(TempAdmin tempAdmin) {
+		    Admin admin = new Admin();
+		    admin.setImeAdmin(tempAdmin.getImeAdmin());
+		    admin.setPrezimeAdmin(tempAdmin.getPrezimeAdmin());
+		    admin.setEmail(tempAdmin.getEmail());
+		    admin.setLozinka(tempAdmin.getLozinka());
+
+		    adminRepo.save(admin);
+		    tempAdminRepo.delete(tempAdmin);
+
+		    return true;
+		}
+
+		public boolean odbaciAdmina(String email) {
+		    Optional<TempAdmin> tempAdmin = tempAdminRepo.findById(email);
+		    if (tempAdmin.isPresent()) {
+		        tempAdminRepo.delete(tempAdmin.get());
+		        return true;
+		    }
+		    return false;
+		}
+
+		public Optional<TempAdmin> dohvatiZahtjevAdminaPoId(String email) {
+		    return tempAdminRepo.findById(email);
+		}
+
+
+		//Nastavnik----------------------------------------------------------------------------------
+		
 		public List<TempNastavnik> dohvatiSveZahtjeveNastavnika() {
 			return tempNastavnikRepo.findAll();
 		}

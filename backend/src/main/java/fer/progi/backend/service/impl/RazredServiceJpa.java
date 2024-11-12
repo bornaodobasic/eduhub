@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import fer.progi.backend.dao.RazredRepository;
-import fer.progi.backend.dao.SmjerRepository;
 import fer.progi.backend.domain.Razred;
 import fer.progi.backend.domain.Smjer;
 import fer.progi.backend.service.RazredService;

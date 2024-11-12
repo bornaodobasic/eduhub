@@ -89,4 +89,9 @@ public class UcenikServiceJpa implements UcenikService {
 	}
 	*/
 
+	@Override
+	public Optional<Ucenik> pronadiUcenikaPoEmail(String email) {
+		return Optional.ofNullable(ucenikRepo.findByEmail(email));
+	}
+
 }

@@ -1,9 +1,10 @@
 package fer.progi.backend.rest;
 
+
 import fer.progi.backend.domain.Admin;
-import fer.progi.backend.domain.Aktivnost;
+//import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.service.AdminService;
-import fer.progi.backend.service.AktivnostService;
+//import fer.progi.backend.service.AktivnostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,6 +78,18 @@ public class RegisterController {
     @Secured("ROLE_GUEST")
     public ResponseEntity<?> sendToAdmin(@RequestBody RegisterDjelatnikDTO registerDjelatnikDTO) {
         boolean success = adminService.addDjelatnikToTempDB(registerDjelatnikDTO);
+
+        if (success) {
+            return ResponseEntity.ok("Zahtjev uspješno poslan adminu");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zahtjev nije poslan!");
+        }
+    }
+    
+    @PostMapping("/admin")
+    @Secured("ROLE_GUEST")
+    public ResponseEntity<?> sendToAdmin(@RequestBody RegisterAdminDTO registerAdminDTO) {
+        boolean success = adminService.addAdminToTempDB(registerAdminDTO);
 
         if (success) {
             return ResponseEntity.ok("Zahtjev uspješno poslan adminu");

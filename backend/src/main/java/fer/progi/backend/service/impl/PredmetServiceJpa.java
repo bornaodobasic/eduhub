@@ -1,13 +1,11 @@
 package fer.progi.backend.service.impl;
 
 import fer.progi.backend.domain.Predmet;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-
-import fer.progi.backend.dao.NastavnikRepository;
 import fer.progi.backend.dao.PredmetRepository;
 import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Smjer;
@@ -22,8 +20,8 @@ public class PredmetServiceJpa implements PredmetService{
 	@Autowired
 	private PredmetRepository predmetRepo;
 	
-	@Autowired
-	private NastavnikRepository nastavnikRepo;
+//	@Autowired
+//	private NastavnikRepository nastavnikRepo;
 	
 	@Autowired
     private SmjerService smjerService;

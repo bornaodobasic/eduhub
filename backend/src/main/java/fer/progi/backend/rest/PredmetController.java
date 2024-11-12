@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fer.progi.backend.domain.Predmet;
-import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.service.PredmetService;
 
 @RestController

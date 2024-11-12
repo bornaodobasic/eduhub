@@ -16,6 +16,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import fer.progi.backend.domain.Admin;
+import fer.progi.backend.domain.TempAdmin;
 import fer.progi.backend.domain.TempDjelatnik;
 import fer.progi.backend.service.AdminService;
 
@@ -32,8 +33,38 @@ public class AdminController {
 	public Admin dodajAdmin(@RequestBody Admin admin) {
 		return AdminService.dodajAdmin(admin);
 	}
+	
+	// Admin------------------------------------------------------------------------------------------------------------------------------
 
+	@GetMapping("/tempAdmin")
+	@Secured("ROLE_administrator")
+	public ResponseEntity<List<TempAdmin>> dohvatiAdmine() {
+	    return ResponseEntity.ok(AdminService.dohvatiSveZahtjeveAdmina());
+	}
 
+	@PostMapping("/tempAdmin/{email}/odobri")
+	@Secured("ROLE_administrator")
+	public ResponseEntity<?> odobriAdmina(@PathVariable String email) {
+	    Optional<TempAdmin> tempAdmin = AdminService.dohvatiZahtjevAdminaPoId(email);
+
+	    if (tempAdmin.isPresent()) {
+	        AdminService.odobriAdmina(tempAdmin.get());
+	        return ResponseEntity.ok("Uspješno pretvoren u admina");
+	    }
+
+	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zahtjev nije pronađen");
+	}
+
+	@DeleteMapping("/tempAdmin/{email}")
+	@Secured("ROLE_administrator")
+	public ResponseEntity<?> odbaciAdmina(@PathVariable String email) {
+	    boolean deleted = AdminService.odbaciAdmina(email);
+	    if (deleted) {
+	        return ResponseEntity.ok("Zahtjev uspješno odbačen.");
+	    }
+	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zahtjev nije pronađen");
+	}
+	
 	
 	//Nastavnik------------------------------------------------------------------------------------------------------------------------------
 	

@@ -1,6 +1,7 @@
 package fer.progi.backend.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,11 @@ public class SatnicarServiceJpa implements SatnicarService{
 		@Override
 		public Satnicar dodajSatnicara (Satnicar satnicar) {
 			return satnicarRepo.save(satnicar);
+		}
+
+		@Override
+		public Optional<Satnicar> pronadiSatnicaraPoEmail(String email) {
+			return Optional.ofNullable(satnicarRepo.findByEmail(email));
 		}
 		
 		

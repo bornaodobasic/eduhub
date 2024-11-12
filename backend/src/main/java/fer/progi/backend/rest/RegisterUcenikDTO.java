@@ -1,6 +1,5 @@
 package fer.progi.backend.rest;
 
-import fer.progi.backend.domain.Razred;
 import lombok.Data;
 
 @Data
