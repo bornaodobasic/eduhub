@@ -21,13 +21,11 @@ public class RegisterController {
     private AdminService adminService;
 
     @GetMapping("")
-    @Secured("ROLE_GUEST")
     public List<Admin> listAdmin() {
         return adminService.listAll();
     }
 
     @PostMapping("/nastavnik")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> sendToAdmin(@RequestBody RegisterNastavnikDTO registerNastavnikDTO) {
         boolean success = adminService.addNastavnikToTempDB(registerNastavnikDTO);
 
@@ -39,7 +37,6 @@ public class RegisterController {
     }
     
     @PostMapping("/ravnatelj")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> sendToAdmin(@RequestBody RegisterRavnateljDTO registerRavnateljDTO) {
         boolean success = adminService.addRavnateljToTempDB(registerRavnateljDTO);
 
@@ -51,7 +48,6 @@ public class RegisterController {
     }
     
     @PostMapping("/satnicar")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> sendToAdmin(@RequestBody RegisterSatnicarDTO registerSatnicarDTO) {
         boolean success = adminService.addSatnicarToTempDB(registerSatnicarDTO);
 
@@ -63,7 +59,6 @@ public class RegisterController {
     }
     
     @PostMapping("/ucenik")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> sendToAdmin(@RequestBody RegisterUcenikDTO registerUcenikDTO) {
         boolean success = adminService.addUcenikToTempDB(registerUcenikDTO);
 
@@ -75,7 +70,6 @@ public class RegisterController {
     }
     
     @PostMapping("/djelatnik")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> sendToAdmin(@RequestBody RegisterDjelatnikDTO registerDjelatnikDTO) {
         boolean success = adminService.addDjelatnikToTempDB(registerDjelatnikDTO);
 
@@ -87,7 +81,6 @@ public class RegisterController {
     }
     
     @PostMapping("/admin")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> sendToAdmin(@RequestBody RegisterAdminDTO registerAdminDTO) {
         boolean success = adminService.addAdminToTempDB(registerAdminDTO);
 

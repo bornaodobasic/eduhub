@@ -57,7 +57,6 @@ public class LoginController {
     //Nastavnik login--------------------------------------------------------------------------------
 
     @PostMapping("/nastavnik")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> prebaciNaNastavnika(@RequestBody LoginDTO loginDTO) {
         Optional<Nastavnik> nastavnikMaybe = nastavnikService.pronadiNastavnikaPoEmail(loginDTO.getEmail());
 
@@ -84,7 +83,6 @@ public class LoginController {
     //Ucenik login-----------------------------------------------------------------------------------
     
     @PostMapping("/ucenik")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> prebaciNaUcenika(@RequestBody LoginDTO loginDTO) {
         Optional<Ucenik> ucenikMaybe = ucenikService.pronadiUcenikaPoEmail(loginDTO.getEmail());
 
@@ -111,7 +109,6 @@ public class LoginController {
     //Djelatnik login--------------------------------------------------------------------------------
     
     @PostMapping("/djelatnik")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> prebaciNaDjelatnika(@RequestBody LoginDTO loginDTO) {
         Optional<Djelatnik> djelatnikMaybe = djelatnikService.pronadiDjelatnikaPoEmail(loginDTO.getEmail());
 
@@ -138,7 +135,6 @@ public class LoginController {
     //Admin login-----------------------------------------------------------------------------------
     
     @PostMapping("/admin")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> prebaciNaAdmina(@RequestBody LoginDTO loginDTO) {
         Optional<Admin> adminMaybe = adminService.pronadiAdminaPoEmail(loginDTO.getEmail());
 
@@ -165,7 +161,6 @@ public class LoginController {
     //Ravnatelj login-------------------------------------------------------------------------------------
     
     @PostMapping("/ravnatelj")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> prebaciNaRavnatelja(@RequestBody LoginDTO loginDTO) {
         Optional<Ravnatelj> ravnateljMaybe = ravnateljService.pronadiRavnateljaPoEmail(loginDTO.getEmail());
 
@@ -192,7 +187,6 @@ public class LoginController {
     //Satnicar login---------------------------------------------------------------------------------------
     
     @PostMapping("/satnicar")
-    @Secured("ROLE_GUEST")
     public ResponseEntity<?> prebaciNaSatnicara(@RequestBody LoginDTO loginDTO) {
         Optional<Satnicar> satnicarMaybe = satnicarService.pronadiSatnicaraPoEmail(loginDTO.getEmail());
 
