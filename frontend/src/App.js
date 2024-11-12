@@ -7,6 +7,7 @@ import Enroll from './pages/enroll/Enroll';
 import LogReg from './pages/logReg/LogReg';
 import Admin from './pages/admin/Admin';
 import Homepage from './pages/homepage/Homepage';
+import Certificate from './pages/certificate/Certificate';
 import './App.css';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/login-registration" element={<LogReg />} /> 
         <Route path="/admin" element={<Admin />} />
         <Route path="/homepage" element={<Homepage/>} />
+        <Route path="/certificate" element={<Certificate/>} />
       </Routes>
     </Router>
   );
