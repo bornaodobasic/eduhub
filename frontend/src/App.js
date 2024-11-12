@@ -9,6 +9,7 @@ import Admin from './pages/admin/Admin';
 import Homepage from './pages/homePage/HomePage';
 import Adminhome from './pages/adminHome/AdminHome';
 import Certificate from './pages/certificate/Certificate';
+import ApproveAdmin from './pages/approveadmin/ApproveAdmin';
 import './App.css';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/homepage" element={<Homepage/>} />
         <Route path="/admin-home" element={<Adminhome />} />
         <Route path="/certificate" element={<Certificate/>} />
+        <Route path="/approveadmin" element={<ApproveAdmin/>} />
       </Routes>
     </Router>
   );

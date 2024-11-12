@@ -1,12 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../../components/Header';
 import SidebarRight from '../../components/SidebarRight';
 import MainContent from '../../components/MainContent';
 import './AdminHome.css';
 
-const Adminhome = () => {
+const AdminHome = () => {
     const roles = [
-        "Administrator", "Djelatnik", "Učenik", "Nastavnik", "Ravnatelj", "Satničar"
+        { name: "Administrator", path: "/approveadmin" },
+        { name: "Djelatnik", path: "/approveemployee" },
+        { name: "Učenik", path: "/approveucenik" },
+        { name: "Nastavnik", path: "/approvenastavnik" },
+        { name: "Ravnatelj", path: "/approveravnatelj" },
+        { name: "Satničar", path: "/approvesatnicar" }
     ];
 
     return (
@@ -16,7 +22,9 @@ const Adminhome = () => {
                 <aside className="sidebar-left">
                 <button className="sidebar-button gray">Zahtjevi za registraciju</button>
                     {roles.map(role => (
-                        <button key={role} className="sidebar-button">{role}</button>
+                        <Link key={role.name} to={role.path}>
+                            <button className="sidebar-button">{role.name}</button>
+                        </Link>
                     ))}
                 </aside>
                 <MainContent />
@@ -26,4 +34,4 @@ const Adminhome = () => {
     );
 };
 
-export default Adminhome;
+export default AdminHome;
