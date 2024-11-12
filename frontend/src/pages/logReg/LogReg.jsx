@@ -34,10 +34,15 @@ const LogReg = () => {
             <button onClick={handleLogin}>
                 PRIJAVA
             </button>
-            <button onClick={handleRegistration}>
-                REGISTRACIJA
-            </button>
-            {userRole === 'ucenik' && 
+
+            {userRole != 'ucenik' &&
+            
+                <button onClick={handleRegistration}>
+                    REGISTRACIJA
+                </button>
+            }
+           
+            {userRole == 'ucenik' && 
             
                 <button onClick={handleEnroll}>
                     UPIS U 1. RAZRED
