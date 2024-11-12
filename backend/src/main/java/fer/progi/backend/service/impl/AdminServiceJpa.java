@@ -1,6 +1,7 @@
 package fer.progi.backend.service.impl;
 
 import java.util.List;
+
 import java.util.Optional;
 
 import fer.progi.backend.dao.*;
@@ -14,11 +15,7 @@ import fer.progi.backend.domain.TempRavnatelj;
 import fer.progi.backend.domain.TempSatnicar;
 import fer.progi.backend.domain.TempUcenik;
 import fer.progi.backend.domain.Ucenik;
-import fer.progi.backend.rest.RegisterAdminDTO;
-import fer.progi.backend.rest.RegisterDjelatnikDTO;
-import fer.progi.backend.rest.RegisterNastavnikDTO;
-import fer.progi.backend.rest.RegisterRavnateljDTO;
-import fer.progi.backend.rest.RegisterSatnicarDTO;
+import fer.progi.backend.rest.RegisterKorisnikDTO;
 import fer.progi.backend.rest.RegisterUcenikDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,10 +91,10 @@ public class AdminServiceJpa implements AdminService{
 		}
 
 		@Override
-		public boolean addAdminToTempDB(RegisterAdminDTO registerAdminDTO) {
+		public boolean addAdminToTempDB(RegisterKorisnikDTO registerAdminDTO) {
 		    TempAdmin tempAdmin = new TempAdmin();
-		    tempAdmin.setImeAdmin(registerAdminDTO.getImeAdmin());
-		    tempAdmin.setPrezimeAdmin(registerAdminDTO.getPrezimeAdmin());
+		    tempAdmin.setImeAdmin(registerAdminDTO.getImeKorisnik());
+		    tempAdmin.setPrezimeAdmin(registerAdminDTO.getPrezimeKorisnik());
 		    tempAdmin.setEmail(registerAdminDTO.getEmail());
 		    tempAdmin.setLozinka(passwordEncoder.encode(registerAdminDTO.getLozinka()));
 
@@ -139,10 +136,10 @@ public class AdminServiceJpa implements AdminService{
 			return tempNastavnikRepo.findAll();
 		}
 		@Override
-		public boolean addNastavnikToTempDB(RegisterNastavnikDTO registerNastavnikDTO) {
+		public boolean addNastavnikToTempDB(RegisterKorisnikDTO registerNastavnikDTO) {
 			TempNastavnik tempNastavnik = new TempNastavnik();
-			tempNastavnik.setImeNastavnik(registerNastavnikDTO.getImeNastavnik());
-			tempNastavnik.setPrezimeNastavnik(registerNastavnikDTO.getPrezimeNastavnik());
+			tempNastavnik.setImeNastavnik(registerNastavnikDTO.getImeKorisnik());
+			tempNastavnik.setPrezimeNastavnik(registerNastavnikDTO.getPrezimeKorisnik());
 			tempNastavnik.setEmail(registerNastavnikDTO.getEmail());
 			tempNastavnik.setLozinka(passwordEncoder.encode(registerNastavnikDTO.getLozinka()));
 
@@ -192,6 +189,8 @@ public class AdminServiceJpa implements AdminService{
 			tempUcenik.setEmail(registerUcenikDTO.getEmail());
 			tempUcenik.setLozinka(passwordEncoder.encode(registerUcenikDTO.getLozinka()));
 			tempUcenik.setSpol(registerUcenikDTO.getSpol());
+			tempUcenik.setDatumRodenja(registerUcenikDTO.getDatumRodenja());
+			tempUcenik.setRazred(registerUcenikDTO.getRazred());
 
 			TempUcenik saved = tempUcenikRepo.save(tempUcenik);
 
@@ -236,10 +235,10 @@ public class AdminServiceJpa implements AdminService{
 		}
 
 		@Override
-		public boolean addDjelatnikToTempDB(RegisterDjelatnikDTO registerDjelatnikDTO) {
+		public boolean addDjelatnikToTempDB(RegisterKorisnikDTO registerDjelatnikDTO) {
 		    TempDjelatnik tempDjelatnik = new TempDjelatnik();
-		    tempDjelatnik.setImeDjel(registerDjelatnikDTO.getImeDjel());
-		    tempDjelatnik.setPrezimeDjel(registerDjelatnikDTO.getPrezimeDjel());
+		    tempDjelatnik.setImeDjel(registerDjelatnikDTO.getImeKorisnik());
+		    tempDjelatnik.setPrezimeDjel(registerDjelatnikDTO.getPrezimeKorisnik());
 		    tempDjelatnik.setEmail(registerDjelatnikDTO.getEmail());
 		    tempDjelatnik.setLozinka(passwordEncoder.encode(registerDjelatnikDTO.getLozinka()));
 
@@ -281,10 +280,10 @@ public class AdminServiceJpa implements AdminService{
 		}
 
 		@Override
-		public boolean addRavnateljToTempDB(RegisterRavnateljDTO registerRavnateljDTO) {
+		public boolean addRavnateljToTempDB(RegisterKorisnikDTO registerRavnateljDTO) {
 			TempRavnatelj tempRavnatelj = new TempRavnatelj();
-			tempRavnatelj.setImeRavnatelj(registerRavnateljDTO.getImeRavnatelj());
-			tempRavnatelj.setPrezimeRavnatelj(registerRavnateljDTO.getPrezimeRavnatelj());
+			tempRavnatelj.setImeRavnatelj(registerRavnateljDTO.getImeKorisnik());
+			tempRavnatelj.setPrezimeRavnatelj(registerRavnateljDTO.getPrezimeKorisnik());
 			tempRavnatelj.setEmail(registerRavnateljDTO.getEmail());
 			tempRavnatelj.setLozinka(passwordEncoder.encode(registerRavnateljDTO.getLozinka()));
 
@@ -326,10 +325,10 @@ public class AdminServiceJpa implements AdminService{
 		}
 
 		@Override
-		public boolean addSatnicarToTempDB(RegisterSatnicarDTO registerSatnicarDTO) {
+		public boolean addSatnicarToTempDB(RegisterKorisnikDTO registerSatnicarDTO) {
 			TempSatnicar tempSatnicar = new TempSatnicar();
-			tempSatnicar.setImeSatnicar(registerSatnicarDTO.getImeSatnicar());
-			tempSatnicar.setPrezimeSatnicar(registerSatnicarDTO.getPrezimeSatnicar());
+			tempSatnicar.setImeSatnicar(registerSatnicarDTO.getImeKorisnik());
+			tempSatnicar.setPrezimeSatnicar(registerSatnicarDTO.getPrezimeKorisnik());
 			tempSatnicar.setEmail(registerSatnicarDTO.getEmail());
 			tempSatnicar.setLozinka(passwordEncoder.encode(registerSatnicarDTO.getLozinka()));
 

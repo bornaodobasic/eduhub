@@ -24,20 +24,38 @@ public class RegisterController {
     public List<Admin> listAdmin() {
         return adminService.listAll();
     }
+    
+    boolean success = false;
 
-    @PostMapping("/nastavnik")
-    public ResponseEntity<?> sendToAdmin(@RequestBody RegisterNastavnikDTO registerNastavnikDTO) {
-        boolean success = adminService.addNastavnikToTempDB(registerNastavnikDTO);
+    @PostMapping("")
+    public ResponseEntity<?> sendToAdmin(@RequestBody RegisterKorisnikDTO registerKorisnikDTO) {
+    	if(registerKorisnikDTO.getRole().toLowerCase().equals("nastavnik")) {
+    		success = adminService.addNastavnikToTempDB(registerKorisnikDTO);
+    	} else if(registerKorisnikDTO.getRole().toLowerCase().equals("admin")) {
+    	   success = adminService.addAdminToTempDB(registerKorisnikDTO);
 
-        if (success) {
+    	} else if(registerKorisnikDTO.getRole().toLowerCase().equals("ravnatelj")) {
+     	   success = adminService.addRavnateljToTempDB(registerKorisnikDTO);
+
+     	} else if(registerKorisnikDTO.getRole().toLowerCase().equals("satnicar")) {
+     	   success = adminService.addSatnicarToTempDB(registerKorisnikDTO);
+
+     	} else if(registerKorisnikDTO.getRole().toLowerCase().equals("djelatnik")) {
+      	   success = adminService.addDjelatnikToTempDB(registerKorisnikDTO);
+
+      	} else {
+      		success = false;
+      	}
+        
+    	if (success) {
             return ResponseEntity.ok("Zahtjev uspješno poslan adminu");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zahtjev nije poslan!");
         }
     }
     
-    @PostMapping("/ravnatelj")
-    public ResponseEntity<?> sendToAdmin(@RequestBody RegisterRavnateljDTO registerRavnateljDTO) {
+
+   /* public ResponseEntity<?> sendToAdmin(@RequestBody RegisterRavnateljDTO registerRavnateljDTO) {
         boolean success = adminService.addRavnateljToTempDB(registerRavnateljDTO);
 
         if (success) {
@@ -91,7 +109,11 @@ public class RegisterController {
         }
     }
     
-    
+    if (success) {
+        return ResponseEntity.ok("Zahtjev uspješno poslan adminu");
+    } else {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zahtjev nije poslan!");
+    }*/
     
 
 }

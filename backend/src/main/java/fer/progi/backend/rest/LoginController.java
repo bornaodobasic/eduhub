@@ -54,11 +54,14 @@ public class LoginController {
     @Autowired 
     private SatnicarService satnicarService;
     
-    //Nastavnik login--------------------------------------------------------------------------------
-
-    @PostMapping("/nastavnik")
-    public ResponseEntity<?> prebaciNaNastavnika(@RequestBody LoginDTO loginDTO) {
+    @PostMapping("")
+    public ResponseEntity<?> prebaciKorisnika(@RequestBody LoginDTO loginDTO) {
         Optional<Nastavnik> nastavnikMaybe = nastavnikService.pronadiNastavnikaPoEmail(loginDTO.getEmail());
+        Optional<Ucenik> ucenikMaybe = ucenikService.pronadiUcenikaPoEmail(loginDTO.getEmail());
+        Optional<Djelatnik> djelatnikMaybe = djelatnikService.pronadiDjelatnikaPoEmail(loginDTO.getEmail());
+        Optional<Admin> adminMaybe = adminService.pronadiAdminaPoEmail(loginDTO.getEmail());
+        Optional<Ravnatelj> ravnateljMaybe = ravnateljService.pronadiRavnateljaPoEmail(loginDTO.getEmail());
+        Optional<Satnicar> satnicarMaybe = satnicarService.pronadiSatnicaraPoEmail(loginDTO.getEmail());
 
         if (nastavnikMaybe.isPresent()) {
             Nastavnik nastavnik = nastavnikMaybe.get();
@@ -74,12 +77,86 @@ public class LoginController {
             );
 
             return ResponseEntity.ok("Prijavljen kao nastavnik");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nastavnik nije pronađen.");
+        }else if(ucenikMaybe.isPresent()) {
+        	Ucenik ucenik = ucenikMaybe.get();
+
+            if (!passwordEncoder.matches(loginDTO.getLozinka(), ucenik.getLozinka())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neispravna lozinka");
+            }
+
+            UserDetails userDetails = new User(
+              ucenik.getEmail(),
+              ucenik.getLozinka(),
+                    AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ucenik")
+            );
+
+            return ResponseEntity.ok("Prijavljen kao učenik");
+        	
+        }else if(djelatnikMaybe.isPresent()) {
+        	Djelatnik djelatnik = djelatnikMaybe.get();
+
+            if (!passwordEncoder.matches(loginDTO.getLozinka(), djelatnik.getLozinka())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neispravna lozinka");
+            }
+
+            UserDetails userDetails = new User(
+              djelatnik.getEmail(),
+              djelatnik.getLozinka(),
+                    AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_djelatnik")
+            );
+
+            return ResponseEntity.ok("Prijavljen kao djelatnik");
+        
+        }else if (adminMaybe.isPresent()) {
+            Admin admin = adminMaybe.get();
+
+            if (!passwordEncoder.matches(loginDTO.getLozinka(), admin.getLozinka())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neispravna lozinka");
+            }
+
+            UserDetails userDetails = new User(
+              admin.getEmail(),
+              admin.getLozinka(),
+                    AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_admin")
+            );
+
+            return ResponseEntity.ok("Prijavljen kao admin");
+
+        }else if (ravnateljMaybe.isPresent()) {
+            Ravnatelj ravnatelj = ravnateljMaybe.get();
+
+            if (!passwordEncoder.matches(loginDTO.getLozinka(), ravnatelj.getLozinka())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neispravna lozinka");
+            }
+
+            UserDetails userDetails = new User(
+              ravnatelj.getEmail(),
+              ravnatelj.getLozinka(),
+                    AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ravnatelj")
+            );
+
+            return ResponseEntity.ok("Prijavljen kao ravnatelj");
+        }else if (satnicarMaybe.isPresent()) {
+            Satnicar satnicar = satnicarMaybe.get();
+
+            if (!passwordEncoder.matches(loginDTO.getLozinka(), satnicar.getLozinka())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neispravna lozinka");
+            }
+
+            UserDetails userDetails = new User(
+              satnicar.getEmail(),
+              satnicar.getLozinka(),
+                    AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_satnicar")
+            );
+
+            return ResponseEntity.ok("Prijavljen kao satnicar");
+        }else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Korisnik nije pronađen.");
         }
 
     }
     
+    /*    
     //Ucenik login-----------------------------------------------------------------------------------
     
     @PostMapping("/ucenik")
@@ -208,7 +285,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Satnicar nije pronađen.");
         }
 
-    }
+    }*/
 
 
 

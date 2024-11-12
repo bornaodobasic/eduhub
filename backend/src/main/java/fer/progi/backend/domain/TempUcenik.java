@@ -13,6 +13,7 @@ public class TempUcenik {
 	
     private String imeUcenik;
     private String prezimeUcenik;
+    private String datumRodenja;
     private String spol;
     private String email;
     private String lozinka;

@@ -1,6 +1,7 @@
 package fer.progi.backend.service;
 
 import java.util.List;
+
 import java.util.Optional;
 
 import fer.progi.backend.domain.Admin;
@@ -10,11 +11,7 @@ import fer.progi.backend.domain.TempNastavnik;
 import fer.progi.backend.domain.TempRavnatelj;
 import fer.progi.backend.domain.TempSatnicar;
 import fer.progi.backend.domain.TempUcenik;
-import fer.progi.backend.rest.RegisterAdminDTO;
-import fer.progi.backend.rest.RegisterDjelatnikDTO;
-import fer.progi.backend.rest.RegisterNastavnikDTO;
-import fer.progi.backend.rest.RegisterRavnateljDTO;
-import fer.progi.backend.rest.RegisterSatnicarDTO;
+import fer.progi.backend.rest.RegisterKorisnikDTO;
 import fer.progi.backend.rest.RegisterUcenikDTO;
 
 
@@ -24,7 +21,7 @@ public interface AdminService {
 	
 	Admin dodajAdmin (Admin admin);
 	
-	boolean addAdminToTempDB(RegisterAdminDTO registerAdminDTO);
+	boolean addAdminToTempDB(RegisterKorisnikDTO registerKorisnikDTO);
 
 	List<TempAdmin> dohvatiSveZahtjeveAdmina();
 	
@@ -36,7 +33,7 @@ public interface AdminService {
 	
 	//Nastavnik--------------------------------------------------------------------------------------
 
-	boolean addNastavnikToTempDB(RegisterNastavnikDTO registerNastavnikDTO);
+	boolean addNastavnikToTempDB(RegisterKorisnikDTO registerKorisnikDTO);
 
 	List<TempNastavnik> dohvatiSveZahtjeveNastavnika();
 
@@ -60,7 +57,7 @@ public interface AdminService {
 	
 	//Djelatnik------------------------------------------------------------------------------------------
 	
-	boolean addDjelatnikToTempDB(RegisterDjelatnikDTO registerDjelatnikDTO);
+	boolean addDjelatnikToTempDB(RegisterKorisnikDTO registerKorisnikDTO);
 	
 	List<TempDjelatnik> dohvatiSveZahtjeveDjelatnika();
 	
@@ -72,7 +69,7 @@ public interface AdminService {
 	
 	//Ravnatelj-------------------------------------------------------------------------------------------
 	
-	boolean addRavnateljToTempDB(RegisterRavnateljDTO registerRavnateljDTO);
+	boolean addRavnateljToTempDB(RegisterKorisnikDTO registerKorisnikDTO);
 	
 	List<TempRavnatelj> dohvatiSveZahtjeveRavnatelja();
 	
@@ -82,7 +79,7 @@ public interface AdminService {
 	
 	//Satnicar---------------------------------------------------------------------------------------------
 	
-	boolean addSatnicarToTempDB(RegisterSatnicarDTO registerSatnicarDTO);
+	boolean addSatnicarToTempDB(RegisterKorisnikDTO registerKorisnikDTO);
 	
 	List<TempSatnicar> dohvatiSveZahtjeveSatnicara();
 	
