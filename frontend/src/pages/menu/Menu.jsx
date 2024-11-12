@@ -7,7 +7,7 @@ const Menu = () => {
 
     const handleRoleSelect = (role) => {
         localStorage.setItem('userRole', role); 
-        navigate('/login-registration'); 
+        navigate('/login-registration?role='+role); 
     };
 
   return (
@@ -24,7 +24,7 @@ const Menu = () => {
       
         <div className="row">
             <div className="square-button" id="satnicar" onClick={() => handleRoleSelect('satnicar')}>SATNIČAR</div>
-            <div className="square-button" id="ucenicka-sluzba" onClick={() => handleRoleSelect('ucenicka-sluzba')}>UČENIČKA SLUŽBA</div>
+            <div className="square-button" id="ucenicka-sluzba" onClick={() => handleRoleSelect('djelatnik')}>UČENIČKA SLUŽBA</div>
             <div className="square-button"id="administrator" onClick={() => handleRoleSelect('administrator')}>ADMINISTRATOR</div>
         </div>
     </div>

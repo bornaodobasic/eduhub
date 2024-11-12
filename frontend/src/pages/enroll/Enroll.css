@@ -8,12 +8,7 @@
     box-sizing: border-box;
 }
 
-.enroll {
-    font-size: 1rem;
-    color: #333;
-    max-width: 200px;
-    text-align: left; 
-}
+
 
 .enroll-container {
     background-color: white;

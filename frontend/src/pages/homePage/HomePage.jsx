@@ -3,9 +3,9 @@ import Header from '../../components/Header';
 import SidebarLeft from '../../components/SidebarLeft';
 import SidebarRight from '../../components/SidebarRight';
 import MainContent from '../../components/MainContent';
-import './Homepage.css';
+import './HomePage.css';
 
-const Homepage = () => {
+const HomePage = () => {
     return (
         <div className="homepage">
             <Header />
@@ -18,4 +18,4 @@ const Homepage = () => {
     );
 };
 
-export default Homepage;
+export default HomePage;
