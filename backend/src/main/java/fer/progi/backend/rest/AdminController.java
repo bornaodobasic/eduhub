@@ -36,13 +36,13 @@ public class AdminController {
 	
 	// Admin------------------------------------------------------------------------------------------------------------------------------
 
-	@GetMapping("/tempAdmin")
+	@GetMapping("/zahtjevi/tempAdmin")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<List<TempAdmin>> dohvatiAdmine() {
 	    return ResponseEntity.ok(AdminService.dohvatiSveZahtjeveAdmina());
 	}
 
-	@PostMapping("/tempAdmin/{email}/odobri")
+	@PostMapping("/zahtjevi/tempAdmin/{email}/odobri")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odobriAdmina(@PathVariable String email) {
 	    Optional<TempAdmin> tempAdmin = AdminService.dohvatiZahtjevAdminaPoId(email);
@@ -55,7 +55,7 @@ public class AdminController {
 	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zahtjev nije pronađen");
 	}
 
-	@DeleteMapping("/tempAdmin/{email}")
+	@DeleteMapping("/zahtjevi/tempAdmin/{email}")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odbaciAdmina(@PathVariable String email) {
 	    boolean deleted = AdminService.odbaciAdmina(email);
@@ -68,13 +68,13 @@ public class AdminController {
 	
 	//Nastavnik------------------------------------------------------------------------------------------------------------------------------
 	
-	@GetMapping("/tempNastavnik")
+	@GetMapping("/zahtjevi/tempNastavnik")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<List<TempNastavnik>> dohvatiNastavnike() {
 		return ResponseEntity.ok(AdminService.dohvatiSveZahtjeveNastavnika());
 	}
 
-	@PostMapping("/tempNastavnik/{email}/odobri")
+	@PostMapping("/zahtjevi/tempNastavnik/{email}/odobri")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odobriNastavnika(@PathVariable String email) {
 		Optional<TempNastavnik> tempNastavnik = AdminService.dohvatiZahtjevNastavnikaPoId(email);
@@ -87,7 +87,7 @@ public class AdminController {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zahtjev nije pronađen");
 	}
 
-	@DeleteMapping("/tempNastavnik/{email}")
+	@DeleteMapping("/zahtjevi/tempNastavnik/{email}")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odbaciNastavnika(@PathVariable String email) {
 		boolean deleted = AdminService.odbaciNastavnika(email);
@@ -99,13 +99,13 @@ public class AdminController {
 
 	//Ucenik------------------------------------------------------------------------------------------------------------------------------------------
 
-	@GetMapping("/tempUcenik")
+	@GetMapping("/zahtjevi/tempUcenik")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<List<TempUcenik>> dohvatiUcenike() {
 		return ResponseEntity.ok(AdminService.dohvatiSveZahtjeveUcenika());
 	}
 
-	@PostMapping("/tempUcenik/{email}/odobri")
+	@PostMapping("/zahtjevi/tempUcenik/{email}/odobri")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odobriUcenika(@PathVariable String email) {
 		Optional<TempUcenik> tempUcenik = AdminService.dohvatiZahtjevUcenikaPoId(email);
@@ -118,7 +118,7 @@ public class AdminController {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zahtjev nije pronađen");
 	}
 
-	@DeleteMapping("/tempUcenik/{email}")
+	@DeleteMapping("/zahtjevi/tempUcenik/{email}")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odbaciUcenika(@PathVariable String email) {
 		boolean deleted = AdminService.odbaciUcenika(email);
@@ -131,13 +131,13 @@ public class AdminController {
 
 	//Djelatnik---------------------------------------------------------------------------------------------------------------------------------------
 	
-	@GetMapping("/tempDjelatnik")
+	@GetMapping("/zahtjevi/tempDjelatnik")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<List<TempDjelatnik>> dohvatiDjelatnike() {
 		return ResponseEntity.ok(AdminService.dohvatiSveZahtjeveDjelatnika());
 	}
 
-	@PostMapping("/tempDjelatnik/{email}/odobri")
+	@PostMapping("/zahtjevi/tempDjelatnik/{email}/odobri")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odobriDjelatnika(@PathVariable String email) {
 		Optional<TempDjelatnik> tempDjelatnik = AdminService.dohvatiZahtjevDjelatnikaPoId(email);
@@ -150,7 +150,7 @@ public class AdminController {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zahtjev nije pronađen");
 	}
 
-	@DeleteMapping("/tempDjelatnik/{email}")
+	@DeleteMapping("/zahtjevi/tempDjelatnik/{email}")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odbaciDjelatnika(@PathVariable String email) {
 		boolean deleted = AdminService.odbaciDjelatnika(email);
@@ -162,13 +162,13 @@ public class AdminController {
 	
 	//Ravnatelj------------------------------------------------------------------------------------------------------------------------------------------
 
-	@GetMapping("/tempRavnatelj")
+	@GetMapping("/zahtjevi/tempRavnatelj")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<List<TempRavnatelj>> dohvatiRavnatelja() {
 		return ResponseEntity.ok(AdminService.dohvatiSveZahtjeveRavnatelja());
 	}
 	
-	@PostMapping("/tempRavnatelj/{email}/odobri")
+	@PostMapping("/zahtjevi/tempRavnatelj/{email}/odobri")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odobriRavnatelja(@PathVariable String email) {
 		Optional<TempRavnatelj> tempRavnatelj = AdminService.dohvatiZahtjevRavnateljaPoId(email);
@@ -181,7 +181,7 @@ public class AdminController {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zahtjev nije pronađen");
 	}
 	
-	@DeleteMapping("/tempRavnatelj/{email}")
+	@DeleteMapping("/zahtjevi/tempRavnatelj/{email}")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odbaciRavnatelja(@PathVariable String email) {
 		boolean deleted = AdminService.odbaciRavnatelja(email);
@@ -193,13 +193,13 @@ public class AdminController {
 
 	//Satnicar-----------------------------------------------------------------------------------------------------------------------------------------------
 	
-	@GetMapping("/tempSatnicar")
+	@GetMapping("/zahtjevi/tempSatnicar")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<List<TempSatnicar>> dohvatiSatnicara() {
 		return ResponseEntity.ok(AdminService.dohvatiSveZahtjeveSatnicara());
 	}
 
-	@PostMapping("/tempSatnicar/{email}/odobri")
+	@PostMapping("/zahtjevi/tempSatnicar/{email}/odobri")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odobriSatnicara(@PathVariable String email) {
 		Optional<TempSatnicar> tempSatnicar = AdminService.dohvatiZahtjevSatnicaraPoId(email);
@@ -213,7 +213,7 @@ public class AdminController {
 	}
 
 
-	@DeleteMapping("/tempSatnicar/{email}")
+	@DeleteMapping("/zahtjevi/tempSatnicar/{email}")
 	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odbaciSatnicara(@PathVariable String email) {
 		boolean deleted = AdminService.odbaciSatnicara(email);
