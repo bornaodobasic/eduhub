@@ -1,11 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../../components/Header';
 import SidebarRight from '../../components/SidebarRight';
 import BackButton from '../../components/BackButton';
-import './ApproveAdmin.css';
+import '../approveadmin/ApproveAdmin.css';
 
 const ApproveAdmin = () => {
+    const [registrationRequests, setRegistrationRequests] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/admin/zahtjevi/tempAdmin')
+            .then(response => response.json())
+            .then(data => {
+                setRegistrationRequests(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError('Failed to fetch');
+                setLoading(false);
+            });
+    }, []);
+
+    
+    const handleApprove = (email) => {
+        fetch(`http://localhost:8080/admin/zahtjevi/tempAdmin/${email}/odobri`, {
+            method: 'POST',
+        })
+        .then(response => {
+            if (response.ok) {
+                setRegistrationRequests(prevRequests => 
+                    prevRequests.filter(request => request.email !== email)
+                );
+            } else {
+                alert('Failed to approve the request.');
+            }
+        })
+        .catch(() => alert('Failed to approve the request.'));
+    };
+
+    
+    const handleReject = (email) => {
+        fetch(`http://localhost:8080/admin/zahtjevi/tempAdmin/${email}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                setRegistrationRequests(prevRequests => 
+                    prevRequests.filter(request => request.email !== email)
+                );
+            } else {
+                alert('Failed to reject the request.');
+            }
+        })
+        .catch(() => alert('Failed to reject the request.'));
+    };
+
     const roles = [
         { name: "Administrator", path: "/approveadmin" },
         { name: "Djelatnik", path: "/approveemployee" },
@@ -13,13 +64,6 @@ const ApproveAdmin = () => {
         { name: "Nastavnik", path: "/approvenastavnik" },
         { name: "Ravnatelj", path: "/approveravnatelj" },
         { name: "Satničar", path: "/approvesatnicar" }
-    ];
-
-    const registrationRequests = [
-        { id: 1, firstName: "John", lastName: "Doe", email: "john.doe@example.com", role: "Administrator" },
-        { id: 2, firstName: "Jane", lastName: "Smith", email: "jane.smith@example.com", role: "Administrator" },
-        { id: 3, firstName: "Robert", lastName: "Brown", email: "robert.brown@example.com", role: "Djelatnik" },
-        // More requests can be added here
     ];
 
     return (
@@ -33,34 +77,46 @@ const ApproveAdmin = () => {
                             <button className="sidebar-button">{role.name}</button>
                         </Link>
                     ))}
-                    <div className="back-button-container">
-                        <BackButton /> {/* Back button at the bottom left */}
-                    </div>
                 </aside>
                 <div className="main-content">
-                    <h2>Zahtjevi za registraciju administratora</h2>
-                    <table className="requests-table">
-                        <thead>
-                            <tr>
-                                <th>Ime</th>
-                                <th>Prezime</th>
-                                <th>Email</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {registrationRequests.map(request => (
-                                <tr key={request.id}>
-                                    <td>{request.firstName}</td>
-                                    <td>{request.lastName}</td>
-                                    <td>{request.email}</td>
-                                    <td>
-                                        <button className="approve-btn">Approve</button>
-                                        <button className="reject-btn">Reject</button>
-                                    </td>
+                    <h2>Zahtjevi za registraciju djelatnika</h2>
+                    {loading && <p>Loading...</p>}
+                    {error && <p>{error}</p>}
+                    {!loading && !error && (
+                        <table className="requests-table">
+                            <thead>
+                                <tr>
+                                    <th>Ime</th>
+                                    <th>Prezime</th>
+                                    <th>Email</th>
+                                    <th>Akcije</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {registrationRequests.map(request => (
+                                    <tr key={request.email}>
+                                        <td>{request.imeAdmin}</td>
+                                        <td>{request.prezimeAdmin}</td>
+                                        <td>{request.email}</td>
+                                        <td>
+                                            <button 
+                                                className="approve-btn" 
+                                                onClick={() => handleApprove(request.email)}
+                                            >
+                                                Approve
+                                            </button>
+                                            <button 
+                                                className="reject-btn" 
+                                                onClick={() => handleReject(request.email)}
+                                            >
+                                                Reject
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
                 <SidebarRight />
             </div>
