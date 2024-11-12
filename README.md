@@ -6,38 +6,35 @@ Cilj projekta je razviti programsku podršku za stvaranje web aplikacije ”EduH
 oprema i prostor) i daje informacije o obrazovnom sadržaju svih kolegija, nastavnih i nenastavnih aktivnosti u školi.
 
 # Funkcijski zahtjevi
-1. Neregistrirani korisnik (inicijator) može: 
-    * registrirati se to jest stvoriti novi korisnički račun 
-    * upisati se u 1. razred
-2. Registrirani korisnik (inicijator) može:
-    * prijaviti se
-    * odjaviti se
-    * pregledati raspored sati
-    * pregledati dostupne resurse
-    * pregledati sadržaj kolegija i aktivnosti
-    * komunicirati s ostalim korisnicima
-3. Nastavnik (inicijator) može:
-    * Dodati nastavne materijale
-4. Djelatnici studentske službe i ravnatelj (inicijatori) mogu:
-    * pregledati izvještaje
-5. Baza podataka (sudionik):
-    * pohranjuje podatke o korisnicima
-    * pohranjuje podatke o nastavnim materijalima, njihovim pregledima i pristupima
-6. Poslužitelj vremenske prognoze (sudionik):
-    * poslužuje potrebne podatke vezane za prognozu
-7. Poslužitelj elektroničke pošte (sudionik):
-    * aplikaciji omogućuje slanje elektroničke pošte korisnicima
-8. Poslužitelj navigacije (sudionik):
-    * aplikaciji omogućuje prikaz navigacije korisnicima 
+Cilj projekta je razviti programsku podršku za stvaranje web aplikacije “EduHub” koja će obrazovnim ustanovama omogućiti organiziranje nastave elektroničkim sredstvima komunikacije. Aplikacija će olakšati pristup nastavnim materijalima, raznim resursima škole i njihovom zauzeću te omogućiti jednostavnu komunikaciju među sudionicima u srednjoškolskom obrazovanju. Kao poseban dodatak aplikacija na početnoj stranici pokazuje podatak o vremenskim uvjetima i vremenskoj prognozi za grad u kojoj se škola nalazi.
+
+# Funkcijski zahtjevi
+|ID zahtjeva|Opis|
+|-------|---------|
+|F-001|Sustav omogućuje korisnicima registraciju to jest stvaranje novog korisničkog računa pomoću osobnih podataka.|
+|F-002|Sustav omogućuje upis u prvi razred.|
+|F-003|Sustav omogućuje prijavu korisnika.|
+|F-004|Sustav omogućuje odjavu korisnika.|
+|F-005|Sustav omogućuje pregled rasporeda sati.|
+|F-006|Sustav omogućuje pregled dostupnih resursa.|
+|F-007|Sustav omogućuje pregled sadržaja kolegija i aktivnosti.|
+|F-008|Sustav omogućuje komunikaciju s ostalim korisnicima.|
+|F-009|Sustav nastavnicima omogućuje dodavanje nastavnih materijala.|
+|F-010|Sustav ravnatelju i djelatnicima službe omogućuje pregled izvještaja|
+|F-011|Sustav pohranjuje podatke o korisnicima.|
+|F-012|Sustav pohranjuje podatke o nastavnim materijalima, njihovim pregledima i pristupima.|
+|F-013|Sustav poslužuje potrebne podatke vezane za prognozu.|
+|F-014|Sustav omogućuje slanje elektroničke pošte korisnicima.|
+|F-015|Sustav omogućuje prikaz navigacije korisnicima.|
 
 # Tehnologije
 # Članovi tima
-Batinić Lana  
-Bilješko Marija    
-Ivančić Ante  
-Odobašić Borna  
-Rožić Donatela  
-Stolar Maja  
-Vrdoljak Katarina
+Batinić Lana - dokumentacija  
+Bilješko Marija - front-end       
+Ivančić Ante - dokumentacija   
+Odobašić Borna - back-end, baza podataka   
+Rožić Donatela - back-end    
+Stolar Maja - back-end    
+Vrdoljak Katarina - front-end 
 # Kontribucije
 
