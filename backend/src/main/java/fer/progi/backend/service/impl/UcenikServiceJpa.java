@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -72,5 +73,20 @@ public class UcenikServiceJpa implements UcenikService {
 		
 		return aktivnosti;
 	}
+
+	@Override
+	public boolean addActivity(Integer sifra) {
+		return false;
+	}
+	/*
+	public boolean addActivity(Integer sifra) {
+		Optional<Aktivnost> aktivnostMaybe = aktivnostRepo.findById(sifra);
+
+		if (aktivnostMaybe.isPresent()) {
+			Aktivnost aktivnost = aktivnostMaybe.get();
+			Set<Aktivnost> aktivnostSet = uce
+		}
+	}
+	*/
 
 }

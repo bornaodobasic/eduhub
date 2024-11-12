@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 //.anyRequest().permitAll()
                  .requestMatchers("/register/**").permitAll()
+                 .requestMatchers("/login/**").permitAll()
                  .requestMatchers("/h2-console/**").permitAll()
                  .anyRequest().authenticated()
                 .and()

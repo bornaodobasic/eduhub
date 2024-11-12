@@ -18,4 +18,6 @@ public interface UcenikService {
     Ucenik addUcenik(Ucenik ucenik);
     
     Set<Aktivnost> findByIds(Set<Integer> sifreAktivnosti);
+
+    boolean addActivity(Integer sifra);
 }

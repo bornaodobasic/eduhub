@@ -27,12 +27,8 @@ public class AdminController {
 	@Autowired
 	private AdminService AdminService;
 	
-	@GetMapping("")
-	public List<Admin> listAdmin() {
-		return AdminService.listAll();
-	}
-	
-	@PostMapping("")
+	@PostMapping("/add")
+	@Secured("ROLE_administrator")
 	public Admin dodajAdmin(@RequestBody Admin admin) {
 		return AdminService.dodajAdmin(admin);
 	}

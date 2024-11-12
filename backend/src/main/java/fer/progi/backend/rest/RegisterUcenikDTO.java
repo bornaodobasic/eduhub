@@ -11,5 +11,4 @@ public class RegisterUcenikDTO {
     private String spol;
     private String email;
     private String lozinka;
-    private Razred razred;
 }

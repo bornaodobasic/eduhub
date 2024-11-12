@@ -73,7 +73,7 @@ public class RegisterController {
         }
     }
     
-    @PostMapping("/ucenik")
+    @PostMapping("/djelatnik")
     @Secured("ROLE_GUEST")
     public ResponseEntity<?> sendToAdmin(@RequestBody RegisterDjelatnikDTO registerDjelatnikDTO) {
         boolean success = adminService.addDjelatnikToTempDB(registerDjelatnikDTO);

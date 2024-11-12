@@ -7,8 +7,8 @@ import lombok.Data;
 @Entity
 @Data
 public class TempDjelatnik {
-    private String imeDjelatnik;
-    private String prezimeDjelatnik;
+    private String imeDjel;
+    private String prezimeDjel;
 
     @Id
     private String email;

@@ -3,13 +3,7 @@ package fer.progi.backend.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import fer.progi.backend.dao.NastavnikRepository;
-import fer.progi.backend.dao.RavnateljRepository;
-import fer.progi.backend.dao.SatnicarRepository;
-import fer.progi.backend.dao.TempNastavnikRepository;
-import fer.progi.backend.dao.TempRavnateljRepository;
-import fer.progi.backend.dao.TempSatnicarRepository;
-import fer.progi.backend.dao.TempUcenikRepository;
+import fer.progi.backend.dao.*;
 import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Ravnatelj;
 import fer.progi.backend.domain.Satnicar;
@@ -29,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import fer.progi.backend.dao.AdminRepository;
 import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Djelatnik;
 import fer.progi.backend.service.AdminService;
@@ -51,13 +44,13 @@ public class AdminServiceJpa implements AdminService{
 		private NastavnikRepository nastavnikRepo;
 		
 		@Autowired
-		private fer.progi.backend.dao.DjelatnikRepository djelatnikRepo;
+		private DjelatnikRepository djelatnikRepo;
 		
 		@Autowired
-		private fer.progi.backend.dao.UcenikRepository ucenikRepo;
+		private UcenikRepository ucenikRepo;
 		
 		@Autowired
-		private fer.progi.backend.dao.TempDjelatnikRepository tempDjelatnikRepo;
+		private TempDjelatnikRepository tempDjelatnikRepo;
 		
 		@Autowired
 		private TempRavnateljRepository tempRavnateljRepo;
@@ -135,10 +128,12 @@ public class AdminServiceJpa implements AdminService{
 		@Override
 		public boolean addUcenikToTempDB(RegisterUcenikDTO registerUcenikDTO) {
 			TempUcenik tempUcenik = new TempUcenik();
+			tempUcenik.setOib(registerUcenikDTO.getOib());
 			tempUcenik.setImeUcenik(registerUcenikDTO.getImeUcenik());
 			tempUcenik.setPrezimeUcenik(registerUcenikDTO.getPrezimeUcenik());
 			tempUcenik.setEmail(registerUcenikDTO.getEmail());
 			tempUcenik.setLozinka(passwordEncoder.encode(registerUcenikDTO.getLozinka()));
+			tempUcenik.setSpol(registerUcenikDTO.getSpol());
 
 			TempUcenik saved = tempUcenikRepo.save(tempUcenik);
 
@@ -151,6 +146,8 @@ public class AdminServiceJpa implements AdminService{
 		    ucenik.setPrezimeUcenik(tempUcenik.getPrezimeUcenik());
 		    ucenik.setEmail(tempUcenik.getEmail());
 		    ucenik.setLozinka(tempUcenik.getLozinka());
+			ucenik.setOib(tempUcenik.getOib());
+			ucenik.setSpol(tempUcenik.getSpol());
 
 		    ucenikRepo.save(ucenik);
 		    tempUcenikRepo.delete(tempUcenik);
@@ -183,8 +180,8 @@ public class AdminServiceJpa implements AdminService{
 		@Override
 		public boolean addDjelatnikToTempDB(RegisterDjelatnikDTO registerDjelatnikDTO) {
 		    TempDjelatnik tempDjelatnik = new TempDjelatnik();
-		    tempDjelatnik.setImeDjelatnik(registerDjelatnikDTO.getImeDjelatnik());
-		    tempDjelatnik.setPrezimeDjelatnik(registerDjelatnikDTO.getPrezimeDjelatnik());
+		    tempDjelatnik.setImeDjel(registerDjelatnikDTO.getImeDjel());
+		    tempDjelatnik.setPrezimeDjel(registerDjelatnikDTO.getPrezimeDjel());
 		    tempDjelatnik.setEmail(registerDjelatnikDTO.getEmail());
 		    tempDjelatnik.setLozinka(passwordEncoder.encode(registerDjelatnikDTO.getLozinka()));
 
@@ -195,8 +192,8 @@ public class AdminServiceJpa implements AdminService{
 
 		public boolean odobriDjelatnika(TempDjelatnik tempDjelatnik) {
 		    Djelatnik djelatnik = new Djelatnik();
-		    djelatnik.setImeDjel(tempDjelatnik.getImeDjelatnik());
-		    djelatnik.setPrezimeDjel(tempDjelatnik.getPrezimeDjelatnik());
+		    djelatnik.setImeDjel(tempDjelatnik.getImeDjel());
+		    djelatnik.setPrezimeDjel(tempDjelatnik.getPrezimeDjel());
 		    djelatnik.setEmail(tempDjelatnik.getEmail());
 		    djelatnik.setLozinka(tempDjelatnik.getLozinka());
 

@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
@@ -23,6 +24,8 @@ public class Nastavnik {
 	
 	@Column(unique=true)
 	private String email;
+
+	@Size(min = 5)
 	private String lozinka;
 	
 	@ManyToMany(mappedBy = "nastavnici")
