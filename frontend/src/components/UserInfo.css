@@ -1,0 +1,32 @@
+.userInfo {
+    position: absolute;
+    top: 66px; 
+    right: 20px; 
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 13vw;
+    font-size: 14px;
+    text-align: left;
+    z-index: 1000;
+}
+
+.userInfo p {
+    margin: 5px 0;
+    color: #333;
+}
+
+.userInfo button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    background-color: #555;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.userInfo button:hover {
+    background-color: #333;
+}
