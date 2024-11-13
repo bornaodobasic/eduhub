@@ -1,0 +1,18 @@
+Oblik Admina: $ je broj
+	ime : admin$ime
+	prezime : admin$prezime
+	email : admin$@admin.hr
+	lozinka : admin$lozinka
+	
+Oblik Smjera : smjer{Opća gimnazija $. razred, ...}
+	smjer$
+	
+Oblik DjelatnikaSluzbe: $ je broj
+	ime : djelatnik$ime
+	prezime : djelatnik$prezime
+	email : djelatnik$@djelatnik.hr
+	lozinka : djelatnik$lozinka
+	
+	
+	insert into admin (ime_admin, prezime_admin, email, lozinka)
+values ('admin2ime', 'admin2prezime', 'admin2@admin.hr', '$2a$12$vYe8jVWpTWJK/xLSJgfxw.QItFP2JELrybOD/JlLelI1M69uUJbM2')
