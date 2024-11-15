@@ -33,4 +33,11 @@ Rožić Donatela - back-end
 Stolar Maja - back-end    
 Vrdoljak Katarina - front-end 
 # Kontribucije
-
+|Nadimak na github-u|Ime i prezime|Doprinosi|
+|----|----|----|
+|LanaBatinic | Batinić Lana |dokumentacije  |
+|plafonn | Bilješko Marija | front-end      |
+|bornaodobasic, KuhaloZaVodu | Odobašić Borna | back-end, baza podataka   |
+|donarozic |Rožić Donatela | back-end    |
+|ms54881 | Stolar Maja | back-end    |
+|katarina-vrdoljak |Vrdoljak Katarina | front-end| 
