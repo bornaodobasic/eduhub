@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 //.anyRequest().permitAll()
                  .requestMatchers("/register/**").permitAll()
+                 .requestMatchers("/", "/index.html", "/static/**", "/homepage", "/login", "/registration", "/enroll").permitAll()
                  .requestMatchers("/loginUser/**").permitAll()
                  .requestMatchers("/h2-console/**").permitAll()
                  .requestMatchers("/upis/**").permitAll()
