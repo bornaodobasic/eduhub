@@ -1,3 +1,0 @@
-app id : e7a52d65-d8f0-45f0-972e-0f422c915b0f
-secret id : 84bbd32d-31f0-4826-bdd0-e024f81d2a31
-secret value : Tbo8Q~6KiZGKm-X5k9i8HsuQ7q.sOi~3Zk4pPbr_
