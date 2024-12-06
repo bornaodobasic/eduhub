@@ -141,6 +141,7 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests(auth -> auth
+                        .requestMatchers("/ouath2/authorization/**", "/login/**", "/static/**", "/index.html", "/", "/favicon.ico", "/logo192.png", "/manifest.json").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("Admin")
                         .requestMatchers("/nastavnik/**").hasAuthority("Nastavnik")
                         .requestMatchers("/djelatnik/**").hasAuthority("Djelatnik")
@@ -150,6 +151,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/oauth2/authorization/azure-dev")
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService())) // Use custom OAuth2 user service
                         .successHandler(customSuccessHandler()) // Use custom success handler
                 )

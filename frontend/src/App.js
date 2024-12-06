@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Menu from './pages/menu/Menu'; 
@@ -45,5 +46,44 @@ function App() {
     </Router>
   );
 }
+
+export default App;
+*/
+
+import React from 'react';
+
+function App() {
+  const handleLogin = () => {
+    // Redirect to the OAuth2 login endpoint in Spring Boot
+    window.location.href = "http://localhost:8080/oauth2/authorization/azure-dev";
+  };
+
+  return (
+    <div style={styles.container}>
+      <h1>Welcome to Our Application</h1>
+      <p>Click below to log in with Microsoft:</p>
+      <button style={styles.button} onClick={handleLogin}>
+        Login with Microsoft
+      </button>
+    </div>
+  );
+}
+
+const styles = {
+  container: {
+    textAlign: 'center',
+    marginTop: '100px',
+    fontFamily: 'Arial, sans-serif',
+  },
+  button: {
+    padding: '10px 20px',
+    fontSize: '16px',
+    color: '#fff',
+    backgroundColor: '#0078D4',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+  },
+};
 
 export default App;
