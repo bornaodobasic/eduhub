@@ -9,10 +9,14 @@ import fer.progi.backend.domain.TempRavnatelj;
 import fer.progi.backend.domain.TempSatnicar;
 import fer.progi.backend.domain.TempUcenik;
 
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import fer.progi.backend.domain.Admin;
@@ -23,27 +27,26 @@ import fer.progi.backend.service.AdminService;
 
 @RestController
 @RequestMapping("/admin")
+@PreAuthorize("hasAuthority('Admin')")
 public class AdminController {
 	
 	@Autowired
 	private AdminService AdminService;
 	
 	@PostMapping("/add")
-	@Secured("ROLE_administrator")
 	public Admin dodajAdmin(@RequestBody Admin admin) {
 		return AdminService.dodajAdmin(admin);
 	}
 	
 	// Admin------------------------------------------------------------------------------------------------------------------------------
 
+
 	@GetMapping("/zahtjevi/tempAdmin")
-	@Secured("ROLE_administrator")
 	public ResponseEntity<List<TempAdmin>> dohvatiAdmine() {
 	    return ResponseEntity.ok(AdminService.dohvatiSveZahtjeveAdmina());
 	}
 
 	@PostMapping("/zahtjevi/tempAdmin/{email}/odobri")
-	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odobriAdmina(@PathVariable String email) {
 	    Optional<TempAdmin> tempAdmin = AdminService.dohvatiZahtjevAdminaPoId(email);
 
@@ -69,13 +72,11 @@ public class AdminController {
 	//Nastavnik------------------------------------------------------------------------------------------------------------------------------
 	
 	@GetMapping("/zahtjevi/tempNastavnik")
-	@Secured("ROLE_administrator")
 	public ResponseEntity<List<TempNastavnik>> dohvatiNastavnike() {
 		return ResponseEntity.ok(AdminService.dohvatiSveZahtjeveNastavnika());
 	}
 
 	@PostMapping("/zahtjevi/tempNastavnik/{email}/odobri")
-	@Secured("ROLE_administrator")
 	public ResponseEntity<?> odobriNastavnika(@PathVariable String email) {
 		Optional<TempNastavnik> tempNastavnik = AdminService.dohvatiZahtjevNastavnikaPoId(email);
 

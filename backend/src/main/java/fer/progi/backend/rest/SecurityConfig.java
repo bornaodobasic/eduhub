@@ -1,139 +1,209 @@
 package fer.progi.backend.rest;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.jwt.Jwt;
+
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+
+import java.io.IOException;
+import java.util.*;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    private final UcenikUserDetailsService ucenikUserDetailsService;
-
-    public SecurityConfig(UcenikUserDetailsService ucenikUserDetailsService) {
-        this.ucenikUserDetailsService = ucenikUserDetailsService;
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        /*http
-                .csrf().disable()
-                .authorizeRequests()
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/ucenici/**").permitAll()
-                .requestMatchers("/ucionice/**").permitAll()
-                .requestMatchers("/razredi/**").permitAll()
-                .requestMatchers("/aktivnosti/**").permitAll()
-                .requestMatchers("/smjerovi/**").permitAll()
-                .requestMatchers("/predmeti/**").permitAll()
-                .requestMatchers("/nastavnici/**").permitAll()
-                .requestMatchers("/admini/**").permitAll()
-                .requestMatchers("/ravnatelji/**").permitAll()
-                .requestMatchers("/djelatnici/**").permitAll()
-                .requestMatchers("/satnicari/**").permitAll()
-
-
-
-                .anyRequest().authenticated()
-                .and()
-                .headers().frameOptions().sameOrigin();*/
-
-         http
-                .csrf(csrf -> csrf.disable())  // Disable CSRF for all endpoints (consider enabling it for production)
-                .authorizeRequests()
-                //.anyRequest().permitAll()
-                 .requestMatchers("/register/**").permitAll()
-                 .requestMatchers("/", "/index.html", "/static/**", "/homepage", "/login", "/registration", "/enroll").permitAll()
-                 .requestMatchers("/loginUser/**").permitAll()
-                 .requestMatchers("/h2-console/**").permitAll()
-                 .requestMatchers("/upis/**").permitAll()
-                 .anyRequest().authenticated()
-                .and()
-                .formLogin(withDefaults())
-                .httpBasic(withDefaults());
-
-        http.headers().frameOptions().sameOrigin();
     /*
-        return http.build();
-        http.authorizeHttpRequests(authz ->
-                authz.anyRequest().permitAll());
-        //authz.requestMatchers("/smjerovi/**").hasRole("administrator"));
-        http.csrf(csrf -> csrf.disable());*/
+    @Bean
+    public AuthenticationSuccessHandler customSuccessHandler() {
+        return (request, response, authentication) -> {
+            Collection<? extends GrantedAuthority> currentAuthorities = authentication.getAuthorities();
+            List<GrantedAuthority> updatedAuthorities = new ArrayList<>(currentAuthorities);
+            updatedAuthorities.add(new SimpleGrantedAuthority("Admin"));
+
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                    authentication.getPrincipal(),
+                    authentication.getCredentials(),
+                    updatedAuthorities
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+            System.out.println("Updated Authorities in SecurityContext:");
+            SecurityContext context = SecurityContextHolder.getContext();
+            context.getAuthentication().getAuthorities().forEach(System.out::println);
 
 
-        return http.build();
+            // Redirect based on roles
+            if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Admin"))) {
+                response.sendRedirect("/admin/zahtjevi/tempAdmin");
+            } else {
+                response.sendRedirect("/home");
+            }
+        };
     }
-}
-/*
-    @Configuration
-    @EnableWebSecurity
-    @EnableMethodSecurity(securedEnabled = true)
-    public class SecurityConfig {
+*/
+    @Bean
+    public AuthenticationSuccessHandler customSuccessHandler() {
+        return new AuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        @Autowired
-        private UcenikUserDetailsService userDetailsService;
+                Object principal = authentication.getPrincipal();
+                Collection<GrantedAuthority> updatedAuthorities = new HashSet<>();
 
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                    .csrf(csrf -> csrf.disable())
-                    .authorizeRequests()
-                    .requestMatchers("/smjerovi").hasRole("administrator")  // Ensure the admin role matches
-                    .anyRequest().permitAll()
-                    .and()
-                    .formLogin()
-                    .permitAll()
-                    .and()
-                    .httpBasic(); // If you're using basic auth for testing
-        }
+                if (principal instanceof Jwt) {
+                    Jwt jwt = (Jwt) principal;
+                    List<String> roles = jwt.getClaimAsStringList("roles");
 
+                    if (roles != null) {
+                        for (String role : roles) {
+                            updatedAuthorities.add(new SimpleGrantedAuthority(role));
+                        }
+                    }
+
+                    updatedAuthorities.addAll(authentication.getAuthorities());
+
+                } else if (principal instanceof OidcUser) {
+                    OidcUser oidcUser = (OidcUser) principal;
+                    List<String> roles = (List<String>) oidcUser.getAttributes().get("roles");
+
+                    if (roles != null) {
+                        for (String role : roles) {
+                            updatedAuthorities.add(new SimpleGrantedAuthority(role));
+                        }
+                    }
+
+                    updatedAuthorities.addAll(authentication.getAuthorities());
+                }
+
+                Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                        authentication.getPrincipal(),
+                        authentication.getCredentials(),
+                        updatedAuthorities
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+                System.out.println("Updated Authorities in SecurityContext:");
+                SecurityContext context = SecurityContextHolder.getContext();
+                context.getAuthentication().getAuthorities().forEach(System.out::println);
+
+                if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Admin"))) {
+                    response.sendRedirect("/admin/zahtjevi/tempAdmin");
+                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Nastavnik"))) {
+                    response.sendRedirect("/nastavnik");
+                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Djelatnik"))) {
+                    response.sendRedirect("/djelatnik");
+                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Satnicar"))) {
+                    response.sendRedirect("/satnicar");
+                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Ravnatelj"))) {
+                    response.sendRedirect("/ravnatelj");
+                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Ucenik"))) {
+                    response.sendRedirect("/ucenik");
+                } else {
+                    response.sendRedirect("/home");
+                }
+            }
+        };
     }
-    */
 
-/*
-@Configuration
-@EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true)
-public class SecurityConfig {
 
-    @Autowired
-    private UcenikUserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())  // Disable CSRF for all endpoints (consider enabling it for production)
-                .authorizeRequests()
-                // Allow access to the H2 console without authentication
-                .requestMatchers("/h2-console/**").permitAll()
-                // Allow access to /ucenici without authentication
-                .requestMatchers("/ucenici/**").permitAll()
-                // Restrict /smjerovi to users with ROLE_ADMIN
-                .requestMatchers("/smjerovi/**").hasRole("administrator")
-                // For everything else, permit all
-                .anyRequest().permitAll()
-                .and()
-                // Enable form login for authentication
-                .formLogin(withDefaults())  // Updated for Spring Security 6
-                // Enable basic HTTP authentication for testing
-                .httpBasic(withDefaults());  // Updated for Spring Security 6
 
-        // Allow frames for the H2 console
-        http.headers().frameOptions().sameOrigin();
+        http
+                .authorizeRequests(auth -> auth
+                        .requestMatchers("/admin/**").hasAuthority("Admin")
+                        .requestMatchers("/nastavnik/**").hasAuthority("Nastavnik")
+                        .requestMatchers("/djelatnik/**").hasAuthority("Djelatnik")
+                        .requestMatchers("/ravnatelj/**").hasAuthority("Ravnatelj")
+                        .requestMatchers("/satnicar/**").hasAuthority("Satnicar")
+                        .requestMatchers("/ucenik/**").hasAuthority("Ucenik")
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService())) // Use custom OAuth2 user service
+                        .successHandler(customSuccessHandler()) // Use custom success handler
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                );
 
         return http.build();
     }
-}
-*/
 
+    @Bean
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService() {
+        return userRequest -> {
+            OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
+
+            Collection<GrantedAuthority> authorities = new HashSet<>();
+            List<String> roles = (List<String>) oAuth2User.getAttributes().get("roles");
+
+            if (roles != null) {
+                for (String role : roles) {
+                    System.out.println(role);
+                    authorities.add(new SimpleGrantedAuthority(role));
+                }
+            }
+
+            return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), "sub");
+        };
+    }
+
+    @Bean
+    public Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter() {
+        return new Converter<Jwt, AbstractAuthenticationToken>() {
+            @Override
+            public AbstractAuthenticationToken convert(Jwt jwt) {
+                List<String> roles = jwt.getClaimAsStringList("roles");
+
+                Collection<GrantedAuthority> authorities = new HashSet<>();
+                if (roles != null) {
+                    for (String role : roles) {
+                        System.out.println(role);
+                        authorities.add(new SimpleGrantedAuthority(role));
+                    }
+                }
+                return new JwtAuthenticationToken(jwt, authorities);
+            }
+        };
+    }
+
+    @Bean
+    public JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter() {
+        JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
+        converter.setAuthorityPrefix("ROLE_");
+        converter.setAuthoritiesClaimName("roles");
+        return converter;
+    }
+
+}

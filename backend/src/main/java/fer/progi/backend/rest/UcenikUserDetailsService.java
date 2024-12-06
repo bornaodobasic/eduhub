@@ -1,3 +1,4 @@
+/*
 package fer.progi.backend.rest;
 
 import fer.progi.backend.dao.*;
@@ -91,3 +92,4 @@ public class UcenikUserDetailsService implements UserDetailsService {
         //else throw new UsernameNotFoundException("Nema korisnika" + email);
     }
 }
+*/

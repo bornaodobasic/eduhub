@@ -14,6 +14,13 @@
 	<name>backend</name>
 	<description>Spring Boot for EduHub</description>
 	<url/>
+	<repositories>
+		<repository>
+			<id>microsoft-azure-spring</id>
+			<url>https://maven.microsoft.com/</url>
+		</repository>
+	</repositories>
+
 	<licenses>
 		<license/>
 	</licenses>
@@ -75,6 +82,11 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.azure.spring</groupId>
+			<artifactId>spring-cloud-azure-starter-active-directory</artifactId>
+			<version>5.13.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
