@@ -1,7 +1,6 @@
 package fer.progi.backend.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import fer.progi.backend.domain.Nastavnik;
 
@@ -13,6 +12,6 @@ public interface NastavnikService {
 
 	Nastavnik findBySifNastavnik(Integer sifNastavnik);
 
-	Optional<Nastavnik> pronadiNastavnikaPoEmail(String email);
+	//Optional<Nastavnik> pronadiNastavnikaPoEmail(String email);
 
 }

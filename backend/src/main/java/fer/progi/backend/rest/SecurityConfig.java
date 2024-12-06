@@ -1,8 +1,18 @@
 package fer.progi.backend.rest;
 
 import fer.progi.backend.domain.Admin;
+import fer.progi.backend.domain.Djelatnik;
+import fer.progi.backend.domain.Nastavnik;
+import fer.progi.backend.domain.Ravnatelj;
+import fer.progi.backend.domain.Satnicar;
+import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.service.AdminService;
 import fer.progi.backend.service.impl.AdminServiceJpa;
+import fer.progi.backend.service.impl.NastavnikServiceJpa;
+import fer.progi.backend.service.impl.UcenikServiceJpa;
+import fer.progi.backend.service.impl.DjelatnikServiceJpa;
+import fer.progi.backend.service.impl.SatnicarServiceJpa;
+import fer.progi.backend.service.impl.RavnateljServiceJpa;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,6 +54,17 @@ public class SecurityConfig {
 
     @Autowired
     private AdminServiceJpa adminService;
+    @Autowired
+    private NastavnikServiceJpa nastavnikService;
+    @Autowired
+    private DjelatnikServiceJpa djelatnikService;
+    @Autowired
+    private UcenikServiceJpa ucenikService;
+    @Autowired
+    private RavnateljServiceJpa ravnateljService;
+    @Autowired
+    private SatnicarServiceJpa satnicarService;
+    
 
     /*
     @Bean
@@ -100,7 +121,22 @@ public class SecurityConfig {
 
                     if (role.equals("Admin")) {
                         Admin admin = adminService.getOrCreateAdmin(email);
-                    }
+                       
+                    } else if (role.equals("Nastavnik")) {
+                        Nastavnik nastavnik = nastavnikService.getOrCreateNastavnik(email);
+
+                    } else if (role.equals("Djelatnik")) {
+                        Djelatnik djelatnik = djelatnikService.getOrCreateDjelatnik(email);
+                        
+                    } else if (role.equals("Satnicar")) {
+                        Satnicar satnicar = satnicarService.getOrCreateSatnicar(email);
+                        
+                    } else if (role.equals("Ucenik")) {
+                       Ucenik ucenik  = ucenikService.getOrCreateUcenik(email);
+
+                    } else if (role.equals("Ravnatelj")) {
+                        Ravnatelj ravnatelj  = ravnateljService.getOrCreateRavnatelj(email);
+                     }
 
                     updatedAuthorities.addAll(authentication.getAuthorities());
 
@@ -121,6 +157,26 @@ public class SecurityConfig {
                     if (role.equals("Admin")) {
                         Admin admin = adminService.getOrCreateAdmin(email);
                     }
+                    
+                    if (role.equals("Nastavnik")) {
+                        Nastavnik nastavnik = nastavnikService.getOrCreateNastavnik(email);
+                    }
+                    
+                    if (role.equals("Ucenik")) {
+                       Ucenik ucenik  = ucenikService.getOrCreateUcenik(email);
+                    }
+                    
+                    if (role.equals("Ravnatelj")) {
+                        Ravnatelj ravnatelj  = ravnateljService.getOrCreateRavnatelj(email);
+                     }
+                    
+                    if (role.equals("Satnicar")) {
+                        Satnicar satnicar = satnicarService.getOrCreateSatnicar(email);
+                     }
+                    
+                    if (role.equals("Djelatnik")) {
+                        Djelatnik djelatnik  = djelatnikService.getOrCreateDjelatnik(email);
+                     }
 
                     updatedAuthorities.addAll(authentication.getAuthorities());
                 }

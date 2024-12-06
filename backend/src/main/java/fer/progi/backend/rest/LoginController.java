@@ -52,15 +52,17 @@ public class LoginController {
     @Autowired 
     private SatnicarService satnicarService;
     
-    @PostMapping("")
+   /* @PostMapping("")
     public ResponseEntity<?> prebaciKorisnika(@RequestBody LoginDTO loginDTO) {
-        Optional<Nastavnik> nastavnikMaybe = nastavnikService.pronadiNastavnikaPoEmail(loginDTO.getEmail());
-        Optional<Ucenik> ucenikMaybe = ucenikService.pronadiUcenikaPoEmail(loginDTO.getEmail());
-        Optional<Djelatnik> djelatnikMaybe = djelatnikService.pronadiDjelatnikaPoEmail(loginDTO.getEmail());
-        Optional<Ravnatelj> ravnateljMaybe = ravnateljService.pronadiRavnateljaPoEmail(loginDTO.getEmail());
-        Optional<Satnicar> satnicarMaybe = satnicarService.pronadiSatnicaraPoEmail(loginDTO.getEmail());
+       // Optional<Nastavnik> nastavnikMaybe = nastavnikService.pronadiNastavnikaPoEmail(loginDTO.getEmail());
+       // Optional<Ucenik> ucenikMaybe = ucenikService.pronadiUcenikaPoEmail(loginDTO.getEmail());
+        //Optional<Djelatnik> djelatnikMaybe = djelatnikService.pronadiDjelatnikaPoEmail(loginDTO.getEmail());
+        //Optional<Ravnatelj> ravnateljMaybe = ravnateljService.pronadiRavnateljaPoEmail(loginDTO.getEmail());
+        //Optional<Satnicar> satnicarMaybe = satnicarService.pronadiSatnicaraPoEmail(loginDTO.getEmail());
 
-        if (nastavnikMaybe.isPresent()) {
+       
+    	
+    	if (nastavnikMaybe.isPresent()) {
             Nastavnik nastavnik = nastavnikMaybe.get();
 
             if (!passwordEncoder.matches(loginDTO.getLozinka(), nastavnik.getLozinka())) {
@@ -136,7 +138,8 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Korisnik nije pronađen.");
         }
 
-    }
+   }
+    */
     
     /*    
     //Ucenik login-----------------------------------------------------------------------------------

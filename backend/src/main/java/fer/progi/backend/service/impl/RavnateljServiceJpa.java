@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fer.progi.backend.dao.RavnateljRepository;
+import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Ravnatelj;
 import fer.progi.backend.service.RavnateljService;
 
@@ -28,9 +29,21 @@ public class RavnateljServiceJpa implements RavnateljService{
 			return ravnateljRepo.save(ravnatelj);
 		}
 
-		@Override
+		/*@Override
 		public Optional<Ravnatelj> pronadiRavnateljaPoEmail(String email) {
 			return Optional.ofNullable(ravnateljRepo.findByEmail(email));
+		}*/
+		
+
+		public Ravnatelj getOrCreateRavnatelj(String email) {
+				return ravnateljRepo.findByEmail(email)
+						.orElseGet(() -> createNewRavnatelj(email));
+		}
+
+		private Ravnatelj createNewRavnatelj(String email) {
+			Ravnatelj ravnatelj = new Ravnatelj();
+			ravnatelj.setEmail(email);
+			return ravnateljRepo.save(ravnatelj);
 		}
 		
 		

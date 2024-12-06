@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fer.progi.backend.dao.DjelatnikRepository;
+import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Djelatnik;
 import fer.progi.backend.service.DjelatnikService;
 
@@ -27,10 +28,20 @@ public class DjelatnikServiceJpa implements DjelatnikService{
 			return djelatnikRepo.save(djelatnik);
 		}
 
-		@Override
+	/*	@Override
 		public Optional<Djelatnik> pronadiDjelatnikaPoEmail(String email) {
 			return Optional.ofNullable(djelatnikRepo.findByEmail(email));
 		}
-		
+*/
+		public Djelatnik getOrCreateDjelatnik(String email) {
+			return djelatnikRepo.findByEmail(email)
+					.orElseGet(() -> createNewDjelatnik(email));
+		}
+
+		private Djelatnik createNewDjelatnik(String email) {
+			Djelatnik djelatnik = new Djelatnik();
+			djelatnik.setEmail(email);
+			return djelatnikRepo.save(djelatnik);
+		}
 		
 }

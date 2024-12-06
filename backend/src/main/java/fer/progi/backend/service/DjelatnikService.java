@@ -12,6 +12,6 @@ public interface DjelatnikService {
 	
 	Djelatnik dodajDjelatnik (Djelatnik djelatnik);
 
-	Optional<Djelatnik> pronadiDjelatnikaPoEmail(String email);
+	//Optional<Djelatnik> pronadiDjelatnikaPoEmail(String email);
 
 }

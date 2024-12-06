@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fer.progi.backend.dao.SatnicarRepository;
+import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Satnicar;
 import fer.progi.backend.service.SatnicarService;
 
@@ -26,10 +27,23 @@ public class SatnicarServiceJpa implements SatnicarService{
 			return satnicarRepo.save(satnicar);
 		}
 
-		@Override
+		/*@Override
 		public Optional<Satnicar> pronadiSatnicaraPoEmail(String email) {
 			return Optional.ofNullable(satnicarRepo.findByEmail(email));
+		}*/
+		
+
+		public Satnicar getOrCreateSatnicar(String email) {
+				return satnicarRepo.findByEmail(email)
+						.orElseGet(() -> createNewSatnicar(email));
 		}
+
+		private Satnicar createNewSatnicar(String email) {
+			Satnicar satnicar = new Satnicar();
+			satnicar.setEmail(email);
+			return satnicarRepo.save(satnicar);
+		}
+		
 		
 		
 }

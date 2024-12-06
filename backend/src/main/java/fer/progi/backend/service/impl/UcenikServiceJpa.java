@@ -1,7 +1,6 @@
 package fer.progi.backend.service.impl;
 
 import fer.progi.backend.dao.AktivnostRepository;
-import fer.progi.backend.dao.RazredRepository;
 import fer.progi.backend.dao.UcenikRepository;
 import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.domain.Razred;
@@ -16,7 +15,6 @@ import org.springframework.util.Assert;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -89,9 +87,20 @@ public class UcenikServiceJpa implements UcenikService {
 	}
 	*/
 
-	@Override
+	/*@Override
 	public Optional<Ucenik> pronadiUcenikaPoEmail(String email) {
 		return Optional.ofNullable(ucenikRepo.findByEmail(email));
+	}*/
+
+	public Ucenik getOrCreateUcenik(String email) {
+		return ucenikRepo.findByEmail(email)
+		.orElseGet(() -> createNewUcenik(email));
+	}
+
+	private Ucenik createNewUcenik(String email) {
+		Ucenik ucenik = new Ucenik();
+		ucenik.setEmail(email);
+		return ucenikRepo.save(ucenik);
 	}
 
 }

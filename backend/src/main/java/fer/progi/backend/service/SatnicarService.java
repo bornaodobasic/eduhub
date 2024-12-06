@@ -13,7 +13,7 @@ public interface SatnicarService {
 	
 	Satnicar dodajSatnicara (Satnicar satnicar);
 
-	Optional<Satnicar> pronadiSatnicaraPoEmail(String email);
+	//Optional<Satnicar> pronadiSatnicaraPoEmail(String email);
 	
 
 }
