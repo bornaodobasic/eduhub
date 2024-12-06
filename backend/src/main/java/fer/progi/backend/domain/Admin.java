@@ -19,8 +19,8 @@ public class Admin {
 	private String prezimeAdmin;
 	
 	@Column(unique=true)
-	
 	private String email;
+
 	private String lozinka;
 
 }

@@ -31,6 +31,7 @@ public class Ucenik {
 	
 	@Column(unique=true)
 	private String email;
+
 	private String lozinka;
 	
 	@ManyToOne

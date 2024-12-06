@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import fer.progi.backend.domain.Admin;
 
+import java.util.Optional;
+
 public interface AdminRepository extends JpaRepository<Admin,Integer>{
-    Admin findByEmail(String email);
+    Optional<Admin> findByEmail(String email);
 }

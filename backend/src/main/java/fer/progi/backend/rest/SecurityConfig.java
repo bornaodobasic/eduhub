@@ -1,5 +1,8 @@
 package fer.progi.backend.rest;
 
+import fer.progi.backend.domain.Admin;
+import fer.progi.backend.service.AdminService;
+import fer.progi.backend.service.impl.AdminServiceJpa;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,6 +42,9 @@ import java.util.*;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private AdminServiceJpa adminService;
+
     /*
     @Bean
     public AuthenticationSuccessHandler customSuccessHandler() {
@@ -77,15 +83,23 @@ public class SecurityConfig {
 
                 Object principal = authentication.getPrincipal();
                 Collection<GrantedAuthority> updatedAuthorities = new HashSet<>();
+                String role = new String();
+                String email = new String();
 
                 if (principal instanceof Jwt) {
                     Jwt jwt = (Jwt) principal;
                     List<String> roles = jwt.getClaimAsStringList("roles");
+                    role = roles != null && !roles.isEmpty() ? roles.get(0) : null;
 
-                    if (roles != null) {
-                        for (String role : roles) {
-                            updatedAuthorities.add(new SimpleGrantedAuthority(role));
-                        }
+                    email = jwt.getClaimAsString("preferred_username");
+                    System.out.println(email);
+
+                    if (role != null) {
+                        updatedAuthorities.add(new SimpleGrantedAuthority(role));
+                    }
+
+                    if (role.equals("Admin")) {
+                        Admin admin = adminService.getOrCreateAdmin(email);
                     }
 
                     updatedAuthorities.addAll(authentication.getAuthorities());
@@ -94,10 +108,18 @@ public class SecurityConfig {
                     OidcUser oidcUser = (OidcUser) principal;
                     List<String> roles = (List<String>) oidcUser.getAttributes().get("roles");
 
-                    if (roles != null) {
-                        for (String role : roles) {
-                            updatedAuthorities.add(new SimpleGrantedAuthority(role));
-                        }
+                    role = roles != null && !roles.isEmpty() ? roles.get(0) : null;
+
+                    email = (String) oidcUser.getAttributes().get("preferred_username");
+                    System.out.println(email);
+                    System.out.println(role);
+
+                    if (role != null) {
+                        updatedAuthorities.add(new SimpleGrantedAuthority(role));
+                    }
+
+                    if (role.equals("Admin")) {
+                        Admin admin = adminService.getOrCreateAdmin(email);
                     }
 
                     updatedAuthorities.addAll(authentication.getAuthorities());
@@ -109,11 +131,14 @@ public class SecurityConfig {
                         updatedAuthorities
                 );
 
+
+
                 SecurityContextHolder.getContext().setAuthentication(newAuth);
 
                 System.out.println("Updated Authorities in SecurityContext:");
                 SecurityContext context = SecurityContextHolder.getContext();
                 context.getAuthentication().getAuthorities().forEach(System.out::println);
+
 
                 if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Admin"))) {
                     response.sendRedirect("/admin/zahtjevi/tempAdmin");
@@ -141,7 +166,7 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/ouath2/authorization/**", "/login/**", "/static/**", "/index.html", "/", "/favicon.ico", "/logo192.png", "/manifest.json").permitAll()
+                        .requestMatchers("/ouath2/authorization/**", "/login/**", "/static/**", "/index.html", "/", "/favicon.ico", "/logo192.png", "/manifest.json", "/h2-console/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("Admin")
                         .requestMatchers("/nastavnik/**").hasAuthority("Nastavnik")
                         .requestMatchers("/djelatnik/**").hasAuthority("Djelatnik")
@@ -150,6 +175,13 @@ public class SecurityConfig {
                         .requestMatchers("/ucenik/**").hasAuthority("Ucenik")
                         .anyRequest().authenticated()
                 )
+                .csrf()
+                .ignoringRequestMatchers("/h2-console/**")
+                .and()
+                    .headers()
+                    .frameOptions()
+                    .sameOrigin()
+                .and()
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/oauth2/authorization/azure-dev")
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService())) // Use custom OAuth2 user service

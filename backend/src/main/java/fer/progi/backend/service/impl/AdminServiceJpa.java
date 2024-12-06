@@ -78,10 +78,16 @@ public class AdminServiceJpa implements AdminService{
 		public Admin dodajAdmin(Admin admin) {
 			return adminRepo.save(admin);
 		}
-		
-		@Override
-		public Optional<Admin> pronadiAdminaPoEmail(String email) {
-			return Optional.ofNullable(adminRepo.findByEmail(email));
+
+		public Admin getOrCreateAdmin(String email) {
+			return adminRepo.findByEmail(email)
+					.orElseGet(() -> createNewAdmin(email));
+		}
+
+		private Admin createNewAdmin(String email) {
+			Admin admin = new Admin();
+			admin.setEmail(email);
+			return adminRepo.save(admin);
 		}
 		
 		//Admin--------------------------------------------------------------------------------------

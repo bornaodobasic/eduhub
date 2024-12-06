@@ -57,7 +57,6 @@ public class LoginController {
         Optional<Nastavnik> nastavnikMaybe = nastavnikService.pronadiNastavnikaPoEmail(loginDTO.getEmail());
         Optional<Ucenik> ucenikMaybe = ucenikService.pronadiUcenikaPoEmail(loginDTO.getEmail());
         Optional<Djelatnik> djelatnikMaybe = djelatnikService.pronadiDjelatnikaPoEmail(loginDTO.getEmail());
-        Optional<Admin> adminMaybe = adminService.pronadiAdminaPoEmail(loginDTO.getEmail());
         Optional<Ravnatelj> ravnateljMaybe = ravnateljService.pronadiRavnateljaPoEmail(loginDTO.getEmail());
         Optional<Satnicar> satnicarMaybe = satnicarService.pronadiSatnicaraPoEmail(loginDTO.getEmail());
 
@@ -105,21 +104,6 @@ public class LoginController {
 
             return ResponseEntity.ok("Prijavljen kao djelatnik");
         
-        }else if (adminMaybe.isPresent()) {
-            Admin admin = adminMaybe.get();
-
-            if (!passwordEncoder.matches(loginDTO.getLozinka(), admin.getLozinka())) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neispravna lozinka");
-            }
-
-            UserDetails userDetails = new User(
-              admin.getEmail(),
-              admin.getLozinka(),
-                    AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_admin")
-            );
-
-            return ResponseEntity.ok("Prijavljen kao admin");
-
         }else if (ravnateljMaybe.isPresent()) {
             Ravnatelj ravnatelj = ravnateljMaybe.get();
 

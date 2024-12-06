@@ -91,6 +91,4 @@ public interface AdminService {
 
 	Optional<TempSatnicar> dohvatiZahtjevSatnicaraPoId(String email);
 
-	Optional<Admin> pronadiAdminaPoEmail(String email);
-
 }
