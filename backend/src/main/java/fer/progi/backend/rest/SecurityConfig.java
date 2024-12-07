@@ -250,6 +250,7 @@ public class SecurityConfig {
                         .requestMatchers("/ravnatelj/**").hasAuthority("Ravnatelj")
                         .requestMatchers("/satnicar/**").hasAuthority("Satnicar")
                         .requestMatchers("/ucenik/**").hasAuthority("Ucenik")
+                        .requestMatchers("/upis.html").hasAuthority("Ucenik")
                         .anyRequest().authenticated()
                 )
                 .csrf()

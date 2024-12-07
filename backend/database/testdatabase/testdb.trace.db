@@ -181,3 +181,9 @@ org.h2.jdbc.JdbcSQLSyntaxErrorException: Index "PRIMARY_KEY_" not found; SQL sta
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+2024-12-07 23:59:59.262008+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "Delete[*]* FROM UCENIK"; expected "identifier"; SQL statement:
+Delete* FROM UCENIK [42001-224]
+2024-12-08 00:00:02.933386+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "Delete [*]* FROM UCENIK"; expected "identifier"; SQL statement:
+Delete * FROM UCENIK [42001-224]

@@ -91,9 +91,9 @@ public class UcenikServiceJpa implements UcenikService {
 	
 
 
-//	public Optional<Ucenik> getUcenik(String email) {
-//		return ucenikRepo.findByEmail(email);
-//	}
+	public Optional<Ucenik> findByEmail(String email) {
+		return ucenikRepo.findByEmail(email);
+	}
 
 	private Ucenik createNewUcenik(String email) {
 		Ucenik ucenik = new Ucenik();
@@ -103,9 +103,12 @@ public class UcenikServiceJpa implements UcenikService {
 	
 	public boolean createNewUcenikFirst(String email, String imeUcenik, String prezimeUcenik, String spol) {
 	    Optional<Ucenik> optionalUcenik = ucenikRepo.findByEmail(email);
+	    System.out.println("provjera 1 " + email);
+	    System.out.println(optionalUcenik);
 	    if (optionalUcenik.isPresent()) {
 	        Ucenik ucenik = optionalUcenik.get();
 	        ucenik.setImeUcenik(imeUcenik);
+	        System.out.println(ucenik.getImeUcenik());
 	        ucenik.setPrezimeUcenik(prezimeUcenik);
 	        ucenik.setSpol(spol);
 	        ucenikRepo.save(ucenik);

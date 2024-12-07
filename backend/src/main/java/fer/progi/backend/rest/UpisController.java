@@ -1,10 +1,14 @@
 package fer.progi.backend.rest;
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,11 +20,66 @@ import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.service.impl.UcenikServiceJpa;
 
 @RestController
-@RequestMapping("/upis.html")
+@RequestMapping("/upis")
 public class UpisController {
 	
     @Autowired
     private UcenikServiceJpa ucenikServiceJpa;
+    
+    @GetMapping
+    public ResponseEntity<Ucenik> getUpisPage() {
+    	OAuth2User principal = (OAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	String email = null;
+
+        // Ako je korisnik uspešno autentifikovan
+        if (principal != null) {
+            // Dobijamo email iz principal-a
+            email = principal.getAttribute("email");
+            
+        }
+        
+        System.out.println("provjera 2 " + email);
+
+        Optional<Ucenik> ucenik = ucenikServiceJpa.findByEmail(email);
+
+        if (ucenik.isPresent()) {
+            return ResponseEntity.ok(ucenik.get());
+        } else {
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+    }
+
+    // Handles POST requests to update the Ucenik data
+    @PostMapping("")
+    public ResponseEntity<String> postUpisPage(@ModelAttribute Ucenik ucenik) {
+//        // Get the logged-in user's email
+//        String loggedInEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+//        System.out.println("provjera 2 " + loggedInEmail);
+
+    	OAuth2User principal = (OAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	String email = null;
+
+        // Ako je korisnik uspešno autentifikovan
+        if (principal != null) {
+            // Dobijamo email iz principal-a
+            email = principal.getAttribute("email");
+            
+        }
+       
+        boolean isUpdated = ucenikServiceJpa.createNewUcenikFirst(
+                email,
+                ucenik.getImeUcenik(),
+                ucenik.getPrezimeUcenik(),
+                ucenik.getSpol()
+        );
+
+        if (isUpdated) {
+            return ResponseEntity.ok("Update successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Update failed");
+        }
+    }
 //    
 //    @GetMapping("")
 //    public String getUpisPage() {

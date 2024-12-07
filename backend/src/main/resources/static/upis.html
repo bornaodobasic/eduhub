@@ -4,6 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upis Studenta</title>
+        <script>
+        async function fetchData() {
+            const response = await fetch('/upis', { method: 'GET' });
+            const ucenik = await response.json();
+            
+            document.getElementById('imeUcenik').value = ucenik.imeUcenik || '';
+            document.getElementById('prezimeUcenik').value = ucenik.prezimeUcenik || '';
+            document.getElementById('spol').value = ucenik.spol || '';
+        }
+
+        async function submitData(event) {
+            event.preventDefault();
+
+            const ucenik = {
+                imeUcenik: document.getElementById('imeUcenik').value,
+                prezimeUcenik: document.getElementById('prezimeUcenik').value,
+                spol: document.getElementById('spol').value
+            };
+
+            const response = await fetch('/upis', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(ucenik)
+            });
+
+            if (response.ok) {
+                alert('Update successful');
+            } else {
+                alert('Update failed');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchData);
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,12 +93,12 @@
         <h1>Upis Studenta</h1>
         <form action="/upis" method="POST">
             <div class="form-group">
-                <label for="ime">Ime:</label>
-                <input type="text" id="ime" name="ime" required>
+                <label for="imeUcenik">Ime:</label>
+                <input type="text" id="ime" name="imeUcenik" required>
             </div>
             <div class="form-group">
-                <label for="prezime">Prezime:</label>
-                <input type="text" id="prezime" name="prezime" required>
+                <label for="prezimeUcenik">Prezime:</label>
+                <input type="text" id="prezime" name="prezimeUcenik" required>
             </div>
             <div class="form-group">
                 <label for="spol">Spol:</label>
