@@ -6,7 +6,6 @@ import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Ravnatelj;
 import fer.progi.backend.domain.Satnicar;
 import fer.progi.backend.domain.Ucenik;
-import fer.progi.backend.service.AdminService;
 import fer.progi.backend.service.impl.AdminServiceJpa;
 import fer.progi.backend.service.impl.NastavnikServiceJpa;
 import fer.progi.backend.service.impl.UcenikServiceJpa;
@@ -30,7 +29,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -43,11 +41,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
-
-
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import java.io.IOException;
 import java.util.*;
 
@@ -101,6 +95,21 @@ public class SecurityConfig {
     }
 */
 
+    @Bean
+    public LogoutHandler customLogoutHandler() {
+        return new CustomLogoutHandler();
+    }
+
+    @Bean
+    public LogoutSuccessHandler customLogoutSuccessHandler() {
+        return (request, response, authentication) -> {
+            System.out.println("Logout uspješan");
+            String log = "https://login.microsoftonline.com/a983c51c-e23d-4e05-b97e-fd9ccf9476c8/oauth2/v2.0/logout";
+            response.sendRedirect(log);
+        };
+    }
+
+
 
     @Bean
     public AuthenticationSuccessHandler customSuccessHandler() {
@@ -138,7 +147,13 @@ public class SecurityConfig {
                         Satnicar satnicar = satnicarService.getOrCreateSatnicar(email);
 
                     } else if (role.equals("Ucenik")) {
-                       Ucenik ucenik  = ucenikService.getOrCreateUcenik(email);
+                        boolean exists = ucenikService.existsByEmail(email);
+                        if(exists) {
+                            Ucenik ucenik  = ucenikService.getUcenik(email);
+                        } else {
+
+                        }
+
 
                     } else if (role.equals("Ravnatelj")) {
                         Ravnatelj ravnatelj  = ravnateljService.getOrCreateRavnatelj(email);
@@ -169,7 +184,7 @@ public class SecurityConfig {
                     }
 
                     if (role.equals("Ucenik")) {
-                       Ucenik ucenik  = ucenikService.getOrCreateUcenik(email);
+                       //Ucenik ucenik  = ucenikService.getOrCreateUcenik(email);
                     }
 
                     if (role.equals("Ravnatelj")) {
@@ -242,13 +257,23 @@ public class SecurityConfig {
                     .frameOptions()
                     .sameOrigin()
                 .and()
+                .csrf().disable()
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/oauth2/authorization/azure-dev")
-                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService())) // Use custom OAuth2 user service
-                        .successHandler(customSuccessHandler()) // Use custom success handler
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService()))
+                        .successHandler(customSuccessHandler())
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .clearAuthentication(true)
+                        .addLogoutHandler(customLogoutHandler())
+                        .logoutSuccessHandler(customLogoutSuccessHandler())
                 );
 
         return http.build();

@@ -48,12 +48,7 @@ public interface AdminService {
 	boolean addUcenikToTempDB(RegisterUcenikDTO registerUcenikDTO);
 
 	List<TempUcenik> dohvatiSveZahtjeveUcenika();
-	
-	boolean odobriUcenika(TempUcenik tempUcenik);
 
-	boolean odbaciUcenika(String email);
-	
-	Optional<TempUcenik> dohvatiZahtjevUcenikaPoId(String email);
 	
 	//Djelatnik------------------------------------------------------------------------------------------
 	

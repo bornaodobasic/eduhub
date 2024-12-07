@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -38,27 +39,6 @@ public class UcenikServiceJpa implements UcenikService {
     public List<Ucenik> listAll() {
         return ucenikRepo.findAll();
     }
-
-	public Ucenik addUcenik(Ucenik ucenik) {
-
-		String oib = ucenik.getOib();
-		Assert.hasText(oib, "OIB mora biti dan");
-		Assert.isTrue(oib.matches(OIB_FORMAT),
-				"OIB mora imati 11 znakova"
-		);
-		if (ucenikRepo.countByOib(ucenik.getOib()) > 0)
-			throw new RequestDeniedException(
-					"Ucenik koji ima OIB " + ucenik.getOib() + " vec postoji!"
-			);
-		//Razred razred = razredRepo.findById(ucenik.getRazred().getNazRazred()).orElseThrow(() -> new RuntimeException("Razred nije pronađen"));
-		Razred razred = razredService.findByNazRazred(ucenik.getRazred().getNazRazred());
-		Set<Aktivnost> aktivnosti = findByIds(ucenik.getSifreAktivnost());
-
-		ucenik.setRazred(razred);
-		ucenik.setAktivnosti(aktivnosti);
-
-		return ucenikRepo.save(ucenik);
-	}
 	
 	public Set<Aktivnost> findByIds(Set<Integer> sifreAktivnosti) {
 		Set<Aktivnost> aktivnosti = new HashSet<>();
@@ -92,9 +72,12 @@ public class UcenikServiceJpa implements UcenikService {
 		return Optional.ofNullable(ucenikRepo.findByEmail(email));
 	}*/
 
-	public Ucenik getOrCreateUcenik(String email) {
-		return ucenikRepo.findByEmail(email)
-		.orElseGet(() -> createNewUcenik(email));
+	public boolean existsByEmail(String email) {
+		return ucenikRepo.findByEmail(email).isPresent();
+	}
+
+	public Optional<Ucenik> getUcenik(String email) {
+		return ucenikRepo.findByEmail(email);
 	}
 
 	private Ucenik createNewUcenik(String email) {

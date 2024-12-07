@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import fer.progi.backend.service.AdminService;
+import fer.progi.backend.service.UcenikService;
 
 @RestController
 @RequestMapping("/upis")
 public class UpisController {
 	
 	@Autowired
-    private AdminService adminService;
+    private UcenikServiceJpa ucenikService;
 	
 	@PostMapping("")
-    public ResponseEntity<?> sendToAdmin(@RequestBody RegisterUcenikDTO registerUcenikDTO) {
+    public ResponseEntity<?> createNewUcenik(@RequestBody RegisterUcenikDTO registerUcenikDTO) {
     	
-    	boolean success = adminService.addUcenikToTempDB(registerUcenikDTO);
+    	boolean success = ucenikService.createNewUcenik(registerUcenikDTO);
  
         if (success) {
             return ResponseEntity.ok("Zahtjev uspješno poslan adminu");

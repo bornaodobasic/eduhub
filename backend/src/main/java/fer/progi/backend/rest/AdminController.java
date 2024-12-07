@@ -106,30 +106,6 @@ public class AdminController {
 		return ResponseEntity.ok(AdminService.dohvatiSveZahtjeveUcenika());
 	}
 
-	@PostMapping("/zahtjevi/tempUcenik/{email}/odobri")
-	@Secured("ROLE_administrator")
-	public ResponseEntity<?> odobriUcenika(@PathVariable String email) {
-		Optional<TempUcenik> tempUcenik = AdminService.dohvatiZahtjevUcenikaPoId(email);
-
-		if (tempUcenik.isPresent()) {
-			AdminService.odobriUcenika(tempUcenik.get());
-			return ResponseEntity.ok("Uspješno pretvoren u Ucenika");
-		}
-
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zahtjev nije pronađen");
-	}
-
-	@DeleteMapping("/zahtjevi/tempUcenik/{email}")
-	@Secured("ROLE_administrator")
-	public ResponseEntity<?> odbaciUcenika(@PathVariable String email) {
-		boolean deleted = AdminService.odbaciUcenika(email);
-		if (deleted) {
-			return ResponseEntity.ok("Zahtjev uspješno odbačen.");
-		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Zahtjev nije pronađen");
-	}
-
-
 	//Djelatnik---------------------------------------------------------------------------------------------------------------------------------------
 	
 	@GetMapping("/zahtjevi/tempDjelatnik")

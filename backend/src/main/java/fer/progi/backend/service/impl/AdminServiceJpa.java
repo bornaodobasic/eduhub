@@ -203,34 +203,10 @@ public class AdminServiceJpa implements AdminService{
 			return saved != null;
 		}
 
-		public boolean odobriUcenika(TempUcenik tempUcenik) {
-		    Ucenik ucenik = new Ucenik();
-		    ucenik.setImeUcenik(tempUcenik.getImeUcenik());
-		    ucenik.setPrezimeUcenik(tempUcenik.getPrezimeUcenik());
-		    ucenik.setEmail(tempUcenik.getEmail());
-		    ucenik.setLozinka(tempUcenik.getLozinka());
-			ucenik.setOib(tempUcenik.getOib());
-			ucenik.setSpol(tempUcenik.getSpol());
-
-		    ucenikRepo.save(ucenik);
-		    tempUcenikRepo.delete(tempUcenik);
-
-		    return true;
-		}
 
 
-		public boolean odbaciUcenika(String email) {
-		    Optional<TempUcenik> tempUcenik = tempUcenikRepo.findById(email);
-		    if (tempUcenik.isPresent()) {
-		        tempUcenikRepo.delete(tempUcenik.get());
-		        return true;
-		    }
-		    return false;
-		}
 
-		public Optional<TempUcenik> dohvatiZahtjevUcenikaPoId(String email) {
-		    return tempUcenikRepo.findById(email);
-		}
+
 
 		
 		

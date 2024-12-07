@@ -8,18 +8,9 @@ import java.util.Set;
 
 public interface UcenikService {
     List<Ucenik> listAll();
-
-    //Ucenik dodajUcenika(Ucenik ucenik);
-    
-    //void dodajAktivnostUceniku(String oib, Integer sifAktivnost);
-    
-    //void dodajAktivnostUcenikuV2(Ucenik ucenik);
-
-    Ucenik addUcenik(Ucenik ucenik);
     
     Set<Aktivnost> findByIds(Set<Integer> sifreAktivnosti);
 
     boolean addActivity(Integer sifra);
 
-	//Optional<Ucenik> pronadiUcenikaPoEmail(String email);
 }
