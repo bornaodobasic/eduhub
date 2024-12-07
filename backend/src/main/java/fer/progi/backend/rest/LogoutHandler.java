@@ -25,7 +25,6 @@ public class LogoutHandler extends SecurityContextLogoutHandler {
                        Authentication authentication) {
         super.logout(request, response, authentication);
 
-
         String logoutEndpoint = (String) clientRegistrationRepository
                 .findByRegistrationId("azure-dev")
                 .getProviderDetails()
@@ -42,8 +41,5 @@ public class LogoutHandler extends SecurityContextLogoutHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
-
 }

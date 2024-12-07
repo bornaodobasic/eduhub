@@ -30,6 +30,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -37,11 +38,14 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
-
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 
 import java.io.IOException;
@@ -96,6 +100,8 @@ public class SecurityConfig {
         };
     }
 */
+
+
     @Bean
     public AuthenticationSuccessHandler customSuccessHandler() {
         return new AuthenticationSuccessHandler() {
@@ -121,16 +127,16 @@ public class SecurityConfig {
 
                     if (role.equals("Admin")) {
                         Admin admin = adminService.getOrCreateAdmin(email);
-                       
+
                     } else if (role.equals("Nastavnik")) {
                         Nastavnik nastavnik = nastavnikService.getOrCreateNastavnik(email);
 
                     } else if (role.equals("Djelatnik")) {
                         Djelatnik djelatnik = djelatnikService.getOrCreateDjelatnik(email);
-                        
+
                     } else if (role.equals("Satnicar")) {
                         Satnicar satnicar = satnicarService.getOrCreateSatnicar(email);
-                        
+
                     } else if (role.equals("Ucenik")) {
                        Ucenik ucenik  = ucenikService.getOrCreateUcenik(email);
 
@@ -157,23 +163,23 @@ public class SecurityConfig {
                     if (role.equals("Admin")) {
                         Admin admin = adminService.getOrCreateAdmin(email);
                     }
-                    
+
                     if (role.equals("Nastavnik")) {
                         Nastavnik nastavnik = nastavnikService.getOrCreateNastavnik(email);
                     }
-                    
+
                     if (role.equals("Ucenik")) {
                        Ucenik ucenik  = ucenikService.getOrCreateUcenik(email);
                     }
-                    
+
                     if (role.equals("Ravnatelj")) {
                         Ravnatelj ravnatelj  = ravnateljService.getOrCreateRavnatelj(email);
                      }
-                    
+
                     if (role.equals("Satnicar")) {
                         Satnicar satnicar = satnicarService.getOrCreateSatnicar(email);
                      }
-                    
+
                     if (role.equals("Djelatnik")) {
                         Djelatnik djelatnik  = djelatnikService.getOrCreateDjelatnik(email);
                      }
@@ -214,8 +220,6 @@ public class SecurityConfig {
             }
         };
     }
-
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

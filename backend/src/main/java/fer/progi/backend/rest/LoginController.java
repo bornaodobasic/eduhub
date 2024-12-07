@@ -1,3 +1,4 @@
+
 package fer.progi.backend.rest;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,7 +31,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/loginUser")
 public class LoginController {
-
+/*
     @Autowired
     private PasswordEncoder passwordEncoder;
     
@@ -52,7 +53,7 @@ public class LoginController {
     @Autowired 
     private SatnicarService satnicarService;
     
-   /* @PostMapping("")
+    @PostMapping("")
     public ResponseEntity<?> prebaciKorisnika(@RequestBody LoginDTO loginDTO) {
        // Optional<Nastavnik> nastavnikMaybe = nastavnikService.pronadiNastavnikaPoEmail(loginDTO.getEmail());
        // Optional<Ucenik> ucenikMaybe = ucenikService.pronadiUcenikaPoEmail(loginDTO.getEmail());
