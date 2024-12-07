@@ -18,6 +18,6 @@ public class Aktivnost {
 	private int sifAktivnost;
 	private String oznAktivnost;
 	
-    @ManyToMany(mappedBy = "aktivnosti")
-    private Set<Ucenik> ucenici;
+//    @ManyToMany(mappedBy = "aktivnosti")
+//    private Set<Ucenik> ucenici;
 }

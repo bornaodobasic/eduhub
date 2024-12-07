@@ -189,11 +189,8 @@ public class AdminServiceJpa implements AdminService{
 		@Override
 		public boolean addUcenikToTempDB(RegisterUcenikDTO registerUcenikDTO) {
 			TempUcenik tempUcenik = new TempUcenik();
-			tempUcenik.setOib(registerUcenikDTO.getOib());
 			tempUcenik.setImeUcenik(registerUcenikDTO.getImeUcenik());
 			tempUcenik.setPrezimeUcenik(registerUcenikDTO.getPrezimeUcenik());
-			tempUcenik.setEmail(registerUcenikDTO.getEmail());
-			tempUcenik.setLozinka(passwordEncoder.encode(registerUcenikDTO.getLozinka()));
 			tempUcenik.setSpol(registerUcenikDTO.getSpol());
 			tempUcenik.setDatumRodenja(registerUcenikDTO.getDatumRodenja());
 			tempUcenik.setRazred(registerUcenikDTO.getRazred());

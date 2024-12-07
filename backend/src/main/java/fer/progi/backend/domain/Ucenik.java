@@ -27,23 +27,23 @@ public class Ucenik {
 	private String imeUcenik;
 	private String prezimeUcenik;
 
-	@Size(min=1, max=1)
+//	@Size(min=1, max=1)
 	private String spol;	
 	
 	@Column(unique=true)
 	private String email;
 
-	@ManyToOne
-	private Razred razred;
+//	@ManyToOne
+//	private Razred razred;
 	
-	@ManyToMany
-	@JoinTable(
-			name = "ucenik_aktivnost",
-			joinColumns = @JoinColumn(name = "email"),
-			inverseJoinColumns = @JoinColumn(name = "sifAktivnost"))
-	private Set<Aktivnost> aktivnosti = new HashSet<>();
-	
-	@Transient
-	private Set<Integer> sifreAktivnost;
+//	@ManyToMany
+//	@JoinTable(
+//			name = "ucenik_aktivnost",
+//			joinColumns = @JoinColumn(name = "email"),
+//			inverseJoinColumns = @JoinColumn(name = "sifAktivnost"))
+//	private Set<Aktivnost> aktivnosti = new HashSet<>();
+//	
+//	@Transient
+//	private Set<Integer> sifreAktivnost;
 	
 }

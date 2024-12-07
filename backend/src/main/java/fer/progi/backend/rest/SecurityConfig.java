@@ -105,7 +105,10 @@ public class SecurityConfig {
         return (request, response, authentication) -> {
             System.out.println("Logout uspješan");
             String log = "https://login.microsoftonline.com/a983c51c-e23d-4e05-b97e-fd9ccf9476c8/oauth2/v2.0/logout";
-            response.sendRedirect(log);
+            // PROMIJENITI U DEPLOYU
+            String post1 = "?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F";
+
+            response.sendRedirect(log + post1);
         };
     }
 
@@ -147,12 +150,11 @@ public class SecurityConfig {
                         Satnicar satnicar = satnicarService.getOrCreateSatnicar(email);
 
                     } else if (role.equals("Ucenik")) {
-                        boolean exists = ucenikService.existsByEmail(email);
-                        if(exists) {
-                            Ucenik ucenik  = ucenikService.getUcenik(email);
-                        } else {
-
-                        }
+                        Ucenik ucenik = ucenikService.getOrCreateUcenik(email);
+//                        if(ucenikService.isFirstClass(email)) {
+//                        	response.sendRedirect("/upis");
+//                        	return;
+//                        }
 
 
                     } else if (role.equals("Ravnatelj")) {
@@ -184,7 +186,7 @@ public class SecurityConfig {
                     }
 
                     if (role.equals("Ucenik")) {
-                       //Ucenik ucenik  = ucenikService.getOrCreateUcenik(email);
+                       Ucenik ucenik  = ucenikService.getOrCreateUcenik(email);
                     }
 
                     if (role.equals("Ravnatelj")) {

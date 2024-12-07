@@ -18,6 +18,6 @@ public class Razred implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Smjer smjer;
 	
-    @OneToMany(mappedBy = "razred", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Ucenik> ucenici;
+//    @OneToMany(mappedBy = "razred", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private Set<Ucenik> ucenici;
 }

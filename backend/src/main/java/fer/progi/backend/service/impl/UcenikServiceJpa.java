@@ -3,8 +3,10 @@ package fer.progi.backend.service.impl;
 import fer.progi.backend.dao.AktivnostRepository;
 import fer.progi.backend.dao.UcenikRepository;
 import fer.progi.backend.domain.Aktivnost;
+import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Razred;
 import fer.progi.backend.domain.Ucenik;
+import fer.progi.backend.rest.RegisterUcenikDTO;
 import fer.progi.backend.service.AktivnostService;
 import fer.progi.backend.service.RazredService;
 import fer.progi.backend.service.RequestDeniedException;
@@ -72,18 +74,45 @@ public class UcenikServiceJpa implements UcenikService {
 		return Optional.ofNullable(ucenikRepo.findByEmail(email));
 	}*/
 
-	public boolean existsByEmail(String email) {
-		return ucenikRepo.findByEmail(email).isPresent();
-	}
+//	public boolean existsByEmail(String email) {
+//		return ucenikRepo.findByEmail(email).isPresent();
+//	}
+	
+	public Ucenik getOrCreateUcenik(String email) {
+		return ucenikRepo.findByEmail(email)
+				.orElseGet(() -> createNewUcenik(email));
+}
+	
+	 public boolean isFirstClass(String email) {
+		 return ucenikRepo.findByEmail(email)
+		            .map(ucenik -> ucenik.getImeUcenik() == null)
+		            .orElse(true);
+	 }
+	
 
-	public Optional<Ucenik> getUcenik(String email) {
-		return ucenikRepo.findByEmail(email);
-	}
+
+//	public Optional<Ucenik> getUcenik(String email) {
+//		return ucenikRepo.findByEmail(email);
+//	}
 
 	private Ucenik createNewUcenik(String email) {
 		Ucenik ucenik = new Ucenik();
 		ucenik.setEmail(email);
 		return ucenikRepo.save(ucenik);
 	}
+	
+	public boolean createNewUcenikFirst(String email, String imeUcenik, String prezimeUcenik, String spol) {
+	    Optional<Ucenik> optionalUcenik = ucenikRepo.findByEmail(email);
+	    if (optionalUcenik.isPresent()) {
+	        Ucenik ucenik = optionalUcenik.get();
+	        ucenik.setImeUcenik(imeUcenik);
+	        ucenik.setPrezimeUcenik(prezimeUcenik);
+	        ucenik.setSpol(spol);
+	        ucenikRepo.save(ucenik);
+	        return true;
+	    }
+	    return false;
+	}
+
 
 }
