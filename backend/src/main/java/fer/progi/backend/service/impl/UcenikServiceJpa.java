@@ -3,18 +3,12 @@ package fer.progi.backend.service.impl;
 import fer.progi.backend.dao.AktivnostRepository;
 import fer.progi.backend.dao.UcenikRepository;
 import fer.progi.backend.domain.Aktivnost;
-import fer.progi.backend.domain.Nastavnik;
-import fer.progi.backend.domain.Razred;
 import fer.progi.backend.domain.Ucenik;
-import fer.progi.backend.rest.RegisterUcenikDTO;
 import fer.progi.backend.service.AktivnostService;
 import fer.progi.backend.service.RazredService;
-import fer.progi.backend.service.RequestDeniedException;
 import fer.progi.backend.service.UcenikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -22,8 +16,6 @@ import java.util.Set;
 
 @Service
 public class UcenikServiceJpa implements UcenikService {
-
-	private static final String OIB_FORMAT = "[0-9]{11}";
 
     @Autowired
     private UcenikRepository ucenikRepo;
@@ -69,52 +61,25 @@ public class UcenikServiceJpa implements UcenikService {
 	}
 	*/
 
-	/*@Override
-	public Optional<Ucenik> pronadiUcenikaPoEmail(String email) {
-		return Optional.ofNullable(ucenikRepo.findByEmail(email));
-	}*/
-
-//	public boolean existsByEmail(String email) {
-//		return ucenikRepo.findByEmail(email).isPresent();
-//	}
-	
-	public Ucenik getOrCreateUcenik(String email) {
-		return ucenikRepo.findByEmail(email)
-				.orElseGet(() -> createNewUcenik(email));
-}
-	
-	 public boolean isFirstClass(String email) {
-		 return ucenikRepo.findByEmail(email)
-		            .map(ucenik -> ucenik.getImeUcenik() == null)
-		            .orElse(true);
-	 }
-	
-
+	public boolean existsByEmail(String email) {
+		return ucenikRepo.findByEmail(email).isPresent();
+	}
 
 	public Optional<Ucenik> findByEmail(String email) {
 		return ucenikRepo.findByEmail(email);
 	}
 
-	private Ucenik createNewUcenik(String email) {
-		Ucenik ucenik = new Ucenik();
-		ucenik.setEmail(email);
-		return ucenikRepo.save(ucenik);
-	}
 	
-	public boolean createNewUcenikFirst(String email, String imeUcenik, String prezimeUcenik, String spol) {
-	    Optional<Ucenik> optionalUcenik = ucenikRepo.findByEmail(email);
-	    System.out.println("provjera 1 " + email);
-	    System.out.println(optionalUcenik);
-	    if (optionalUcenik.isPresent()) {
-	        Ucenik ucenik = optionalUcenik.get();
+	public boolean createNewUcenik(String email, String imeUcenik, String prezimeUcenik, String spol) {
+
+	        Ucenik ucenik = new Ucenik();
 	        ucenik.setImeUcenik(imeUcenik);
-	        System.out.println(ucenik.getImeUcenik());
 	        ucenik.setPrezimeUcenik(prezimeUcenik);
 	        ucenik.setSpol(spol);
+			ucenik.setEmail(email);
 	        ucenikRepo.save(ucenik);
+
 	        return true;
-	    }
-	    return false;
 	}
 
 

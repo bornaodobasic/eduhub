@@ -62,38 +62,7 @@ public class SecurityConfig {
     private RavnateljServiceJpa ravnateljService;
     @Autowired
     private SatnicarServiceJpa satnicarService;
-    
 
-    /*
-    @Bean
-    public AuthenticationSuccessHandler customSuccessHandler() {
-        return (request, response, authentication) -> {
-            Collection<? extends GrantedAuthority> currentAuthorities = authentication.getAuthorities();
-            List<GrantedAuthority> updatedAuthorities = new ArrayList<>(currentAuthorities);
-            updatedAuthorities.add(new SimpleGrantedAuthority("Admin"));
-
-            Authentication newAuth = new UsernamePasswordAuthenticationToken(
-                    authentication.getPrincipal(),
-                    authentication.getCredentials(),
-                    updatedAuthorities
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-            System.out.println("Updated Authorities in SecurityContext:");
-            SecurityContext context = SecurityContextHolder.getContext();
-            context.getAuthentication().getAuthorities().forEach(System.out::println);
-
-
-            // Redirect based on roles
-            if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Admin"))) {
-                response.sendRedirect("/admin/zahtjevi/tempAdmin");
-            } else {
-                response.sendRedirect("/home");
-            }
-        };
-    }
-*/
 
     @Bean
     public LogoutHandler customLogoutHandler() {
@@ -124,6 +93,7 @@ public class SecurityConfig {
                 Collection<GrantedAuthority> updatedAuthorities = new HashSet<>();
                 String role = new String();
                 String email = new String();
+                boolean exists = false;
 
                 if (principal instanceof Jwt) {
                     Jwt jwt = (Jwt) principal;
@@ -150,12 +120,10 @@ public class SecurityConfig {
                         Satnicar satnicar = satnicarService.getOrCreateSatnicar(email);
 
                     } else if (role.equals("Ucenik")) {
-                        Ucenik ucenik = ucenikService.getOrCreateUcenik(email);
-//                        if(ucenikService.isFirstClass(email)) {
-//                        	response.sendRedirect("/upis");
-//                        	return;
-//                        }
-
+                        exists = ucenikService.existsByEmail(email);
+                        if (exists) {
+                            Optional<Ucenik> ucenik  = ucenikService.findByEmail(email);
+                        }
 
                     } else if (role.equals("Ravnatelj")) {
                         Ravnatelj ravnatelj  = ravnateljService.getOrCreateRavnatelj(email);
@@ -186,7 +154,11 @@ public class SecurityConfig {
                     }
 
                     if (role.equals("Ucenik")) {
-                       Ucenik ucenik  = ucenikService.getOrCreateUcenik(email);
+                       exists = ucenikService.existsByEmail(email);
+                       if (exists) {
+                           Optional<Ucenik> ucenik  = ucenikService.findByEmail(email);
+                       }
+
                     }
 
                     if (role.equals("Ravnatelj")) {
@@ -229,8 +201,10 @@ public class SecurityConfig {
                     response.sendRedirect("/satnicar");
                 } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Ravnatelj"))) {
                     response.sendRedirect("/ravnatelj");
-                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Ucenik"))) {
+                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Ucenik")) && exists) {
                     response.sendRedirect("/ucenik");
+                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Ucenik")) && !exists){
+                    response.sendRedirect("/upis");
                 } else {
                     response.sendRedirect("/home");
                 }
@@ -250,7 +224,7 @@ public class SecurityConfig {
                         .requestMatchers("/ravnatelj/**").hasAuthority("Ravnatelj")
                         .requestMatchers("/satnicar/**").hasAuthority("Satnicar")
                         .requestMatchers("/ucenik/**").hasAuthority("Ucenik")
-                        .requestMatchers("/upis.html").hasAuthority("Ucenik")
+                        .requestMatchers("/upis").hasAuthority("Ucenik")
                         .anyRequest().authenticated()
                 )
                 .csrf()

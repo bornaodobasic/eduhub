@@ -8,7 +8,6 @@ public class RegisterUcenikDTO {
 	
     private String imeUcenik;
     private String prezimeUcenik;
-    private String datumRodenja;
+    private String email;
     private String spol;
-    private Razred razred;
 }

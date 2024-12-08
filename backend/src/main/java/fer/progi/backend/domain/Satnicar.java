@@ -19,5 +19,4 @@ public class Satnicar {
 	
 	@Column(unique=true)
 	private String email;
-	private String lozinka;
 }

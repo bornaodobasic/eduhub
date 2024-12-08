@@ -24,9 +24,6 @@ public class Nastavnik {
 	
 	@Column(unique=true)
 	private String email;
-
-	@Size(min = 5)
-	private String lozinka;
 	
 	@ManyToMany(mappedBy = "nastavnici")
 	private Set<Predmet> predmeti;

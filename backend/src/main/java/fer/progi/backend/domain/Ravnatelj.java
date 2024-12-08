@@ -20,5 +20,4 @@ public class Ravnatelj {
 	
 	@Column(unique=true)
 	private String email;
-	private String lozinka;
 }
