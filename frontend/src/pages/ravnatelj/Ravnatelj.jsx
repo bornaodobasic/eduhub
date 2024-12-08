@@ -1,17 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "../../components/Header"; 
-import "./Nastavnik.css"; 
+import "./Ravnatelj.css"; 
 import "../../components/MainContent.css"; 
 
 const Nastavnik = () => {
     const roles = [
-        { name: "Učenici"},
-        { name: "Materijali"},
-        { name: "Statistika"},
+        { name: "Djelatnici"},
         { name: "Raspored"},
-        { name: "Poruke"},
-        { name: "Ispiti"},
+        { name: "Statistika"},
+        { name: "Učionice"},
+    
+        
     ];
 
     return (
@@ -29,7 +29,7 @@ const Nastavnik = () => {
 
                 
                 <div className="main-content">
-                    {["Obavijest1", "Obavijest2", "Obavijest3"].map((obavijest, index) => (
+                    {["Obavijest1", "Obavijest2", "Obavijest"].map((obavijest, index) => (
                         <div key={index} className="notification-box">
                             {obavijest}
                         </div>

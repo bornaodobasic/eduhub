@@ -1,17 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "../../components/Header"; 
-import "./Nastavnik.css"; 
+import "./Satnicar.css"; 
 import "../../components/MainContent.css"; 
 
 const Nastavnik = () => {
     const roles = [
-        { name: "Učenici"},
-        { name: "Materijali"},
-        { name: "Statistika"},
-        { name: "Raspored"},
-        { name: "Poruke"},
-        { name: "Ispiti"},
+        { name: "Rasporedi"},
+        { name: "Učionice"},
+        { name: "Oprema"},
+    
     ];
 
     return (
