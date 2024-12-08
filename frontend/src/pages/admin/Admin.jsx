@@ -1,112 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import './Admin.css'; 
+import React from "react";
+import { Link } from 'react-router-dom';
+import Header from '../../components/Header2'; // Reusing the provided Header component
+import "./Admin.css"; // Styling based on Login
+import SidebarRight from '../../components/SidebarRight';
+import MainContent from '../../components/MainContent';
 
 const Admin = () => {
-  const [registrations, setRegistrations] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedRegistration, setSelectedRegistration] = useState(null);
 
-  // za primjer, a kasnije iz backenda
-  useEffect(() => {
-    setRegistrations([
-      { id: 1, ime: 'Ime Prezime', email: 'mail@fer.hr', uloga: 'Uloga', status: 'Na čekanju', datumReg: '10.11.2024' },
-      { id: 2, ime: 'Ime Prezime', email: 'mail@fer.hr', uloga: 'Uloga', status: 'Na čekanju', datumReg: '9.11.2024' },
-    ]);
-  }, []);
+        const roles = [
+            { name: "Administrator", path: "/approveadmin" },
+            { name: "Djelatnik", path: "/approveemployee" },
+            { name: "Učenik", path: "/approveucenik" },
+            { name: "Nastavnik", path: "/approvenastavnik" },
+            { name: "Ravnatelj", path: "/approveravnatelj" },
+            { name: "Satničar", path: "/approvesatnicar" }
+        ];
 
-  const approveRegistration = (id) => {
-    setRegistrations((prev) =>
-      prev.map((registration) =>
-        registration.id === id ? { ...registration, status: 'Odobreno' } : registration
-      )
-    );
-    setModalVisible(false);
-  };
+        return (
+            <div className="homepage">
+                <Header />
+                <div className="homepage-container">
+                    <aside className="sidebar-left">
+                        <button className="sidebar-button gray">Zahtjevi za registraciju</button>
+                        {roles.map(role => (
+                            <Link key={role.name} to={role.path}>
+                                <button className="sidebar-button">{role.name}</button>
+                            </Link>
+                        ))}
+                    </aside>
 
-  const rejectRegistration = (id) => {
-    setRegistrations((prev) =>
-      prev.map((registration) =>
-        registration.id === id ? { ...registration, status: 'Odbijeno' } : registration
-      )
-    );
-    setModalVisible(false);
-  };
+                    <MainContent />
 
-  const handleModalOpen = (registration) => {
-    setSelectedRegistration(registration);
-    setModalVisible(true);
-  };
+                    <SidebarRight />
+                </div>
+            </div>
+        );
+    };
 
-  const handleModalClose = () => {
-    setModalVisible(false);
-    setSelectedRegistration(null);
-  };
 
-  return (
-   
-    <div className="admin-registration-page">
-      <div className="admin-header"></div>
-
-      <h1>Upravljanje registracijama</h1>
-
-      <div className="search-bar">
-        <input type="text" />
-        <button>Pretraži</button>
-      </div>
-
-      <table className="registration-table">
-        <thead>
-          <tr>
-            <th>Ime i prezime</th>
-            <th>Email</th>
-            <th>Uloga</th>
-            <th>Status</th>
-            <th>Akcija</th>
-            <th>Datum registracije</th>
-          </tr>
-        </thead>
-        <tbody>
-          {registrations.map((registration) => (
-            <tr key={registration.id}>
-              <td>{registration.ime}</td>
-              <td>{registration.email}</td>
-              <td>{registration.uloga}</td>
-              <td>{registration.status}</td>
-              <td>
-                <button className="approve-btn" onClick={() => handleModalOpen(registration)}>
-                  Odobri
-                </button>
-                <button className="reject-btn" onClick={() => rejectRegistration(registration.id)}>
-                  Odbij
-                </button>
-              </td>
-              <td>{registration.datumReg}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      
-
-      {modalVisible && selectedRegistration && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Potvrdi</h2>
-            <p>
-              Jeste li sigurni da želite odobriti registraciju{' '}
-              <strong>{selectedRegistration.ime}</strong>?
-            </p>
-            <button className="confirm-btn" onClick={() => approveRegistration(selectedRegistration.id)}>
-              Potvrdi
-            </button>
-            <button className="cancel-btn" onClick={handleModalClose}>
-              Odbaci
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 export default Admin;

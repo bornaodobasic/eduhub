@@ -1,5 +1,10 @@
+<<<<<<< Updated upstream
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+=======
+
+/*
+>>>>>>> Stashed changes
 import Menu from './pages/menu/Menu'; 
 import Login from './pages/login/Login'; 
 import Registration from './pages/registration/Registration'; 
@@ -47,3 +52,47 @@ function App() {
 }
 
 export default App;
+<<<<<<< Updated upstream
+=======
+*/
+
+import React from 'react';
+import Circles from './components/Circles';
+import './App.css';
+
+
+function App() {
+  const handleLogin = () => {
+    // Redirect to the OAuth2 login endpoint in Spring Boot
+    window.location.href = "http://localhost:8080/oauth2/authorization/azure-dev";
+  };
+
+  return (
+    
+    <div className="login-page">
+      <div className='heder'>
+      <header className="header">
+          <span className="title">eŠkolskaKomunikacija</span>
+      </header>
+      </div>
+  
+    <Circles></Circles>
+
+  <main className="login-form">
+    <h1>Dobrodošli!</h1>
+    <p className="oneliner">eŠkolskaKomunikacija</p>
+    <p >
+    Jedna platforma za sve školske potrebe.
+    </p>
+    <button className="continue-button" onClick={handleLogin}>
+        Prijava uz Microsoft
+    </button>
+  </main>
+</div>
+  );
+}
+
+
+
+export default App;
+>>>>>>> Stashed changes
