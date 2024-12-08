@@ -11,6 +11,7 @@ import ApproveNastavnik from './pages/approvenastavnik/ApproveNastavnik';
 import ApproveRavnatelj from './pages/approveravnatelj/ApproveRavnatelj';
 import ApproveSatnicar from './pages/approvesatnicar/ApproveSatnicar';
 import Circles from './components/Circles';
+import CirclesMobile from './components/CirclesMobile';
 import './App.css';
 import Nastavnik from './pages/nastavnik/Nastavnik';
 import Ucenik from './pages/ucenik/Ucenik';
@@ -34,7 +35,14 @@ function App() {
                   <span className="title">eŠkolskaKomunikacija</span>
               </div>
 
-              <Circles />
+              <div className='veliki'>
+                <Circles />
+              </div>
+              <div className='maleni'>
+                <CirclesMobile />
+              </div>
+
+              
 
               <main className="login-form">
                 <h1>Dobrodošli!</h1>

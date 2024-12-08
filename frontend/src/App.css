@@ -69,11 +69,36 @@ body, html {
   font-weight: bold;
 }
 
+.maleni{
+  display: none;
+}
 
 
 
 
+@media (max-width: 768px) {
+  .heder{
+    z-index: 3;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    text-align: center;
+    padding: 7px 20px;
+    background: linear-gradient(to right, #ff7eb3, #ff758c);
+    color: white;
+  }
+  
+  .title{
+    font-size: 16px;
+    font-weight: bold;
+  }
 
-
-
-
+  .veliki{
+    display: none;
+  }
+  
+  .maleni{
+    display: block;
+  }
+}
