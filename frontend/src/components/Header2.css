@@ -1,0 +1,163 @@
+/*
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+}
+
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-icon {
+  margin-right: 10px;
+}
+
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
+.user-name {
+  font-size: 16px;
+}
+
+
+.profile-icon-container {
+  position: relative; 
+  display: inline-block;
+}
+
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+
+.logout-form {
+  position: absolute;
+  top: 40px; 
+  right: -5px; 
+  background-color: #444;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  width: 120px; 
+  text-align: center; 
+  opacity: 0; 
+  visibility: hidden; 
+  transition: opacity 0.3s ease, visibility 0.3s ease; 
+}
+
+
+.profile-icon-container:hover .logout-form {
+  opacity: 1;
+  visibility: visible; 
+}
+
+
+.logout-btn {
+  background-color: white; 
+  color: #333; 
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%; 
+}
+
+.logout-btn:hover {
+  background-color: #f0f0f0; 
+}
+*/
+
+/* Header styling */
+/* Header styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+  width: 100%; /* Ensure the header spans the full width of the screen */
+}
+
+/* Logo styling */
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-icon {
+  margin-right: 10px;
+}
+
+/* User information styling */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Add spacing between username and icon */
+  margin-left: auto; /* Push user-info to the right */
+}
+
+/* Profile icon container (with hover effect) */
+.profile-icon-container {
+  position: relative; /* For positioning the logout form */
+  display: inline-block;
+}
+
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+/* Log-out form styling (hidden by default) */
+.logout-form {
+  position: absolute;
+  top: 40px; /* Reduce the top value for closer proximity */
+  right: -5px; /* Align more closely to the profile icon */
+  background-color: #444;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  width: 120px; /* Width to fit the "Log Out" text */
+  text-align: center; /* Center the text inside the button */
+  opacity: 0; /* Make the form invisible initially */
+  visibility: hidden; /* Keep the form hidden */
+  transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition */
+}
+
+/* Display logout form when hovering over the icon or form */
+.profile-icon-container:hover .logout-form {
+  opacity: 1;
+  visibility: visible; /* Make the form visible */
+}
+
+/* Log out button styling */
+.logout-btn {
+  background-color: white; /* White background */
+  color: #333; /* Dark text color for contrast */
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%; /* Make the button width fit the form */
+}
+
+.logout-btn:hover {
+  background-color: #f0f0f0; /* Light grey hover effect */
+}
