@@ -12,7 +12,7 @@ import lombok.Data;
 public class Satnicar {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer sifSatnicar;
+	private Integer id;
 	
 	private String imeSatnicar;
 	private String prezimeSatnicar;

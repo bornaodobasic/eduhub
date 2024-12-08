@@ -33,6 +33,10 @@ public class DjelatnikServiceJpa implements DjelatnikService{
 			return Optional.ofNullable(djelatnikRepo.findByEmail(email));
 		}
 */
+		public boolean findByEmail(String email) {
+			return djelatnikRepo.findByEmail(email).isPresent();
+		}
+
 		public Djelatnik getOrCreateDjelatnik(String email) {
 			return djelatnikRepo.findByEmail(email)
 					.orElseGet(() -> createNewDjelatnik(email));

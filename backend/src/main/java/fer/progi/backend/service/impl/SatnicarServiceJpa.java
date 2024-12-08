@@ -31,7 +31,10 @@ public class SatnicarServiceJpa implements SatnicarService{
 		public Optional<Satnicar> pronadiSatnicaraPoEmail(String email) {
 			return Optional.ofNullable(satnicarRepo.findByEmail(email));
 		}*/
-		
+
+		public boolean findByEmail(String email) {
+			return satnicarRepo.findByEmail(email).isPresent();
+		}
 
 		public Satnicar getOrCreateSatnicar(String email) {
 				return satnicarRepo.findByEmail(email)

@@ -33,7 +33,10 @@ public class RavnateljServiceJpa implements RavnateljService{
 		public Optional<Ravnatelj> pronadiRavnateljaPoEmail(String email) {
 			return Optional.ofNullable(ravnateljRepo.findByEmail(email));
 		}*/
-		
+
+		public boolean findByEmail(String email) {
+			return ravnateljRepo.findByEmail(email).isPresent();
+		}
 
 		public Ravnatelj getOrCreateRavnatelj(String email) {
 				return ravnateljRepo.findByEmail(email)

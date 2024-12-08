@@ -17,7 +17,7 @@ public class Nastavnik {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer sifNastavnik;
+	private Integer id;
 	
 	private String imeNastavnik;
 	private String prezimeNastavnik;

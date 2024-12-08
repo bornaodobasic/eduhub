@@ -1,54 +1,86 @@
 package fer.progi.backend.service.impl;
 
 import java.util.List;
+
 import fer.progi.backend.dao.*;
+import fer.progi.backend.domain.*;
+import fer.progi.backend.rest.AddDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import fer.progi.backend.domain.Admin;
 import fer.progi.backend.service.AdminService;
 
 
 @Service
-public class AdminServiceJpa implements AdminService{
+public class AdminServiceJpa implements AdminService {
 
-		@Autowired
-		private AdminRepository adminRepo;
+    @Autowired
+    private AdminRepository adminRepo;
 
-		@Autowired
-		private NastavnikRepository nastavnikRepo;
+    @Autowired
+    private DjelatnikRepository djelatnikRepo;
 
-		@Autowired
-		private DjelatnikRepository djelatnikRepo;
+    @Autowired
+    private NastavnikRepository nastavnikRepo;
 
-		@Autowired
-		private UcenikRepository ucenikRepo;
+    @Autowired
+    private RavnateljRepository ravnateljRepo;
 
-		@Autowired
-		private RavnateljRepository ravnateljRepo;
+    @Autowired
+    private SatnicarRepository satnicarRepo;
 
-		@Autowired
-		private SatnicarRepository satnicarRepo;
+    @Override
+    public boolean findByEmail(String email) {
+        return adminRepo.findByEmail(email).isPresent();
+    }
 
+    @Override
+    public Admin addAdmin(AddDTO addDTO) {
+        Admin admin = new Admin();
+        admin.setImeAdmin(addDTO.getIme());
+        admin.setPrezimeAdmin(addDTO.getPrezime());
+        admin.setEmail(addDTO.getEmail());
 
-		@Override
-		public List<Admin> listAll() {
-			return adminRepo.findAll();
-		}
+        return adminRepo.save(admin);
+    }
 
-		@Override
-		public Admin dodajAdmin(Admin admin) {
-			return adminRepo.save(admin);
-		}
+    @Override
+    public Djelatnik addDjelatnik(AddDTO addDTO) {
+        Djelatnik djelatnik = new Djelatnik();
+        djelatnik.setImeDjel(addDTO.getIme());
+        djelatnik.setImeDjel(addDTO.getPrezime());
+        djelatnik.setEmail(addDTO.getEmail());
 
-		public Admin getOrCreateAdmin(String email) {
-			return adminRepo.findByEmail(email)
-					.orElseGet(() -> createNewAdmin(email));
-		}
+        return djelatnikRepo.save(djelatnik);
+    }
 
-		private Admin createNewAdmin(String email) {
-			Admin admin = new Admin();
-			admin.setEmail(email);
-			return adminRepo.save(admin);
-		}
+    @Override
+    public Satnicar addSatnicar(AddDTO addDTO) {
+        Satnicar satnicar = new Satnicar();
+        satnicar.setImeSatnicar(addDTO.getIme());
+        satnicar.setPrezimeSatnicar(addDTO.getPrezime());
+        satnicar.setEmail(addDTO.getEmail());
+
+        return satnicarRepo.save(satnicar);
+    }
+
+    @Override
+    public Ravnatelj addRavnatelj(AddDTO addDTO) {
+        Ravnatelj ravnatelj = new Ravnatelj();
+        ravnatelj.setImeRavnatelj(addDTO.getIme());
+        ravnatelj.setPrezimeRavnatelj(addDTO.getPrezime());
+        ravnatelj.setEmail(addDTO.getEmail());
+
+        return ravnateljRepo.save(ravnatelj);
+    }
+
+    @Override
+    public Nastavnik addNastavnik(AddDTO addDTO) {
+        Nastavnik nastavnik = new Nastavnik();
+        nastavnik.setImeNastavnik(addDTO.getIme());
+        nastavnik.setPrezimeNastavnik(addDTO.getPrezime());
+        nastavnik.setEmail(addDTO.getEmail());
+
+        return nastavnikRepo.save(nastavnik);
+    }
 
 }

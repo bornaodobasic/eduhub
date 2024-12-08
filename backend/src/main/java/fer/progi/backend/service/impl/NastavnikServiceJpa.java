@@ -36,6 +36,10 @@ public class NastavnikServiceJpa implements NastavnikService{
 			return Optional.ofNullable(nastavnikRepo.findByEmail(email));
 	}*/
 
+	public boolean findByEmail(String email) {
+		return nastavnikRepo.findByEmail(email).isPresent();
+	}
+
 	public Nastavnik getOrCreateNastavnik(String email) {
 			return nastavnikRepo.findByEmail(email)
 					.orElseGet(() -> createNewNastavnik(email));

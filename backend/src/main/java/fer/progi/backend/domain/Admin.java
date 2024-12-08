@@ -13,14 +13,12 @@ public class Admin {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer sifAdmin;
+	private Integer id;
 	
 	private String imeAdmin;
 	private String prezimeAdmin;
 	
 	@Column(unique=true)
 	private String email;
-
-	private String lozinka;
 
 }

@@ -1,11 +1,5 @@
 package fer.progi.backend.rest;
 
-import fer.progi.backend.domain.Admin;
-import fer.progi.backend.domain.Djelatnik;
-import fer.progi.backend.domain.Nastavnik;
-import fer.progi.backend.domain.Ravnatelj;
-import fer.progi.backend.domain.Satnicar;
-import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.service.impl.AdminServiceJpa;
 import fer.progi.backend.service.impl.NastavnikServiceJpa;
 import fer.progi.backend.service.impl.UcenikServiceJpa;
@@ -91,9 +85,9 @@ public class SecurityConfig {
 
                 Object principal = authentication.getPrincipal();
                 Collection<GrantedAuthority> updatedAuthorities = new HashSet<>();
-                String role = new String();
-                String email = new String();
-                boolean exists = false;
+                String role;
+                String email;
+                boolean present = false;
 
                 if (principal instanceof Jwt) {
                     Jwt jwt = (Jwt) principal;
@@ -103,31 +97,30 @@ public class SecurityConfig {
                     email = jwt.getClaimAsString("preferred_username");
                     System.out.println(email);
 
-                    if (role != null) {
-                        updatedAuthorities.add(new SimpleGrantedAuthority(role));
-                    }
-
                     if (role.equals("Admin")) {
-                        Admin admin = adminService.getOrCreateAdmin(email);
+                        present = adminService.findByEmail(email);
 
                     } else if (role.equals("Nastavnik")) {
-                        Nastavnik nastavnik = nastavnikService.getOrCreateNastavnik(email);
+                        present = nastavnikService.findByEmail(email);
 
                     } else if (role.equals("Djelatnik")) {
-                        Djelatnik djelatnik = djelatnikService.getOrCreateDjelatnik(email);
+                        present = djelatnikService.findByEmail(email);
 
                     } else if (role.equals("Satnicar")) {
-                        Satnicar satnicar = satnicarService.getOrCreateSatnicar(email);
+                        present = satnicarService.findByEmail(email);
 
                     } else if (role.equals("Ucenik")) {
-                        exists = ucenikService.existsByEmail(email);
-                        if (exists) {
-                            Optional<Ucenik> ucenik  = ucenikService.findByEmail(email);
-                        }
+                        present = ucenikService.findByEmail(email);
 
                     } else if (role.equals("Ravnatelj")) {
-                        Ravnatelj ravnatelj  = ravnateljService.getOrCreateRavnatelj(email);
-                     }
+                        present  = ravnateljService.findByEmail(email);
+                    }
+
+                    if (present) {
+                        updatedAuthorities.add(new SimpleGrantedAuthority(role));
+                    } else if (!present && role.equals("Ucenik")) {
+                        updatedAuthorities.add(new SimpleGrantedAuthority("Upis"));
+                    }
 
                     updatedAuthorities.addAll(authentication.getAuthorities());
 
@@ -141,37 +134,30 @@ public class SecurityConfig {
                     System.out.println(email);
                     System.out.println(role);
 
-                    if (role != null) {
-                        updatedAuthorities.add(new SimpleGrantedAuthority(role));
-                    }
-
                     if (role.equals("Admin")) {
-                        Admin admin = adminService.getOrCreateAdmin(email);
+                        present = adminService.findByEmail(email);
+
+                    } else if (role.equals("Nastavnik")) {
+                        present = nastavnikService.findByEmail(email);
+
+                    } else if (role.equals("Djelatnik")) {
+                        present = djelatnikService.findByEmail(email);
+
+                    } else if (role.equals("Satnicar")) {
+                        present = satnicarService.findByEmail(email);
+
+                    } else if (role.equals("Ucenik")) {
+                        present = ucenikService.findByEmail(email);
+
+                    } else if (role.equals("Ravnatelj")) {
+                        present  = ravnateljService.findByEmail(email);
                     }
 
-                    if (role.equals("Nastavnik")) {
-                        Nastavnik nastavnik = nastavnikService.getOrCreateNastavnik(email);
+                    if (present) {
+                        updatedAuthorities.add(new SimpleGrantedAuthority(role));
+                    } else if (!present && role.equals("Ucenik")) {
+                        updatedAuthorities.add(new SimpleGrantedAuthority("Upis"));
                     }
-
-                    if (role.equals("Ucenik")) {
-                       exists = ucenikService.existsByEmail(email);
-                       if (exists) {
-                           Optional<Ucenik> ucenik  = ucenikService.findByEmail(email);
-                       }
-
-                    }
-
-                    if (role.equals("Ravnatelj")) {
-                        Ravnatelj ravnatelj  = ravnateljService.getOrCreateRavnatelj(email);
-                     }
-
-                    if (role.equals("Satnicar")) {
-                        Satnicar satnicar = satnicarService.getOrCreateSatnicar(email);
-                     }
-
-                    if (role.equals("Djelatnik")) {
-                        Djelatnik djelatnik  = djelatnikService.getOrCreateDjelatnik(email);
-                     }
 
                     updatedAuthorities.addAll(authentication.getAuthorities());
                 }
@@ -190,9 +176,10 @@ public class SecurityConfig {
                 SecurityContext context = SecurityContextHolder.getContext();
                 context.getAuthentication().getAuthorities().forEach(System.out::println);
 
-
-                if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Admin"))) {
-                    response.sendRedirect("/admin/zahtjevi/tempAdmin");
+                if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Upis"))) {
+                    response.sendRedirect("/upis");
+                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Admin"))) {
+                    response.sendRedirect("/admin");
                 } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Nastavnik"))) {
                     response.sendRedirect("/nastavnik");
                 } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Djelatnik"))) {
@@ -201,12 +188,10 @@ public class SecurityConfig {
                     response.sendRedirect("/satnicar");
                 } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Ravnatelj"))) {
                     response.sendRedirect("/ravnatelj");
-                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Ucenik")) && exists) {
+                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Ucenik"))) {
                     response.sendRedirect("/ucenik");
-                } else if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Ucenik")) && !exists){
-                    response.sendRedirect("/upis");
                 } else {
-                    response.sendRedirect("/home");
+                    response.sendRedirect("/");
                 }
             }
         };
@@ -224,7 +209,7 @@ public class SecurityConfig {
                         .requestMatchers("/ravnatelj/**").hasAuthority("Ravnatelj")
                         .requestMatchers("/satnicar/**").hasAuthority("Satnicar")
                         .requestMatchers("/ucenik/**").hasAuthority("Ucenik")
-                        .requestMatchers("/upis").hasAuthority("Ucenik")
+                        .requestMatchers("/upis").hasAuthority("Upis")
                         .anyRequest().authenticated()
                 )
                 .csrf()
