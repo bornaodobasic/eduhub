@@ -46,16 +46,22 @@
 }
 
 
-.logout-btn {
-  background-color: white; 
-  color: #333; 
-  padding: 8px 12px;
-  border: none;
+.logout-form {
+  position: absolute;
+  top: 35px; 
+  right: 0px;
+  background-color: #444;
+  padding: 10px;
   border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  width: 100%; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  width: 120px;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
+
 
 .logout-btn:hover {
   background-color: #f0f0f0; 
