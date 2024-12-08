@@ -21,15 +21,12 @@ const Enroll = () => {
                 <label htmlFor="firstName">Ime</label>
                 <input type="text" id="firstName" placeholder="Unesite ime" />
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="oib">OIB</label>
                 <input type="text" id="oib" placeholder="Unesite OIB" />
               </div>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input type="email" id="email" placeholder="Unesite email" />
-              </div>
+             
               <div className="form-group">
                 <label htmlFor="gender">Spol</label>
                 <select id="gender">
@@ -46,14 +43,12 @@ const Enroll = () => {
                 <label htmlFor="lastName">Prezime</label>
                 <input type="text" id="lastName" placeholder="Unesite prezime" />
               </div>
+
               <div className="form-group">
                 <label htmlFor="birthDate">Datum rođenja</label>
                 <input type="date" id="birthDate" />
               </div>
-              <div className="form-group">
-                <label htmlFor="password">Lozinka</label>
-                <input type="password" id="password" placeholder="Unesite lozinku" />
-              </div>
+
               <div className="form-group">
                 <label htmlFor="program">Željeni smjer</label>
                 <select id="program">
