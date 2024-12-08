@@ -1,6 +1,6 @@
 # EduHub
 # Opis projekta
-Ovaj projekt je reultat timskog rada u sklopu projeknog zadatka kolegija Programsko inženjerstvo na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu.
+Ovaj projekt rezultat je timskog rada u sklopu projeknog zadatka kolegija Programsko inženjerstvo na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu.
 
 Cilj projekta je razviti programsku podršku za stvaranje web aplikacije “EduHub” koja će obrazovnim ustanovama omogućiti organiziranje nastave elektroničkim sredstvima komunikacije. Aplikacija će olakšati pristup nastavnim materijalima, raznim resursima škole i njihovom zauzeću te omogućiti jednostavnu komunikaciju među sudionicima u srednjoškolskom obrazovanju. Kao poseban dodatak aplikacija na početnoj stranici pokazuje podatak o vremenskim uvjetima i vremenskoj prognozi za grad u kojoj se škola nalazi.
 
