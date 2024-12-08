@@ -1,7 +1,5 @@
 package fer.progi.backend.service.impl;
 
-import java.util.List;
-
 import fer.progi.backend.dao.*;
 import fer.progi.backend.domain.*;
 import fer.progi.backend.rest.AddDTO;

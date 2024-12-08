@@ -1,32 +1,28 @@
 .main-content {
-    flex-grow: 1;
-    padding: 20px;
-    background-color: #e8e8e8;
     display: flex;
     flex-direction: column;
+    gap: 24px; /* Increased spacing between containers */
+    padding: 24px; /* Added more padding around the content */
+    background-color: #f5f5f5; /* Light background color */
 }
 
-.tabs {
+.notification-box {
+    background-color:#ffe6f0; /* Lightened version of #ff7eb3 */
+    padding: 32px; /* Increased padding for a more spacious feel */
+    height: 150px; /* Increased height for larger containers */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Stronger shadow for more depth */
+    font-size: 20px; /* Slightly larger font size */
+    font-weight: bold; /* Make text stand out */
+    text-align: center; /* Center-align text */
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    align-items: center; /* Vertically center content */
+    justify-content: center; /* Horizontally center content */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
 }
 
-.tab-button {
-    flex: 1;
-    padding: 10px;
-    background-color: #d1d1d1;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
-}
-
-.tab-button.active {
-    background-color: #bbb;
-}
-
-.content-area {
-    flex-grow: 1;
-    background-color: white;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+.notification-box:hover {
+    background-color:#fed0e2; /* Slightly darker pink on hover */
+    transform: translateY(-5px); /* Lift the box on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
 }

@@ -27,14 +27,17 @@ public class Ucenik {
 	private String imeUcenik;
 	private String prezimeUcenik;
 
-//	@Size(min=1, max=1)
+	private String oib;
+	private String datumRodenja;
+
+	@ManyToOne
+	private Razred razred;
+
 	private String spol;	
 	
 	@Column(unique=true)
 	private String email;
 
-//	@ManyToOne
-//	private Razred razred;
 	
 //	@ManyToMany
 //	@JoinTable(

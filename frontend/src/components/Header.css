@@ -1,36 +1,78 @@
 .header {
-    background-color: #555;
-    color: white;
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: linear-gradient(to right, #ff7eb3, #ff758c);
+  color: white;
+  width: 100%; 
 }
 
-.header-logo {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-    background-color: white;
+.user-name {
+  font-size: 16px;
 }
 
-.header-nazivSkole {
-    flex-grow: 1;
-    font-size: 18px;
+.profile-icon-container {
+  position: relative; 
+  display: inline-block;
 }
 
-.header-ikonica {
-    background-color: white;
-    color: #555;
-    padding: 10px;
-    border-radius: 50%;
-    font-weight: bold;
-    width: 35px;
-    height: 35px;
-    text-align: center;
-    cursor: pointer;
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 }
 
-.header-ikonica:hover {
-    background-color: #ddd;
+.logout-form {
+  position: absolute;
+  top: 40px; 
+  right: -5px; 
+  background-color: #444;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  width: 120px; 
+  text-align: center; 
+  opacity: 0; 
+  visibility: hidden; 
+  transition: opacity 0.3s ease, visibility 0.3s ease; 
 }
+
+
+.profile-icon-container:hover .logout-form {
+  opacity: 1;
+  visibility: visible; 
+}
+
+
+.logout-form {
+  position: absolute;
+  top: 35px; 
+  right: 0px;
+  background-color: #444;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  width: 120px;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+
+.logout-btn:hover {
+  background-color: #f0f0f0; 
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+  margin-left: auto; 
+}
+
+
 

@@ -1,161 +1,121 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+body, html {
+  height: 100%;
+  font-family: 'Arial', sans-serif;
+  background: #fff;
+  color: #333;
+}
 
-.admin-registration-page {
+/* Homepage container - adding padding-top to avoid overlap with fixed header */
+.homepage {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   height: 100vh;
-  text-align: center;
-  gap: 20px;
-  padding: 20px;
-  margin: 0 auto;
+  width: 100vw;
 }
 
-h1 {
-  font-size: 3vw;
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.532);
-  margin-bottom: 20px;
-}
-
-.search-bar {
-  margin-bottom: 20px;
+.homepage-container {
   display: flex;
-  flex-direction: column;
+  flex: 1;
+  width: 100vw;
+  background-color: #f7f7f7; /* Background for the main content area */
+  margin-top: 60px; /* Add space for the header */
+}
+
+/* Sidebar Styles */
+.sidebar-left {
+  background-color: #f4f4f4;
+  padding: 20px;
+  width: 200px;
+  height: 100%;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-button {
+  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
-}
-
-.search-bar input {
-  padding: 10px;
-  width: 70%;  
-  max-width: 600px;  
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-
-.search-bar button {
-  padding: 10px 20px;
-  background-color: #e50914;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: opacity 0.3s ease;
-  width: 60%;  
-}
-
-.search-bar button:hover {
-  background-color: #c40811;
-  transform: scale(1.05);
-}
-
-.registration-table {
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-  max-width: 1200px;
-}
-
-.registration-table th,
-.registration-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
+  height: 40px;
+  margin-bottom: 10px;
+  background-color: white;
+  color: #555;
+  cursor: pointer;
   text-align: center;
-  font-size: 1rem;
-}
-
-.registration-table th {
-  background-color: #f2f2f2;
-}
-
-.approve-btn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 5px 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
   border: none;
-  cursor: pointer;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 5px;
 }
 
-.reject-btn {
-  background-color: #f44336;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  cursor: pointer;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-
-.approve-btn:hover {
-  background-color: #45a049;
-}
-
-.reject-btn:hover {
-  background-color: #e53935;
-}
-
-.pagination button {
-  padding: 10px 20px;
-  margin: 0 10px;
+.sidebar-button:hover {
   background-color: #ddd;
-  border: none;
+}
+
+.sidebar-button.gray {
+  background-color: #ccc; /* Light gray background */
+  color: #333; /* Darker text color */
+}
+
+.sidebar-button.gray:hover {
+  background-color: #bbb; /* Slightly darker gray on hover */
+}
+
+/* Main Content Area */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-left: 20px; /* Space between sidebar and main content */
   border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
 }
 
-.pagination button:hover {
-  background-color: #ccc;
+/* Right Sidebar */
+.sidebar-right {
+  background-color: #f4f4f4;
+  padding: 20px;
+  width: 200px;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.modal {
+/* Header Styles */
+header {
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  right: 0;
+  z-index: 10;
 }
 
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  text-align: center;
+h1 {
+  color: #333;
 }
 
-.confirm-btn,
-.cancel-btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-}
 
-.confirm-btn {
-  background-color: #4CAF50;
-  color: white;
-}
 
-.confirm-btn:hover {
-  background-color: #45a049;
-}
+/* Custom Media Queries */
+@media (max-width: 768px) {
+  .homepage-container {
+      flex-direction: column;
+      margin-top: 80px; 
+  }
 
-.cancel-btn {
-  background-color: #f44336;
-  color: white;
-}
+  .sidebar-left, .sidebar-right {
+      width: 100%;
+      box-shadow: none;
+  }
 
-.cancel-btn:hover {
-  background-color: #e53935;
+  .main-content {
+      margin-left: 0;
+  }
+
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../../components/Header';
+import Header2 from '../../components/Header';
 import SidebarRight from '../../components/SidebarRight';
 import BackButton from '../../components/BackButton';
 import '../approveadmin/ApproveAdmin.css';
@@ -68,7 +68,7 @@ const ApproveNastavnik = () => {
 
     return (
         <div className="homepage">
-            <Header />
+            <Header2 />
             <div className="homepage-container">
                 <aside className="sidebar-left">
                     <button className="sidebar-button gray">Zahtjevi za registraciju</button>
