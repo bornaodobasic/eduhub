@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "../../components/Header"; 
 import "../../components/MainContent.css"; 
 
-const Admin = () => {
+const Djelatnik = () => {
     const roles = [
         { name: "Funkcija1"},
         { name: "Funckija2"},
@@ -24,11 +24,7 @@ const Admin = () => {
 
                 
                 <div className="main-content">
-                    {["Zahtjev1", "Zahtjev2", "Zahtjev3"].map((obavijest, index) => (
-                        <div key={index} className="notification-box">
-                            {obavijest}
-                        </div>
-                    ))}
+                   
                 </div>
 
              
@@ -56,4 +52,4 @@ const Admin = () => {
     );
 };
 
-export default Admin;
+export default Djelatnik;

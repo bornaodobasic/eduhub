@@ -14,6 +14,7 @@ import Circles from './components/Circles';
 import './App.css';
 import Nastavnik from './pages/nastavnik/Nastavnik';
 import Ucenik from './pages/ucenik/Ucenik';
+import Djelatnik from './pages/djelatnik/Djelatnik';
 
 function App() {
   const handleLogin = () => {
@@ -49,7 +50,6 @@ function App() {
 
         {/* Ostale rute */}
         <Route path="/enroll" element={<Enroll />} />
-        <Route path="/admin" element={<Admin />} />
         <Route path="/admin-home" element={<Adminhome />} />
         <Route path="/certificate" element={<Certificate />} />
         <Route path="/approveadmin" element={<ApproveAdmin />} />
@@ -60,6 +60,8 @@ function App() {
         <Route path="/approvesatnicar" element={<ApproveSatnicar />} />
         <Route path="/nastavnik" element={<Nastavnik />} />
         <Route path="/ucenik" element={<Ucenik />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/djelatnik" element={<Djelatnik />} />
       </Routes>
     </Router>
   );
