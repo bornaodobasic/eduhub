@@ -106,7 +106,7 @@ h1 {
 @media (max-width: 768px) {
   .homepage-container {
       flex-direction: column;
-      margin-top: 80px; /* Adjust for header height on small screens */
+      margin-top: 80px; 
   }
 
   .sidebar-left, .sidebar-right {
@@ -117,4 +117,5 @@ h1 {
   .main-content {
       margin-left: 0;
   }
+
 }
