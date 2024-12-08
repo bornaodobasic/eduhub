@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
-import Header from '../../components/Header2'; // Reusing the provided Header component
-import "./Admin.css"; // Styling based on Login
+import Header from '../../components/Header'; 
+import "./Admin.css"; 
 import SidebarRight from '../../components/SidebarRight';
 import MainContent from '../../components/MainContent';
 

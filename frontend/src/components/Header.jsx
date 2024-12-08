@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Header2.css';
+import './Header.css';
 
 const Header = () => {
   // Placeholder for user's name
@@ -11,8 +11,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo">
-        <span className="logo-icon">🍭</span>
-        <span>eSkolskaKomunikacija</span>
+        <span>eŠkolskaKomunikacija</span>
       </div>
       <div className="user-info">
         <span className="user-name">{userName}</span>
@@ -21,10 +20,9 @@ const Header = () => {
           onMouseEnter={() => setShowLogout(true)}
           onMouseLeave={() => setShowLogout(false)}
         >
-          {/* Profile Icon */}
+         
           <svg
-            width="30" // Adjust the size
-            height="30" // Adjust the size
+            height="30"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +35,6 @@ const Header = () => {
             />
           </svg>
 
-          {/* Log-out form */}
           {showLogout && (
             <div className="logout-form">
               <button className="logout-btn">Log Out</button>

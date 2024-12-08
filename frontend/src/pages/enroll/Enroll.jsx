@@ -15,7 +15,7 @@ const Enroll = () => {
     
         <form>
           <div className="form-row">
-            {/* Prvi Stupac */}
+           
             <div className="form-column">
               <div className="form-group">
                 <label htmlFor="firstName">Ime</label>

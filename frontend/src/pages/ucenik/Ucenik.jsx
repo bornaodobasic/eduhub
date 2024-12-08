@@ -1,17 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "../../components/Header"; 
-import "./Nastavnik.css"; 
 import "../../components/MainContent.css"; 
 
-const Nastavnik = () => {
+const Ucenik = () => {
     const roles = [
-        { name: "Učenici"},
-        { name: "Materijali"},
-        { name: "Statistika"},
-        { name: "Raspored"},
-        { name: "Poruke"},
-        { name: "Ispiti"},
+        { name: "Matematika"},
+        { name: "Fizika"},
+        { name: "Kemija"},
+        { name: "Biologija"},
+        { name: "Psihologija"},
+        { name: "Filozofija"},
+        { name: "Hrvatski jezik"},
+        { name: "Engleski jezik"},
+        { name: "Latinski jezik"},
+        { name: "Geografija"},
+        { name: "Povijest"},
+        { name: "Tjelesna kultura"},
+        { name: "Glazbena kultura"},
     ];
 
     return (
@@ -29,7 +35,7 @@ const Nastavnik = () => {
 
                 
                 <div className="main-content">
-                    {["Zahtjev1", "Zahtjev2", "Zahtjev3"].map((obavijest, index) => (
+                    {["Obavijest1", "Obavijest2", "Obavijest3"].map((obavijest, index) => (
                         <div key={index} className="notification-box">
                             {obavijest}
                         </div>
@@ -61,4 +67,4 @@ const Nastavnik = () => {
     );
 };
 
-export default Nastavnik;
+export default Ucenik;
