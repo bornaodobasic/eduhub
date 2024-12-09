@@ -1,6 +1,6 @@
 # EduHub
 # Opis projekta
-Ovaj projekt je reultat timskog rada u sklopu projeknog zadatka kolegija Programsko inženjerstvo na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu.
+Ovaj projekt je rezultat timskog rada u sklopu projektnog zadatka kolegija Programsko inženjerstvo na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu.
 
 Cilj projekta je razviti programsku podršku za stvaranje web aplikacije “EduHub” koja će obrazovnim ustanovama omogućiti organiziranje nastave elektroničkim sredstvima komunikacije. Aplikacija će olakšati pristup nastavnim materijalima, raznim resursima škole i njihovom zauzeću te omogućiti jednostavnu komunikaciju među sudionicima u srednjoškolskom obrazovanju. Kao poseban dodatak aplikacija na početnoj stranici pokazuje podatak o vremenskim uvjetima i vremenskoj prognozi za grad u kojoj se škola nalazi.
 
@@ -33,7 +33,7 @@ Rožić Donatela - back-end
 Stolar Maja - back-end    
 Vrdoljak Katarina - front-end 
 # Kontribucije
-|Nadimak na github-u|Ime i prezime|Doprinosi|
+|Nadimak na GitHub-u|Ime i prezime|Doprinosi|
 |----|----|----|
 |LanaBatinic | Batinić Lana |dokumentacije  |
 |plafonn | Bilješko Marija | front-end      |
