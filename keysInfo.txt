@@ -1,3 +1,8 @@
 tenant id : a983c51c-e23d-4e05-b97e-fd9ccf9476c8
 app id : 80e82501-5674-424a-8280-51c13c8b2014
 secret value : kcM8Q~isBvkVHJOywHt0ZHqKJ.a3_~vKFr3lidvb
+
+lozinka svakog racuna : Lozinka1
+učenik : ucenik@eduxhub.onmicrosoft.com
+učenik koji još nije upisan : upis@eduxhub.onmicrosoft.com
+admin : admin@eduxhub.onmicrosoft.com
