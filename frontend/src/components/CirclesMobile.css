@@ -1,0 +1,41 @@
+.krugovi {
+
+    position: fixed;
+    width: 100vw; 
+    height: 100vh; 
+    overflow: hidden; 
+  }
+  
+  .zuti {
+    position: fixed;
+    width: 33vh;
+    height: 33vh;
+    background-color: #FFFF00;
+    border-radius: 50%; 
+    bottom: -13vh; 
+    left: -13vh; 
+    opacity: 0.3;
+  }
+  
+  .zeleni {
+    position: fixed;
+    width: 32vh;
+    height: 32vh;
+    background-color: #00FA9A;
+    border-radius: 50%; 
+    top: 20vh; 
+    right: -15vh; 
+    opacity: 0.3;
+  }
+  
+  .rozi {
+    position: fixed;
+    width: 7vh;
+    height: 7vh;
+    background-color: #ff758c;
+    border-radius: 50%; 
+    top: 65vh; 
+    right: 25vw; 
+    opacity: 0.3;
+  }
+  

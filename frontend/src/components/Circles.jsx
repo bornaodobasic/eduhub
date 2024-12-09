@@ -10,7 +10,8 @@ const Circles = () => {
   viewBox="0 0 1600 800"
   xmlns="http://www.w3.org/2000/svg"
   className="decorative-svg"
-  width="100%"
+  width="100vw"
+  height="50vh"
   preserveAspectRatio="xMidYMid slice"
 >
   <defs>
@@ -25,15 +26,15 @@ const Circles = () => {
     
   </defs>
 
-  <path
+  <path class="responsive-path" 
     d="M 0 0 L 1600 0 L 1600 250 Q 1200 450 800 250 Q 400 50 0 250 Z"
     fill="url(#gradient1)"
     opacity="0.5"
   />
-  
-  <circle cx="1500" cy="350" r="180"fill="#00FA9A" opacity="0.3"/>
-  <circle cx="1340" cy="600" r="30" fill="#ff758c" opacity="0.3" /> 
-  <circle cx="150" cy="800" r="240"fill="#FFFF00" opacity="0.3"/>
+
+  <circle className="responsive-circle" cx="1500" cy="350" r="180"fill="#00FA9A" opacity="0.3"/>
+  <circle className="responsive-circle" cx="1340" cy="600" r="30" fill="#ff758c" opacity="0.3" /> 
+  <circle className="responsive-circle" cx="150" cy="800" r="240"fill="#FFFF00" opacity="0.3"/>
 </svg>
 </div>
 

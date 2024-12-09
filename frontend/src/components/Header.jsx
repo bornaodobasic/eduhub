@@ -11,7 +11,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo">
-        <span>eŠkolskaKomunikacija</span>
+        <span>EduHub</span>
       </div>
       <div className="user-info">
         <span className="user-name">{userName}</span>

@@ -32,7 +32,7 @@ function App() {
           element={
             <div className="login-page">
               <div className="heder">
-                  <span className="title">eŠkolskaKomunikacija</span>
+                  <span className="title">EduHub</span>
               </div>
 
               <div className='veliki'>
@@ -45,10 +45,10 @@ function App() {
               
 
               <main className="login-form">
-                <h1>Dobrodošli!</h1>
-                <p className="oneliner">eŠkolskaKomunikacija</p>
+                <h1 className="welcome">Dobrodošli!</h1>
+                <p className="oneliner">EduHub</p>
                 <p>Jedna platforma za sve školske potrebe.</p>
-                <button className="continue-button" onClick={handleLogin}>
+                <button className="login-button" onClick={handleLogin}>
                   Prijava uz Microsoft
                 </button>
               </main>
