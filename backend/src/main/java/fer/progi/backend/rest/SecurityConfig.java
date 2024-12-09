@@ -164,6 +164,9 @@ public class SecurityConfig {
                     updatedAuthorities.addAll(authentication.getAuthorities());
                 }
 
+                SecurityContext context = SecurityContextHolder.getContext();
+                context.getAuthentication().getAuthorities().forEach(System.out::println);
+
                 Authentication newAuth = new UsernamePasswordAuthenticationToken(
                         authentication.getPrincipal(),
                         authentication.getCredentials(),
@@ -175,7 +178,7 @@ public class SecurityConfig {
                 SecurityContextHolder.getContext().setAuthentication(newAuth);
 
                 System.out.println("Updated Authorities in SecurityContext:");
-                SecurityContext context = SecurityContextHolder.getContext();
+                context = SecurityContextHolder.getContext();
                 context.getAuthentication().getAuthorities().forEach(System.out::println);
 
                 if (updatedAuthorities.stream().anyMatch(auth -> auth.getAuthority().equals("Upis"))) {
