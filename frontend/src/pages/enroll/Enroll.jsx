@@ -80,12 +80,12 @@ import Circles from '../../components/Circles';
 
 const Enroll = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    imeUcenik: '',
+    prezimeUcenik: '',
     oib: '',
-    birthDate: '',
-    gender: '',
-    program: '',
+    datumRodenja: '',
+    spol: '',
+    smjer: '',
   });
 
   const handleChange = (e) => {
@@ -107,28 +107,30 @@ const Enroll = () => {
     if (!validateForm()) return;
 
     try {
+      const formDataObj = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataObj.append(key, value);
+      });
+
       const response = await fetch('/upis/ucenik', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: formDataObj,
       });
 
       if (response.ok) {
         setFormData({
-          firstName: '',
-          lastName: '',
+          imeUcenik: '',
+          prezimeUcenik: '',
           oib: '',
-          birthDate: '',
-          gender: '',
-          program: '',
+          datumRodenja: '',
+          spol: '',
+          smjer: '',
         });
         alert('Upis uspješan!');
         window.location.href = '/ucenik'; // Redirect to /ucenik page
       } else {
-        const errorData = await response.json();
-        alert(`Greška: ${errorData.message || 'Neuspješan upis'}`);
+        const errorData = await response.text();
+        alert(`Greška: ${errorData || 'Neuspješan upis'}`);
         console.error('Error:', errorData);
       }
     } catch (error) {
@@ -203,7 +205,7 @@ const Enroll = () => {
                 <div className="form-group">
                   <label htmlFor="datumRodenja">Datum rođenja</label>
                   <input
-                      type="text"
+                      type="date"
                       id="datumRodenja"
                       value={formData.datumRodenja}
                       onChange={handleChange}
@@ -240,4 +242,3 @@ const Enroll = () => {
 };
 
 export default Enroll;
-
