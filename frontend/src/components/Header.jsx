@@ -36,7 +36,7 @@ const Header = () => {
 
           {showLogout && (
             <div className="logout-form">
-              <button className="logout-btn">Log Out</button>
+              <button className="logout-btn">Odjava</button>
             </div>
           )}
         </div>

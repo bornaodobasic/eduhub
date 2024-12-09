@@ -34,12 +34,10 @@
 
 .logout-form {
   position: absolute;
-  top: 40px; 
-  right: -5px; 
-  background-color: #444;
-  padding: 10px;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  top: 33px; 
+  right: -22px;
+  border: none;
+  padding: 0px;
   z-index: 10;
   width: 120px; 
   text-align: center; 
@@ -54,23 +52,12 @@
   visibility: visible; 
 }
 
-
-.logout-form {
-  position: absolute;
-  top: 35px; 
-  right: 0px;
-  background-color: #444;
-  padding: 10px;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-  width: 120px;
-  text-align: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+.logout-btn{
+  height: 5vh;
+  font-size: 15px;
+  border-radius: 0px;
+  color: black;
 }
-
 
 .logout-btn:hover {
   background-color: #f0f0f0; 
