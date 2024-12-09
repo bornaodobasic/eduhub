@@ -126,13 +126,13 @@
     }
   
     .form-row {
-      flex-direction: column; /* Postavi elemente u jedan red */
-      gap: 5px; /* Održava razmak između elemenata */
+      flex-direction: column; 
+      gap: 5px; 
     }
   
     .form-column {
-      min-width: 100%; /* Postavi stupce da zauzimaju punu širinu */
-      flex: none; /* Onemogući prilagođavanje veličine */
+      min-width: 100%;
+      flex: none;
     }
 
     .enroll-button {

@@ -104,36 +104,36 @@ const Admin = () => {
     return (
         <div className="homepage">
             <Header />
-            <div className="homepage-container">
-                <aside className="sidebar-left">
+            <div className="homepage-container-admin">
+                <aside className="sidebar-left-admin">
                     <button 
-                        className="sidebar-button" 
+                        className="sidebar-button-admin" 
                         onClick={() => handleButtonClick("dodajKorisnika")}
                     >
                         Dodaj korisnika
                     </button>
                     <button 
-                        className="sidebar-button" 
+                        className="sidebar-button-admin" 
                         onClick={() => handleButtonClick("Funkcija2")}
                     >
                         Funkcija2
                     </button>
                     <button 
-                        className="sidebar-button" 
+                        className="sidebar-button-admin" 
                         onClick={() => handleButtonClick("Funkcija3")}
                     >
                         Funkcija3
                     </button>
                 </aside>
 
-                <div className="main-content">
+                <div className="main-content-admin">
                     {content}
                 </div>
 
-                <aside className="sidebar-right">
-                    <div className="empty-container"></div>
-                    <div className="weather-widget-container">
-                        <div className="weather-widget">
+                <aside className="sidebar-right-admin">
+                    <div className="empty-container-admin"></div>
+                    <div className="weather-widget-container-admin">
+                        <div className="weather-widget-admin">
                             <div className="weather-icon">
                                 <img 
                                     src={require("../../components/5.png")} 

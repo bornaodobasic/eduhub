@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "../../components/Header"; 
-import "./Ravnatelj.css"; 
 import "../../components/MainContent.css"; 
 
 const Ravnatelj = () => {
