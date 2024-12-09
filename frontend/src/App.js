@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './App.css';
 import Enroll from './pages/enroll/Enroll';
 import Admin from './pages/admin/Admin';
-import Adminhome from './pages/adminHome/AdminHome';
 import Certificate from './pages/certificate/Certificate';
 import ApproveAdmin from './pages/approveadmin/ApproveAdmin';
 import ApproveEmployee from './pages/approveemployee/ApproveEmployee';
@@ -11,21 +11,22 @@ import ApproveNastavnik from './pages/approvenastavnik/ApproveNastavnik';
 import ApproveRavnatelj from './pages/approveravnatelj/ApproveRavnatelj';
 import ApproveSatnicar from './pages/approvesatnicar/ApproveSatnicar';
 import Circles from './components/Circles';
-import './App.css';
+import CirclesMobile from './components/CirclesMobile';
 import Nastavnik from './pages/nastavnik/Nastavnik';
 import Ucenik from './pages/ucenik/Ucenik';
 import Djelatnik from './pages/djelatnik/Djelatnik';
+import Satnicar from './pages/satnicar/Satnicar';
+import Ravnatelj from './pages/ravnatelj/Ravnatelj';
 
 function App() {
   const handleLogin = () => {
-    // Redirect to the OAuth2 login endpoint in Spring Boot
     window.location.href = "http://localhost:8080/oauth2/authorization/azure-dev";
   };
 
   return (
     <Router>
       <Routes>
-        {/* Prijavni ekran */}
+        
         <Route
           path="/"
           element={
@@ -34,7 +35,14 @@ function App() {
                   <span className="title">eŠkolskaKomunikacija</span>
               </div>
 
-              <Circles />
+              <div className='veliki'>
+                <Circles />
+              </div>
+              <div className='maleni'>
+                <CirclesMobile />
+              </div>
+
+              
 
               <main className="login-form">
                 <h1>Dobrodošli!</h1>
@@ -48,9 +56,7 @@ function App() {
           }
         />
 
-        {/* Ostale rute */}
-        <Route path="/enroll" element={<Enroll />} />
-        <Route path="/admin-home" element={<Adminhome />} />
+        <Route path="/upis" element={<Enroll />} />
         <Route path="/certificate" element={<Certificate />} />
         <Route path="/approveadmin" element={<ApproveAdmin />} />
         <Route path="/approveemployee" element={<ApproveEmployee />} />
@@ -62,6 +68,8 @@ function App() {
         <Route path="/ucenik" element={<Ucenik />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/djelatnik" element={<Djelatnik />} />
+        <Route path="/satnicar" element={<Satnicar />} />
+        <Route path="/ravnatelj" element={<Ravnatelj />} />
       </Routes>
     </Router>
   );
