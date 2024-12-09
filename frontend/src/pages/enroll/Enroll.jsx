@@ -37,7 +37,7 @@ const Enroll = () => {
               </div>
             </div>
 
-            {/* Drugi Stupac */}
+            
             <div className="form-column">
               <div className="form-group">
                 <label htmlFor="lastName">Prezime</label>

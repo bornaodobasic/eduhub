@@ -11,7 +11,7 @@ body, html {
   color: #333;
 }
 
-/* Homepage container - adding padding-top to avoid overlap with fixed header */
+
 .homepage {
   display: flex;
   flex-direction: column;
@@ -23,11 +23,11 @@ body, html {
   display: flex;
   flex: 1;
   width: 100vw;
-  background-color: #f7f7f7; /* Background for the main content area */
-  margin-top: 60px; /* Add space for the header */
+  background-color: #f7f7f7; 
+  margin-top: 60px;
 }
 
-/* Sidebar Styles */
+
 .sidebar-left {
   background-color: #f4f4f4;
   padding: 20px;
@@ -58,25 +58,24 @@ body, html {
 }
 
 .sidebar-button.gray {
-  background-color: #ccc; /* Light gray background */
-  color: #333; /* Darker text color */
+  background-color: #ccc; 
+  color: #333;
 }
 
 .sidebar-button.gray:hover {
-  background-color: #bbb; /* Slightly darker gray on hover */
+  background-color: #bbb; 
 }
 
-/* Main Content Area */
 .main-content {
   flex: 1;
   padding: 20px;
   background: #fff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin-left: 20px; /* Space between sidebar and main content */
+  margin-left: 20px; 
   border-radius: 8px;
 }
 
-/* Right Sidebar */
+
 .sidebar-right {
   background-color: #f4f4f4;
   padding: 20px;
@@ -84,7 +83,6 @@ body, html {
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Header Styles */
 header {
   background-color: #fff;
   padding: 20px;
@@ -100,22 +98,46 @@ h1 {
   color: #333;
 }
 
+.add-title{
+  margin-bottom: 3px;
+  padding-left: 20px;
+}
 
 
-/* Custom Media Queries */
-@media (max-width: 768px) {
-  .homepage-container {
-      flex-direction: column;
-      margin-top: 80px; 
-  }
+.add-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px; 
+  padding: 20px;
+}
 
-  .sidebar-left, .sidebar-right {
-      width: 100%;
-      box-shadow: none;
-  }
+.user-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px; 
+  padding-left: 20px;
+  padding-right: 280px;
+}
 
-  .main-content {
-      margin-left: 0;
-  }
+.add-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex: 1;
+}
 
+.add-button {
+  padding: 8px 15px;
+  background-color: #3ba752; 
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 700;
+}
+
+.add-button:hover {
+  background-color: #18702c; 
 }
