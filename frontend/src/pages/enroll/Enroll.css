@@ -76,7 +76,7 @@
     font-size: 16px;
   }
   
-  .continue-button {
+  .enroll-button {
     background: linear-gradient(to right, #ff7eb3, #ff758c);
     color: white;
     padding: 15px 20px;
@@ -117,4 +117,44 @@
     box-shadow: 0 0 5px rgba(255, 117, 140, 0.5); 
   }
   
+  @media only screen and (max-width: 768px) {
+    .enroll-form {
+      max-width: 70%; 
+      padding: 30px; 
+      margin: auto; 
+      margin-top: 5vh;
+    }
+  
+    .form-row {
+      flex-direction: column; /* Postavi elemente u jedan red */
+      gap: 5px; /* Održava razmak između elemenata */
+    }
+  
+    .form-column {
+      min-width: 100%; /* Postavi stupce da zauzimaju punu širinu */
+      flex: none; /* Onemogući prilagođavanje veličine */
+    }
+
+    .enroll-button {
+      font-size: 18px; /* Zadrži veličinu teksta dugmeta */
+      padding: 15px; /* Prilagodi padding za dugme */
+      padding: 10px 10px;
+
+    }
+
+    .form-group {
+      margin-bottom: 1vh;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 5px;
+    }
+  
+    .enroll-form h1 {
+      font-size: 28px;
+      color: #5c5c5c;
+      margin-bottom: 23px;
+    }
+  }
   

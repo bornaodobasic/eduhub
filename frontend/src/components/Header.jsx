@@ -3,7 +3,7 @@ import './Header.css';
 
 const Header = () => {
   // Placeholder for user's name
-  const userName = "User Name"; // Replace with dynamic data as needed
+  const userName = "Ime Prezime"; // Replace with dynamic data as needed
 
   // State to toggle the form visibility on hover
   const [showLogout, setShowLogout] = useState(false);
@@ -21,8 +21,7 @@ const Header = () => {
           onMouseLeave={() => setShowLogout(false)}
         >
          
-          <svg
-            height="30"
+          <svg className="icon"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

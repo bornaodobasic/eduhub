@@ -17,6 +17,9 @@
   font-weight: bold;
 }
 
+.icon{
+  height: 30px;
+}
 
 .profile-icon-container {
   position: relative; 
@@ -82,3 +85,27 @@
 
 
 
+@media (max-width: 768px) {
+  .header{
+    z-index: 3;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    text-align: center;
+    padding: 0px 20px;
+    padding-right:10px;
+    background: linear-gradient(to right, #ff7eb3, #ff758c);
+    color: white;
+
+  }
+
+  .logo{
+    font-size: 16px;
+  }
+
+  .icon{
+    height: 28px;
+  }
+  
+}

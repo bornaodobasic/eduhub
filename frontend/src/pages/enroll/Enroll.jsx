@@ -158,7 +158,7 @@ const Enroll = () => {
               </div>
             </div>
 
-            <button type="submit" className="continue-button">
+            <button type="submit" className="enroll-button">
               Potvrdi
             </button>
           </form>
