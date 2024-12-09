@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Header from "../../components/Header"; 
-import "../../components/MainContent.css"; 
 import './Admin.css';
 
 const Admin = () => {
