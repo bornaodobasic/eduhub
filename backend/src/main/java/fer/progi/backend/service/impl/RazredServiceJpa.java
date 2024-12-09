@@ -1,5 +1,6 @@
 package fer.progi.backend.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +29,6 @@ public class RazredServiceJpa implements RazredService{
 	public List<Razred> listAll() {
 		return razredRepo.findAll();
 	}
-
-//	@Override
-//	public Razred dodajRazred(Razred razred) {
-//		
-//		Smjer smjer = smjerRepo.findById(razred.getSmjer().getSifSmjer()).orElseThrow(() -> new IllegalArgumentException("kriva šifra"));
-//		
-//		razred.setSmjer(smjer);
-//		
-//		return razredRepo.save(razred);
-//	}
 	
 	public Razred addRazred(Razred razred) {
 		String nazRazred = razred.getNazRazred();
@@ -52,6 +43,25 @@ public class RazredServiceJpa implements RazredService{
 		razred.setSmjer(smjer);
 		
 		return razredRepo.save(razred);
+	}
+
+	@Override
+	public Razred getBestClass(String smjer) {
+		List<Razred> tempRazredi = razredRepo.findAllBySmjer_NazivSmjer(smjer);
+		for (Razred razred : tempRazredi) {
+			System.out.println(razred.getNazRazred());
+		}
+		tempRazredi.removeIf(razred -> !razred.getNazRazred().startsWith("1"));
+
+
+		Razred bestClass = tempRazredi.get(0);
+		for(Razred razred : tempRazredi){
+			int ucenikCount = razred.getUcenici().size();
+			if (ucenikCount < bestClass.getUcenici().size()) {
+				bestClass = razred;
+			}
+		}
+		return bestClass;
 	}
 
 	public Razred findByNazRazred(String nazRazred) {

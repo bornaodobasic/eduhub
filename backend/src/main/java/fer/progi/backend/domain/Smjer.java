@@ -23,4 +23,7 @@ public class Smjer {
     
     @OneToMany(mappedBy = "smjer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Predmet> predmeti;
+
+    @OneToMany(mappedBy = "smjer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Razred> razredi;
 }
