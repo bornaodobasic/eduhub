@@ -36,6 +36,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -68,7 +71,6 @@ public class SecurityConfig {
         return (request, response, authentication) -> {
             System.out.println("Logout uspješan");
             String log = "https://login.microsoftonline.com/a983c51c-e23d-4e05-b97e-fd9ccf9476c8/oauth2/v2.0/logout";
-            // PROMIJENITI U DEPLOYU
             String post1 = "?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F";
 
             response.sendRedirect(log + post1);
@@ -198,11 +200,18 @@ public class SecurityConfig {
     }
 
     @Bean
+    public StrictHttpFirewall allowSemiColonInUrl() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowSemicolon(true);
+        return firewall;
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/ouath2/authorization/**", "/login/**", "/static/**", "/index.html", "/", "/favicon.ico", "/logo192.png", "/manifest.json", "/h2-console/**").permitAll()
+                        .requestMatchers("/oauth2/authorization/**", "/login/**", "/static/**", "/index.html", "/", "/favicon.ico", "/logo192.png", "/manifest.json", "/h2-console/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("Admin")
                         .requestMatchers("/nastavnik/**").hasAuthority("Nastavnik")
                         .requestMatchers("/djelatnik/**").hasAuthority("Djelatnik")
@@ -236,7 +245,8 @@ public class SecurityConfig {
                         .clearAuthentication(true)
                         .addLogoutHandler(customLogoutHandler())
                         .logoutSuccessHandler(customLogoutSuccessHandler())
-                );
+                )
+                .setSharedObject(HttpFirewall.class, allowSemiColonInUrl());
 
         return http.build();
     }

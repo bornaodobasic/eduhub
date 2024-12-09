@@ -12,6 +12,15 @@
   font-size: 16px;
 }
 
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.icon{
+  height: 30px;
+}
+
 .profile-icon-container {
   position: relative; 
   display: inline-block;
@@ -25,12 +34,10 @@
 
 .logout-form {
   position: absolute;
-  top: 40px; 
-  right: -5px; 
-  background-color: #444;
-  padding: 10px;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  top: 33px; 
+  right: -22px;
+  border: none;
+  padding: 0px;
   z-index: 10;
   width: 120px; 
   text-align: center; 
@@ -45,23 +52,12 @@
   visibility: visible; 
 }
 
-
-.logout-form {
-  position: absolute;
-  top: 35px; 
-  right: 0px;
-  background-color: #444;
-  padding: 10px;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-  width: 120px;
-  text-align: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+.logout-btn{
+  height: 5vh;
+  font-size: 15px;
+  border-radius: 0px;
+  color: black;
 }
-
 
 .logout-btn:hover {
   background-color: #f0f0f0; 
@@ -76,3 +72,27 @@
 
 
 
+@media (max-width: 768px) {
+  .header{
+    z-index: 3;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    text-align: center;
+    padding: 0px 20px;
+    padding-right:10px;
+    background: linear-gradient(to right, #ff7eb3, #ff758c);
+    color: white;
+
+  }
+
+  .logo{
+    font-size: 16px;
+  }
+
+  .icon{
+    height: 28px;
+  }
+  
+}

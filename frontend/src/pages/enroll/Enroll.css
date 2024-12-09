@@ -15,33 +15,8 @@
   }
   
 
-  .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 40px;
-    background: linear-gradient(to right, #ff7eb3, #ff758c);
-    color: white;
-    z-index: 3; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-  }
-  
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .logo-icon {
-    margin-right: 8px;
-  }
-  
-
   .enroll-page {
-    padding-top: 120px; 
+    padding-top: 40px; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,7 +27,6 @@
   .enroll-form {
     max-width: 800px;
     width: 90%; 
-    margin: 0 auto;
     padding: 30px;
     background: #fff;
     border-radius: 8px;
@@ -102,7 +76,7 @@
     font-size: 16px;
   }
   
-  .continue-button {
+  .enroll-button {
     background: linear-gradient(to right, #ff7eb3, #ff758c);
     color: white;
     padding: 15px 20px;
@@ -143,4 +117,44 @@
     box-shadow: 0 0 5px rgba(255, 117, 140, 0.5); 
   }
   
+  @media only screen and (max-width: 768px) {
+    .enroll-form {
+      max-width: 70%; 
+      padding: 30px; 
+      margin: auto; 
+      margin-top: 5vh;
+    }
+  
+    .form-row {
+      flex-direction: column; 
+      gap: 5px; 
+    }
+  
+    .form-column {
+      min-width: 100%;
+      flex: none;
+    }
+
+    .enroll-button {
+      font-size: 18px; /* Zadrži veličinu teksta dugmeta */
+      padding: 15px; /* Prilagodi padding za dugme */
+      padding: 10px 10px;
+
+    }
+
+    .form-group {
+      margin-bottom: 1vh;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 5px;
+    }
+  
+    .enroll-form h1 {
+      font-size: 28px;
+      color: #5c5c5c;
+      margin-bottom: 23px;
+    }
+  }
   

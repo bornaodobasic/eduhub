@@ -1,0 +1,28 @@
+.svg-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; 
+  height: 100vh; 
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1; 
+}
+
+.decorative-svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.responsive-circle {
+  transform: scale(calc(1vw / 100), calc(1vh / 100)); /* Relativno skaliranje */
+  transform-origin: center;
+}
+
+.responsive-path {
+  transform-origin: top left; 
+  transform: scale(calc(1vw / 1600), calc(1vh / 800)); 
+}

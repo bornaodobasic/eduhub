@@ -10,12 +10,10 @@ public class CustomLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        // Invalidate the HTTP session
         if (request.getSession(false) != null) {
             request.getSession().invalidate();
         }
 
-        // Clear the SecurityContext
         SecurityContextHolder.clearContext();
         System.out.println("User logged out and SecurityContext cleared");
     }
