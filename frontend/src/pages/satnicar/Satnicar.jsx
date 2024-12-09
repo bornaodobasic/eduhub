@@ -4,7 +4,7 @@ import Header from "../../components/Header";
 import "./Satnicar.css"; 
 import "../../components/MainContent.css"; 
 
-const Nastavnik = () => {
+const Satnicar = () => {
     const roles = [
         { name: "Rasporedi"},
         { name: "Učionice"},
@@ -59,4 +59,4 @@ const Nastavnik = () => {
     );
 };
 
-export default Nastavnik;
+export default Satnicar;

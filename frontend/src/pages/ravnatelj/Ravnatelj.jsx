@@ -4,7 +4,7 @@ import Header from "../../components/Header";
 import "./Ravnatelj.css"; 
 import "../../components/MainContent.css"; 
 
-const Nastavnik = () => {
+const Ravnatelj = () => {
     const roles = [
         { name: "Djelatnici"},
         { name: "Raspored"},
@@ -61,4 +61,4 @@ const Nastavnik = () => {
     );
 };
 
-export default Nastavnik;
+export default Ravnatelj;
