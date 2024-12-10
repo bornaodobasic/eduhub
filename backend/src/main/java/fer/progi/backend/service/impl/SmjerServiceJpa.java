@@ -1,6 +1,7 @@
 package fer.progi.backend.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,12 +22,16 @@ public class SmjerServiceJpa implements SmjerService {
     }
 
     @Override
-    public Smjer dodajSmjer(Smjer smjer) {
+    public Smjer dodajSmjer(String naziv) {
+        Smjer smjer = new Smjer();
+        smjer.setNazivSmjer(naziv);
         return smjerRepo.save(smjer);
     }
 
 	@Override
-	public Smjer findBySifSmjer(Integer sifSmjer) {
-		return smjerRepo.findBySifSmjer(sifSmjer).orElseThrow(() -> new RuntimeException("Smjer nije pronađen"));
+	public Smjer findByNazSmjer(String naziv) {
+        Optional<Smjer> smjer = smjerRepo.findByNazSmjer(naziv);
+        if (smjer.isEmpty()) { return dodajSmjer(naziv); }
+        else return smjer.get();
 	}
 }

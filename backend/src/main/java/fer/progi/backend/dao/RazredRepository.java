@@ -12,8 +12,6 @@ import java.util.Optional;
 public interface RazredRepository extends JpaRepository<Razred, String>{
 
     Optional<Razred> findByNazRazred(String nazRazred);
-    
-    int countByNazRazred(String nazRazred);
 
     @Query("SELECT r FROM Razred r WHERE r.smjer.nazivSmjer = :smjer")
     List<Razred> findAllBySmjer_NazivSmjer(@Param("smjer") String smjer);

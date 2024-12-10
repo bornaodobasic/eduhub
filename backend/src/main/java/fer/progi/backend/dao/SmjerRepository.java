@@ -8,6 +8,6 @@ import fer.progi.backend.domain.Smjer;
 
 public interface SmjerRepository extends JpaRepository<Smjer, Integer>{
 	
-	Optional<Smjer> findBySifSmjer(Integer sifSmjer);
+	Optional<Smjer> findByNazSmjer(String naziv);
 
 }

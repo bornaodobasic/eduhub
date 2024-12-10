@@ -1,5 +1,6 @@
 package fer.progi.backend.rest;
 
+import fer.progi.backend.service.RazredService;
 import fer.progi.backend.service.impl.AdminServiceJpa;
 import fer.progi.backend.service.impl.NastavnikServiceJpa;
 import fer.progi.backend.service.impl.UcenikServiceJpa;
@@ -60,6 +61,9 @@ public class SecurityConfig {
     @Autowired
     private SatnicarServiceJpa satnicarService;
 
+    @Autowired
+    private RazredService razredService;
+
 
     @Bean
     public LogoutHandler customLogoutHandler() {
@@ -92,6 +96,10 @@ public class SecurityConfig {
                 boolean present = false;
                 boolean exists = true;
 
+                if(!razredService.findByNazRazred("1a")) razredService.dodajRazred("1a", "opca");
+                if(!razredService.findByNazRazred("1b")) razredService.dodajRazred("1b", "prirodoslovno-matematicka");
+                if(!razredService.findByNazRazred("1c")) razredService.dodajRazred("1c", "jezicna");
+                
                 if (principal instanceof Jwt) {
                     Jwt jwt = (Jwt) principal;
                     List<String> roles = jwt.getClaimAsStringList("roles");

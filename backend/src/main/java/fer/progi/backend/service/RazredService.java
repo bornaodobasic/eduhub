@@ -9,10 +9,12 @@ public interface RazredService {
 	
 	List<Razred> listAll();
 	
-	Razred addRazred(Razred razred);
-	
 	Razred getBestClass(String string);
 
-	Razred findByNazRazred(String nazRazred);
+	boolean findByNazRazred(String nazRazred);
+
+	void dodajRazred(String nazRazred, String nazivSmjer);
+
+
 
 }
