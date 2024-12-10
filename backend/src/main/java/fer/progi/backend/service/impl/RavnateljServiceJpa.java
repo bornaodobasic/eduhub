@@ -29,25 +29,20 @@ public class RavnateljServiceJpa implements RavnateljService{
 			return ravnateljRepo.save(ravnatelj);
 		}
 
-		/*@Override
-		public Optional<Ravnatelj> pronadiRavnateljaPoEmail(String email) {
-			return Optional.ofNullable(ravnateljRepo.findByEmail(email));
-		}*/
-
 		public boolean findByEmail(String email) {
 			return ravnateljRepo.findByEmail(email).isPresent();
 		}
 
-		public Ravnatelj getOrCreateRavnatelj(String email) {
-				return ravnateljRepo.findByEmail(email)
-						.orElseGet(() -> createNewRavnatelj(email));
+		@Override
+		public boolean createIfNeeded(String email) {
+        	Optional<Ravnatelj> optionalRavnatelj = ravnateljRepo.findByEmail(email);
+			if (optionalRavnatelj.isEmpty()) {
+				Ravnatelj ravnatelj = new Ravnatelj();
+				ravnatelj.setEmail(email);
+				ravnateljRepo.save(ravnatelj);
+			}
+			return true;
 		}
 
-		private Ravnatelj createNewRavnatelj(String email) {
-			Ravnatelj ravnatelj = new Ravnatelj();
-			ravnatelj.setEmail(email);
-			return ravnateljRepo.save(ravnatelj);
-		}
-		
 		
 }

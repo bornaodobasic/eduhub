@@ -90,6 +90,7 @@ public class SecurityConfig {
                 String role;
                 String email;
                 boolean present = false;
+                boolean exists = true;
 
                 if (principal instanceof Jwt) {
                     Jwt jwt = (Jwt) principal;
@@ -100,28 +101,21 @@ public class SecurityConfig {
                     System.out.println(email);
 
                     if (role.equals("Admin")) {
-                        present = adminService.findByEmail(email);
-
+                        present = adminService.createIfNeeded(email);
                     } else if (role.equals("Nastavnik")) {
-                        present = nastavnikService.findByEmail(email);
+                        present = nastavnikService.createIfNeeded(email);
 
                     } else if (role.equals("Djelatnik")) {
-                        present = djelatnikService.findByEmail(email);
+                        present = djelatnikService.createIfNeeded(email);
 
                     } else if (role.equals("Satnicar")) {
-                        present = satnicarService.findByEmail(email);
+                        present = satnicarService.createIfNeeded(email);
 
                     } else if (role.equals("Ucenik")) {
-                        present = ucenikService.findByEmail(email);
+                        exists = ucenikService.findByEmail(email);
 
                     } else if (role.equals("Ravnatelj")) {
-                        present  = ravnateljService.findByEmail(email);
-                    }
-
-                    if (present) {
-                        updatedAuthorities.add(new SimpleGrantedAuthority(role));
-                    } else if (!present && role.equals("Ucenik")) {
-                        updatedAuthorities.add(new SimpleGrantedAuthority("Upis"));
+                        present  = ravnateljService.createIfNeeded(email);
                     }
 
                     updatedAuthorities.addAll(authentication.getAuthorities());
@@ -137,28 +131,27 @@ public class SecurityConfig {
                     System.out.println(role);
 
                     if (role.equals("Admin")) {
-                        //present = adminService.findByEmail(email);
-                        present = true;
+                        present = adminService.createIfNeeded(email);
                     } else if (role.equals("Nastavnik")) {
-                        present = nastavnikService.findByEmail(email);
+                        present = nastavnikService.createIfNeeded(email);
 
                     } else if (role.equals("Djelatnik")) {
-                        present = djelatnikService.findByEmail(email);
+                        present = djelatnikService.createIfNeeded(email);
 
                     } else if (role.equals("Satnicar")) {
-                        present = satnicarService.findByEmail(email);
+                        present = satnicarService.createIfNeeded(email);
 
                     } else if (role.equals("Ucenik")) {
-                        present = ucenikService.findByEmail(email);
+                        exists = ucenikService.findByEmail(email);
 
                     } else if (role.equals("Ravnatelj")) {
-                        present  = ravnateljService.findByEmail(email);
+                        present  = ravnateljService.createIfNeeded(email);
                     }
 
-                    if (present) {
-                        updatedAuthorities.add(new SimpleGrantedAuthority(role));
-                    } else if (!present && role.equals("Ucenik")) {
+                    if (!exists) {
                         updatedAuthorities.add(new SimpleGrantedAuthority("Upis"));
+                    } else if (present) {
+                        updatedAuthorities.add(new SimpleGrantedAuthority(role));
                     }
 
                     updatedAuthorities.addAll(authentication.getAuthorities());

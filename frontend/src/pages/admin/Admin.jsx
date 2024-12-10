@@ -3,7 +3,7 @@ import Header from "../../components/Header";
 import './Admin.css';
 
 const Admin = () => {
-    const [content, setContent] = useState("Pozdrav, admine!");
+    const [content, setContent] = useState("Dobrodošli na početnu stranicu admina!");
 
     const handleNastavnikSubmit = async (e) => {
         e.preventDefault();

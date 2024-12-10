@@ -12,41 +12,35 @@ import fer.progi.backend.domain.Satnicar;
 import fer.progi.backend.service.SatnicarService;
 
 @Service
-public class SatnicarServiceJpa implements SatnicarService{	
-		
-		@Autowired
-		private SatnicarRepository satnicarRepo;
+public class SatnicarServiceJpa implements SatnicarService {
 
-		@Override
-		public List<Satnicar> listAll() {
-			return satnicarRepo.findAll();
-		}
+    @Autowired
+    private SatnicarRepository satnicarRepo;
 
-		@Override
-		public Satnicar dodajSatnicara (Satnicar satnicar) {
-			return satnicarRepo.save(satnicar);
-		}
+    @Override
+    public List<Satnicar> listAll() {
+        return satnicarRepo.findAll();
+    }
 
-		/*@Override
-		public Optional<Satnicar> pronadiSatnicaraPoEmail(String email) {
-			return Optional.ofNullable(satnicarRepo.findByEmail(email));
-		}*/
+    @Override
+    public Satnicar dodajSatnicara(Satnicar satnicar) {
+        return satnicarRepo.save(satnicar);
+    }
 
-		public boolean findByEmail(String email) {
-			return satnicarRepo.findByEmail(email).isPresent();
-		}
+    public boolean findByEmail(String email) {
+        return satnicarRepo.findByEmail(email).isPresent();
+    }
 
-		public Satnicar getOrCreateSatnicar(String email) {
-				return satnicarRepo.findByEmail(email)
-						.orElseGet(() -> createNewSatnicar(email));
-		}
+    @Override
+    public boolean createIfNeeded(String email) {
+        Optional<Satnicar> optionalSatnicar = satnicarRepo.findByEmail(email);
+        if (optionalSatnicar.isEmpty()) {
+            Satnicar satnicar = new Satnicar();
+            satnicar.setEmail(email);
+            satnicarRepo.save(satnicar);
+        }
+        return true;
+    }
 
-		private Satnicar createNewSatnicar(String email) {
-			Satnicar satnicar = new Satnicar();
-			satnicar.setEmail(email);
-			return satnicarRepo.save(satnicar);
-		}
-		
-		
-		
+
 }

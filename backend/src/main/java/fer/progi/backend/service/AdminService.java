@@ -16,4 +16,6 @@ public interface AdminService {
 	Ravnatelj addRavnatelj (AddDTO addDTO);
 	Satnicar addSatnicar (AddDTO addDTO);
 
+	boolean createIfNeeded(String email);
+
 }

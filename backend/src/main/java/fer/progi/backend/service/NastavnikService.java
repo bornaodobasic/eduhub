@@ -12,6 +12,6 @@ public interface NastavnikService {
 
 	Nastavnik findBySifNastavnik(Integer sifNastavnik);
 
-	//Optional<Nastavnik> pronadiNastavnikaPoEmail(String email);
+	boolean createIfNeeded(String email);
 
 }

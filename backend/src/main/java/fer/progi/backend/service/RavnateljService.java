@@ -12,7 +12,7 @@ public interface RavnateljService {
 	
 	Ravnatelj dodajRavnatelj(Ravnatelj ravnatelj);
 
-	//Optional<Ravnatelj> pronadiRavnateljaPoEmail(String email);
+	boolean createIfNeeded(String email);
 	
 
 }

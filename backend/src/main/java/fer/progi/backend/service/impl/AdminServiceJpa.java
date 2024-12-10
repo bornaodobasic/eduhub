@@ -6,6 +6,7 @@ import fer.progi.backend.rest.AddDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import fer.progi.backend.service.AdminService;
+import java.util.Optional;
 
 
 @Service
@@ -79,6 +80,17 @@ public class AdminServiceJpa implements AdminService {
         nastavnik.setEmail(addDTO.getEmail());
 
         return nastavnikRepo.save(nastavnik);
+    }
+
+    @Override
+    public boolean createIfNeeded(String email) {
+        Optional<Admin> optionalAdmin = adminRepo.findByEmail(email);
+        if (optionalAdmin.isEmpty()) {
+            Admin admin = new Admin();
+            admin.setEmail(email);
+            adminRepo.save(admin);
+        }
+        return true;
     }
 
 }
