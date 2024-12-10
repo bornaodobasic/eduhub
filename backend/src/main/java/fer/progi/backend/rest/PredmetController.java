@@ -26,15 +26,6 @@ public class PredmetController {
 	return predmetService.listAll();
 	}
 	
-	@PostMapping("")
-    public ResponseEntity<String> addPredmet(@RequestBody Predmet predmet) {
-        try {
-            predmetService.addPredmet(predmet);
-            return ResponseEntity.ok("Predmet je uspješno dodan");
-        } catch(RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-    }
 	
 	@PostMapping("/{sifPredmet}/nastavnici/{sifNastavnik}")
 	public ResponseEntity<String> dodajNastavnikaUPredmet(

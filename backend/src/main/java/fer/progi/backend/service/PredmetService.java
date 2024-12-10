@@ -8,9 +8,7 @@ public interface PredmetService {
 	
 	List<Predmet> listAll();
 	
-	//Predmet dodajPredmet(Predmet predmet);
-	
-	Predmet addPredmet(Predmet predmet);
+
 	
 	void dodajNastavnikaUPredmet(Integer sifPredmet, Integer sifNastavnik);
 }

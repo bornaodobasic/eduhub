@@ -20,8 +20,6 @@ public class PredmetServiceJpa implements PredmetService{
 	@Autowired
 	private PredmetRepository predmetRepo;
 	
-//	@Autowired
-//	private NastavnikRepository nastavnikRepo;
 	
 	@Autowired
     private SmjerService smjerService;
@@ -34,15 +32,7 @@ public class PredmetServiceJpa implements PredmetService{
 		return predmetRepo.findAll();
 	}
 
-//	@Override
-//	public Predmet dodajPredmet(Predmet predmet) {
-//		
-//		Smjer smjer = smjerRepo.findById(predmet.getSmjer().getSifSmjer()).orElseThrow(() -> new IllegalArgumentException("kriva šifra"));
-//		
-//		predmet.setSmjer(smjer);
-//		return predmetRepo.save(predmet);
-//	}
-	
+
 
 	
 	public void dodajNastavnikaUPredmet(Integer sifPredmet, Integer sifNastavnik) {
@@ -53,18 +43,5 @@ public class PredmetServiceJpa implements PredmetService{
 		predmetRepo.save(predmet);
 		
 	}
-
-	@Override
-	public Predmet addPredmet(Predmet predmet) {
-		
-		if(predmetRepo.countBySifPredmet(predmet.getSifPredmet()) >0)
-			throw new RequestDeniedException(
-					"Predmet sa šifrom " + predmet.getSifPredmet() + " vec postoji!"
-			);
-		Smjer smjer = smjerService.findBySifSmjer(predmet.getSmjer().getSifSmjer());
-		
-		predmet.setSmjer(smjer);
-		return predmetRepo.save(predmet);
-	}
-
+	
 }

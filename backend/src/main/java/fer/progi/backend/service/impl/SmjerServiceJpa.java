@@ -30,7 +30,7 @@ public class SmjerServiceJpa implements SmjerService {
 
 	@Override
 	public Smjer findByNazSmjer(String naziv) {
-        Optional<Smjer> smjer = smjerRepo.findByNazSmjer(naziv);
+        Optional<Smjer> smjer = smjerRepo.findByNazivSmjer(naziv);
         if (smjer.isEmpty()) { return dodajSmjer(naziv); }
         else return smjer.get();
 	}

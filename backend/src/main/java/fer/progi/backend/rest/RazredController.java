@@ -24,14 +24,5 @@ public class RazredController {
     public List<Razred> listRazred() {
         return razredService.listAll();
     }
-
-    @PostMapping("")
-    public ResponseEntity<String> dodajRazred(@RequestBody Razred razred) {
-    	try {
-            razredService.addRazred(razred);
-            return ResponseEntity.ok("Razred je uspješno dodan");
-        } catch(RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-    }
+    
 }
