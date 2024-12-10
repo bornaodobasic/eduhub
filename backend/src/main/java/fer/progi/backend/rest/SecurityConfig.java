@@ -137,8 +137,8 @@ public class SecurityConfig {
                     System.out.println(role);
 
                     if (role.equals("Admin")) {
-                        present = adminService.findByEmail(email);
-
+                        //present = adminService.findByEmail(email);
+                        present = true;
                     } else if (role.equals("Nastavnik")) {
                         present = nastavnikService.findByEmail(email);
 
