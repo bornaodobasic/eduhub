@@ -99,7 +99,7 @@ public class SecurityConfig {
                 if(!razredService.findByNazRazred("1a")) razredService.dodajRazred("1a", "opca");
                 if(!razredService.findByNazRazred("1b")) razredService.dodajRazred("1b", "prirodoslovno-matematicka");
                 if(!razredService.findByNazRazred("1c")) razredService.dodajRazred("1c", "jezicna");
-                
+
                 if (principal instanceof Jwt) {
                     Jwt jwt = (Jwt) principal;
                     List<String> roles = jwt.getClaimAsStringList("roles");
@@ -121,9 +121,16 @@ public class SecurityConfig {
 
                     } else if (role.equals("Ucenik")) {
                         exists = ucenikService.findByEmail(email);
+                        present = true;
 
                     } else if (role.equals("Ravnatelj")) {
                         present  = ravnateljService.createIfNeeded(email);
+                    }
+
+                    if (!exists) {
+                        updatedAuthorities.add(new SimpleGrantedAuthority("Upis"));
+                    } else if (present) {
+                        updatedAuthorities.add(new SimpleGrantedAuthority(role));
                     }
 
                     updatedAuthorities.addAll(authentication.getAuthorities());
@@ -151,6 +158,7 @@ public class SecurityConfig {
 
                     } else if (role.equals("Ucenik")) {
                         exists = ucenikService.findByEmail(email);
+                        present = true;
 
                     } else if (role.equals("Ravnatelj")) {
                         present  = ravnateljService.createIfNeeded(email);
