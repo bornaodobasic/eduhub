@@ -41,6 +41,7 @@ import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.*;
 
 @Configuration
@@ -74,13 +75,14 @@ public class SecurityConfig {
     public LogoutSuccessHandler customLogoutSuccessHandler() {
         return (request, response, authentication) -> {
             System.out.println("Logout uspješan");
-            String log = "https://login.microsoftonline.com/a983c51c-e23d-4e05-b97e-fd9ccf9476c8/oauth2/v2.0/logout";
-            String post1 = "?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F";
 
-            response.sendRedirect(log + post1);
+            String microsoftLogout = "https://login.microsoftonline.com/a983c51c-e23d-4e05-b97e-fd9ccf9476c8/oauth2/v2.0/logout";
+            String postLogoutRedirect = "http://localhost:8080/";
+            String logoutRedirect = microsoftLogout + "?post_logout_redirect_uri=" + URLEncoder.encode(postLogoutRedirect, "UTF-8");
+
+            response.sendRedirect(logoutRedirect);
         };
     }
-
 
 
     @Bean

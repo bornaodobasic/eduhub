@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import Header from "../../components/Header"; 
+import Header from "../../components/Header";
+import WeatherWidget from "../../components/WeatherWidget"
 import './Admin.css';
 
 const Admin = () => {
@@ -248,17 +249,7 @@ const Admin = () => {
                 <aside className="sidebar-right-admin">
                     <div className="empty-container-admin"></div>
                     <div className="weather-widget-container-admin">
-                        <div className="weather-widget-admin">
-                            <div className="weather-icon">
-                                <img 
-                                    src={require("../../components/5.png")} 
-                                    alt="Weather Icon" 
-                                    style={{ width: "50px", height: "50px" }} 
-                                />
-                            </div> 
-                            <p>21°C</p> 
-                            <p>Zagreb, Hrvatska</p>
-                        </div>
+                        <WeatherWidget />
                     </div>
                 </aside>
             </div>

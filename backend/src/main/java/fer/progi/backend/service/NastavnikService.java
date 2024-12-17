@@ -2,6 +2,7 @@ package fer.progi.backend.service;
 
 import java.util.List;
 
+import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Nastavnik;
 
 public interface NastavnikService {
@@ -14,4 +15,6 @@ public interface NastavnikService {
 
 	boolean createIfNeeded(String email);
 
+	List<Nastavnik> findAllNastavniks();
+	void deleteNastavnik(String email);
 }

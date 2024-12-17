@@ -3,6 +3,7 @@ package fer.progi.backend.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import fer.progi.backend.domain.Admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +45,14 @@ public class RavnateljServiceJpa implements RavnateljService{
 			return true;
 		}
 
+	@Override
+	public List<Ravnatelj> findAllRavnateljs() {
+		return ravnateljRepo.findAll();
+	}
+
+	@Override
+	public void deleteRavnatelj(String email) {
+		ravnateljRepo.deleteByEmail(email);
+	}
 		
 }

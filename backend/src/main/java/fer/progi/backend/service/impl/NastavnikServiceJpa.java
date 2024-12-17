@@ -58,6 +58,15 @@ public class NastavnikServiceJpa implements NastavnikService{
 		}
 		return true;
 	}
-		
+
+	@Override
+	public List<Nastavnik> findAllNastavniks() {
+		return nastavnikRepo.findAll();
+	}
+
+	@Override
+	public void deleteNastavnik(String email) {
+		nastavnikRepo.deleteByEmail(email);
+	}
 		
 }

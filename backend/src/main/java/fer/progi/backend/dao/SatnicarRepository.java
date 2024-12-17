@@ -8,4 +8,5 @@ import fer.progi.backend.domain.Satnicar;
 
 public interface SatnicarRepository extends JpaRepository<Satnicar,Integer>{
    Optional<Satnicar> findByEmail(String email);
+   void deleteByEmail(String email);
 }

@@ -60,5 +60,12 @@ public class RazredServiceJpa implements RazredService{
 		if(optionalRazred.isEmpty()) {return false;}
 		else {return true;}
 	}
-	
+
+	@Override
+	public Razred findRazred(String nazRazred) {
+		Optional<Razred> optionalRazred = razredRepo.findByNazRazred(nazRazred);
+		return optionalRazred.orElse(null);
+	}
+
+
 }

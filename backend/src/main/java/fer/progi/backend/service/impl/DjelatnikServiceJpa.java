@@ -2,10 +2,8 @@ package fer.progi.backend.service.impl;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import fer.progi.backend.dao.DjelatnikRepository;
 import fer.progi.backend.domain.Djelatnik;
 import fer.progi.backend.service.DjelatnikService;
@@ -41,5 +39,14 @@ public class DjelatnikServiceJpa implements DjelatnikService{
 			}
 			return true;
 		}
-		
+
+	@Override
+	public List<Djelatnik> findAllDjelatniks() {
+		return djelatnikRepo.findAll();
+	}
+
+	@Override
+	public void deleteDjelatnik(String email) {
+		djelatnikRepo.deleteByEmail(email);
+	}
 }

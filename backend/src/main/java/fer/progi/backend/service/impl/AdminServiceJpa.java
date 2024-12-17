@@ -3,9 +3,13 @@ package fer.progi.backend.service.impl;
 import fer.progi.backend.dao.*;
 import fer.progi.backend.domain.*;
 import fer.progi.backend.rest.AddDTO;
+import fer.progi.backend.rest.AdminAddUcenikDTO;
+import fer.progi.backend.service.RazredService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import fer.progi.backend.service.AdminService;
+
+import java.util.List;
 import java.util.Optional;
 
 
@@ -27,6 +31,12 @@ public class AdminServiceJpa implements AdminService {
     @Autowired
     private SatnicarRepository satnicarRepo;
 
+    @Autowired
+    private RazredService razredService;
+
+    @Autowired
+    private UcenikRepository ucenikRepo;
+
     @Override
     public boolean findByEmail(String email) {
         return adminRepo.findByEmail(email).isPresent();
@@ -40,6 +50,16 @@ public class AdminServiceJpa implements AdminService {
         admin.setEmail(addDTO.getEmail());
 
         return adminRepo.save(admin);
+    }
+
+    @Override
+    public List<Admin> findAllAdmins() {
+        return adminRepo.findAll();
+    }
+
+    @Override
+    public void deleteAdmin(String email) {
+        adminRepo.deleteByEmail(email);
     }
 
     @Override
@@ -92,5 +112,20 @@ public class AdminServiceJpa implements AdminService {
         }
         return true;
     }
+
+    @Override
+    public Ucenik addUcenik(AdminAddUcenikDTO adminAddUcenikDTO) {
+        Ucenik ucenik = new Ucenik();
+        ucenik.setSpol(adminAddUcenikDTO.getSpol());
+        ucenik.setImeUcenik(adminAddUcenikDTO.getImeUcenik());
+        ucenik.setOib(adminAddUcenikDTO.getOib());
+        ucenik.setPrezimeUcenik(adminAddUcenikDTO.getPrezimeUcenik());
+        ucenik.setDatumRodenja(adminAddUcenikDTO.getDatumRodenja());
+        ucenik.setRazred(razredService.findRazred(adminAddUcenikDTO.getRazred()));
+
+        return ucenikRepo.save(ucenik);
+    }
+
+
 
 }

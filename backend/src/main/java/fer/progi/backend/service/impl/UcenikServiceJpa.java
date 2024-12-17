@@ -1,6 +1,7 @@
 package fer.progi.backend.service.impl;
 
 import fer.progi.backend.dao.UcenikRepository;
+import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Razred;
 import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.rest.UpisDTO;
@@ -8,6 +9,8 @@ import fer.progi.backend.service.RazredService;
 import fer.progi.backend.service.UcenikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UcenikServiceJpa implements UcenikService {
@@ -42,5 +45,14 @@ public class UcenikServiceJpa implements UcenikService {
         return true;
     }
 
+    @Override
+    public List<Ucenik> findAllUceniks() {
+        return ucenikRepo.findAll();
+    }
+
+    @Override
+    public void deleteUcenik(String email) {
+        ucenikRepo.deleteByEmail(email);
+    }
 
 }
