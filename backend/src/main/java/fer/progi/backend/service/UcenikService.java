@@ -15,5 +15,8 @@ public interface UcenikService {
 
     List<Ucenik> findAllUceniks();
     void deleteUcenik(String email);
+	boolean dodajAktivnostiPoNazivu(String email, List<String> oznAktivnosti);
+	Set<Aktivnost> findUcenikAktivnosti(String email);
+	boolean ukloniAktivnostiPoNazivu(String email, List<String> naziviAktivnosti);
 
 }

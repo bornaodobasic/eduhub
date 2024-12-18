@@ -37,16 +37,15 @@ public class Ucenik {
 	
 	@Column(unique=true)
 	private String email;
-
 	
-//	@ManyToMany
-//	@JoinTable(
-//			name = "ucenik_aktivnost",
-//			joinColumns = @JoinColumn(name = "email"),
-//			inverseJoinColumns = @JoinColumn(name = "sifAktivnost"))
-//	private Set<Aktivnost> aktivnosti = new HashSet<>();
-//	
-//	@Transient
-//	private Set<Integer> sifreAktivnost;
+	@ManyToMany
+	@JoinTable(
+			name = "ucenik_aktivnosti",
+			joinColumns = @JoinColumn(name = "id"),
+		inverseJoinColumns = @JoinColumn(name = "sifAktivnost"))
+	private Set<Aktivnost> aktivnosti = new HashSet<>();
+	
+	@Transient
+	private Set<Integer> sifreAktivnost;
 	
 }

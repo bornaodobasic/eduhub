@@ -14,10 +14,13 @@ import lombok.Data;
 public class Aktivnost {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue
 	private int sifAktivnost;
+	
 	private String oznAktivnost;
 	
-//    @ManyToMany(mappedBy = "aktivnosti")
-//    private Set<Ucenik> ucenici;
+   @ManyToMany(mappedBy = "aktivnosti")
+   private Set<Ucenik> ucenici; 
+    
+    
 }

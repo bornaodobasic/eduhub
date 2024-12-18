@@ -3,11 +3,13 @@ package fer.progi.backend.rest;
 import fer.progi.backend.domain.*;
 import fer.progi.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -127,6 +129,38 @@ public class AdminController {
     public ResponseEntity<String> deleteUcenik(@PathVariable String email) {
         UcenikService.deleteUcenik(email);
         return ResponseEntity.ok("Obrisan ucenik s emailom " + email + ".");
+    }
+    
+    @GetMapping("/ucenik/aktivnosti/{email}")
+    	public Set<Aktivnost> getUcenikAktivnosti(@PathVariable String email) {
+    	    return UcenikService.findUcenikAktivnosti(email);
+    	}
+    
+    @PostMapping("/ucenik/aktivnosti/add/{email}")
+    public ResponseEntity<String> addAktivnostUcenik( @PathVariable String email, @RequestBody List<String> naziviAktivnosti) {
+        
+            boolean rezultat = UcenikService.dodajAktivnostiPoNazivu(email, naziviAktivnosti);
+            
+            if (rezultat) {
+                return ResponseEntity.ok("Aktivnosti uspješno dodane učeniku");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Došlo je do problema prilikom dodavanja aktivnosti učeniku.");
+            }
+       
+    }
+    
+    @DeleteMapping("/ucenik/aktivnosti/delete/{email}")
+    public ResponseEntity<String> deleteAktivnostUcenik(@PathVariable String email,  @RequestBody List<String> naziviAktivnosti ){
+    	 boolean rezultat = UcenikService.ukloniAktivnostiPoNazivu(email, naziviAktivnosti);
+         
+         if (rezultat) {
+             return ResponseEntity.ok("Aktivnosti uspješno uklonjene učeniku");
+         } else {
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                     .body("Došlo je do problema prilikom uklanjanja aktivnosti učeniku.");
+         }
+    	
     }
 
 }
