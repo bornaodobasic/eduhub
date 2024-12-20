@@ -162,6 +162,38 @@ public class AdminController {
          }
     	
     }
+    
+    @GetMapping("/nastavnik/predmeti/{email}")
+	public Set<Predmet> getPredmetNastavnik(@PathVariable String email) {
+	    return NastavnikService.findNastavnikPredmeti(email);
+	}
+    
+    @PostMapping("/nastavnik/predmeti/add/{email}")
+    public ResponseEntity<String> addPredmetNastavnik( @PathVariable String email, @RequestBody List<String> predmeti) {
+        
+            boolean rezultat = NastavnikService.dodajPredmetNastavniku(email, predmeti);
+            
+            if (rezultat) {
+                return ResponseEntity.ok("Predmet uspješno dodan nastavniku");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Došlo je do problema prilikom dodavanja predmeta nastavniku.");
+            }
+       
+    }
+    
+    @DeleteMapping("/nastavnik/predmeti/delete/{email}")
+    public ResponseEntity<String> deletePredmetNastavnik(@PathVariable String email,  @RequestBody List<String> predmeti ){
+    	boolean rezultat = NastavnikService.ukloniPredmetNastavniku(email, predmeti);
+         
+         if (rezultat) {
+             return ResponseEntity.ok("Predmeti uspješno uklonjeni nastavniku");
+         } else {
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                     .body("Došlo je do problema prilikom uklanjanja predmeta nastavniku.");
+         }
+    	
+    }
 
 }
 

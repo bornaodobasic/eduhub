@@ -1,9 +1,11 @@
 package fer.progi.backend.service;
 
 import java.util.List;
+import java.util.Set;
 
 import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Nastavnik;
+import fer.progi.backend.domain.Predmet;
 
 public interface NastavnikService {
 	
@@ -17,4 +19,10 @@ public interface NastavnikService {
 
 	List<Nastavnik> findAllNastavniks();
 	void deleteNastavnik(String email);
+
+	Set<Predmet> findNastavnikPredmeti(String email);
+
+	boolean dodajPredmetNastavniku(String email, List<String> predmeti);
+
+	boolean ukloniPredmetNastavniku(String email, List<String> predmeti);
 }

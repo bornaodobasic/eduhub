@@ -31,9 +31,6 @@ public class PredmetServiceJpa implements PredmetService{
 	public List<Predmet> listAll() {
 		return predmetRepo.findAll();
 	}
-
-
-
 	
 	public void dodajNastavnikaUPredmet(Integer sifPredmet, Integer sifNastavnik) {
 		Predmet predmet = predmetRepo.findById(sifPredmet).orElseThrow(() -> new IllegalArgumentException("krivi predmet"));
@@ -42,6 +39,11 @@ public class PredmetServiceJpa implements PredmetService{
 		predmet.getNastavnici().add(nastavnik);
 		predmetRepo.save(predmet);
 		
+	}
+
+	@Override
+	public Predmet findPredmetByNaziv(String nazPredmet) {
+		return predmetRepo.findByNazivPredmet(nazPredmet);
 	}
 	
 }

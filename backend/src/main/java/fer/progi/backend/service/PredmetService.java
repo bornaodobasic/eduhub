@@ -8,7 +8,7 @@ public interface PredmetService {
 	
 	List<Predmet> listAll();
 	
-
-	
 	void dodajNastavnikaUPredmet(Integer sifPredmet, Integer sifNastavnik);
+
+	Predmet findPredmetByNaziv(String string);
 }
