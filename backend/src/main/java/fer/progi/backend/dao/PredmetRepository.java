@@ -7,6 +7,6 @@ import fer.progi.backend.domain.Predmet;
 public interface PredmetRepository extends JpaRepository<Predmet, Integer>{
 	int countBySifPredmet(Integer sifPredmet);
 
-	Predmet findByNazivPredmet(String nazPredmet);
+	Predmet findByNazPredmet(String nazPredmet);
 
 }

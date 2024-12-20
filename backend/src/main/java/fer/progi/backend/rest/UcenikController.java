@@ -19,24 +19,24 @@ public class UcenikController {
     @Autowired
     private UcenikService ucenikService;
     
-    @PostMapping("/dodajAktivnosti")
-    public ResponseEntity<String> dodajAktivnosti(Authentication authentication, @RequestBody List<String> oznAktivnosti){
-    	  LocalDate krajnjiRok = LocalDate.of(2025, 9, 1);
-    	  
-    	    if (LocalDate.now().isAfter(krajnjiRok)) {
-    	        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-    	                             .body("Više nije moguće prijaviti aktivnosti jer je prošao rok.");
-    	    }
-        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-        String email = (String) oidcUser.getAttributes().get("preferred_username");
-        
-        boolean success = ucenikService.dodajAktivnostiPoNazivu(email, oznAktivnosti);
-
-        if (success) {
-            return ResponseEntity.ok("Aktivnosti su uspešno dodane.");
-        } else {
-            return ResponseEntity.badRequest().body("Dodavanje aktivnosti nije uspelo.");
-        }
-    	
-    } 
+//    @PostMapping("/dodajAktivnosti")
+//    public ResponseEntity<String> dodajAktivnosti(Authentication authentication, @RequestBody List<String> oznAktivnosti){
+//    	  LocalDate krajnjiRok = LocalDate.of(2025, 9, 1);
+//    	  
+//    	    if (LocalDate.now().isAfter(krajnjiRok)) {
+//    	        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//    	                             .body("Više nije moguće prijaviti aktivnosti jer je prošao rok.");
+//    	    }
+//        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+//        String email = (String) oidcUser.getAttributes().get("preferred_username");
+//        
+//        boolean success = ucenikService.dodajAktivnostiPoNazivu(email, oznAktivnosti);
+//
+//        if (success) {
+//            return ResponseEntity.ok("Aktivnosti su uspešno dodane.");
+//        } else {
+//            return ResponseEntity.badRequest().body("Dodavanje aktivnosti nije uspelo.");
+//        }
+//    	
+//    } 
 }

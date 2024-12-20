@@ -24,6 +24,9 @@ public class AdminController {
     private DjelatnikService DjelatnikService;
 
     @Autowired
+    private NastavnikPredmetService NastavnikPredmetService;
+    
+    @Autowired
     private NastavnikService NastavnikService;
 
     @Autowired
@@ -34,6 +37,9 @@ public class AdminController {
 
     @Autowired
     private UcenikService UcenikService;
+    
+    @Autowired
+    private UcenikAktivnostService UcenikAktivnostService;
 
     @GetMapping("/admin")
     public List<Admin> listAllAdmins() {
@@ -139,7 +145,7 @@ public class AdminController {
     @PostMapping("/ucenik/aktivnosti/add/{email}")
     public ResponseEntity<String> addAktivnostUcenik( @PathVariable String email, @RequestBody List<String> naziviAktivnosti) {
         
-            boolean rezultat = UcenikService.dodajAktivnostiPoNazivu(email, naziviAktivnosti);
+            boolean rezultat = UcenikAktivnostService.dodajUcenikAktivnost(email, naziviAktivnosti);
             
             if (rezultat) {
                 return ResponseEntity.ok("Aktivnosti uspješno dodane učeniku");
@@ -152,7 +158,7 @@ public class AdminController {
     
     @DeleteMapping("/ucenik/aktivnosti/delete/{email}")
     public ResponseEntity<String> deleteAktivnostUcenik(@PathVariable String email,  @RequestBody List<String> naziviAktivnosti ){
-    	 boolean rezultat = UcenikService.ukloniAktivnostiPoNazivu(email, naziviAktivnosti);
+    	 boolean rezultat = UcenikAktivnostService.ukloniUcenikAktivnost(email, naziviAktivnosti);
          
          if (rezultat) {
              return ResponseEntity.ok("Aktivnosti uspješno uklonjene učeniku");
@@ -171,7 +177,7 @@ public class AdminController {
     @PostMapping("/nastavnik/predmeti/add/{email}")
     public ResponseEntity<String> addPredmetNastavnik( @PathVariable String email, @RequestBody List<String> predmeti) {
         
-            boolean rezultat = NastavnikService.dodajPredmetNastavniku(email, predmeti);
+            boolean rezultat = NastavnikPredmetService.dodajPredmetNastavnik(email, predmeti);
             
             if (rezultat) {
                 return ResponseEntity.ok("Predmet uspješno dodan nastavniku");
@@ -184,7 +190,7 @@ public class AdminController {
     
     @DeleteMapping("/nastavnik/predmeti/delete/{email}")
     public ResponseEntity<String> deletePredmetNastavnik(@PathVariable String email,  @RequestBody List<String> predmeti ){
-    	boolean rezultat = NastavnikService.ukloniPredmetNastavniku(email, predmeti);
+    	boolean rezultat = NastavnikPredmetService.ukloniPredmetNastavnik(email, predmeti);
          
          if (rezultat) {
              return ResponseEntity.ok("Predmeti uspješno uklonjeni nastavniku");

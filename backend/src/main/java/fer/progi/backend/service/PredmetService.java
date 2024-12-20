@@ -7,8 +7,6 @@ import fer.progi.backend.domain.Predmet;
 public interface PredmetService {
 	
 	List<Predmet> listAll();
-	
-	void dodajNastavnikaUPredmet(Integer sifPredmet, Integer sifNastavnik);
 
-	Predmet findPredmetByNaziv(String string);
+	Predmet findPredmetByNaz(String string);
 }
