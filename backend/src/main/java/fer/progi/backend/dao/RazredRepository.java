@@ -1,5 +1,6 @@
 package fer.progi.backend.dao;
 
+import fer.progi.backend.domain.Smjer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import fer.progi.backend.domain.Razred;
@@ -16,4 +17,5 @@ public interface RazredRepository extends JpaRepository<Razred, String>{
     @Query("SELECT r FROM Razred r WHERE r.smjer.nazivSmjer = :smjer")
     List<Razred> findAllBySmjer_NazivSmjer(@Param("smjer") String smjer);
 
+    boolean existsByNazRazredAndSmjer(String nazRazred, Smjer smjer);
 }

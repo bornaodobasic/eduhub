@@ -2,14 +2,7 @@ package fer.progi.backend.domain;
 
 import java.util.Set;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -26,7 +19,7 @@ public class Predmet {
 	@ManyToOne
 	private Smjer smjer;
 	
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "predmet_nastavnik",
 			joinColumns = @JoinColumn(name = "sifPredmet"),

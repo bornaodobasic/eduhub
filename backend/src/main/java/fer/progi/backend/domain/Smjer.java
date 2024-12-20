@@ -26,4 +26,9 @@ public class Smjer {
 
     @OneToMany(mappedBy = "smjer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Razred> razredi;
+
+    public Smjer(String nazivSmjer) {
+        this.nazivSmjer = nazivSmjer;
+    }
+    public Smjer() {}
 }
