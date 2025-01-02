@@ -59,7 +59,8 @@ public class AdminServiceJpa implements AdminService {
 
     @Override
     public void deleteAdmin(String email) {
-        adminRepo.deleteByEmail(email);
+        Admin admin = adminRepo.findByEmail(email).orElse(null);
+        adminRepo.delete(admin);
     }
 
     @Override
@@ -122,7 +123,7 @@ public class AdminServiceJpa implements AdminService {
         ucenik.setPrezimeUcenik(adminAddUcenikDTO.getPrezimeUcenik());
         ucenik.setDatumRodenja(adminAddUcenikDTO.getDatumRodenja());
         ucenik.setRazred(razredService.findRazred(adminAddUcenikDTO.getRazred()));
-
+        ucenik.setEmail(adminAddUcenikDTO.getEmail());
         return ucenikRepo.save(ucenik);
     }
 

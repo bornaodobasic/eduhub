@@ -1,5 +1,6 @@
 package fer.progi.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -19,5 +20,6 @@ public class Razred implements Serializable {
 	private Smjer smjer;
 
 	@OneToMany(mappedBy = "razred", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonManagedReference
     private Set<Ucenik> ucenici;
 }

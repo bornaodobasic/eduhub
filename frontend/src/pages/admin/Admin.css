@@ -151,7 +151,6 @@ h1 {
   flex-direction: row;
   align-items: center;
   gap: 30px; 
-  padding-left: 20px;
   padding-right: 280px;
 }
 
@@ -175,6 +174,45 @@ h1 {
 
 .add-button:hover {
   background-color: #18702c; 
+}
+
+.izbornik {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+
+.izborButton {
+  width: 8.5vw;
+  padding: 1.2vh;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #f6bdc6;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.izborButton:hover {
+  background-color: #ff758c;
+}
+
+.izborButton.active {
+  background-color: #ff758c;
+  color: white;
+}
+
+.add{
+  margin-top: 10px;
+  text-align: left;
+}
+
+
+.content{
+  text-align: left;
 }
 
 
@@ -232,7 +270,6 @@ margin-left: 20px;
 margin-right: 20px;
 border-radius: 8px;
 }
-
 
 .sidebar-right-admin {
 background-color: #f4f4f4;

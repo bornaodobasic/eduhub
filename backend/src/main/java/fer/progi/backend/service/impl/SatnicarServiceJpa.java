@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import fer.progi.backend.domain.Admin;
+import fer.progi.backend.domain.Ucenik;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +52,7 @@ public class SatnicarServiceJpa implements SatnicarService {
 
     @Override
     public void deleteSatnicar(String email) {
-        satnicarRepo.deleteByEmail(email);
+        Satnicar satnicar = satnicarRepo.findByEmail(email).orElse(null);
+        satnicarRepo.delete(satnicar);
     }
 }

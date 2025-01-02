@@ -54,7 +54,8 @@ public class UcenikServiceJpa implements UcenikService {
 
     @Override
     public void deleteUcenik(String email) {
-        ucenikRepo.deleteByEmail(email);
+        Ucenik ucenik = ucenikRepo.findByEmail(email).orElse(null);
+        ucenikRepo.delete(ucenik);
     }
     
     @Override

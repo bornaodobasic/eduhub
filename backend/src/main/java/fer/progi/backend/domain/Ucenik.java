@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -22,7 +23,7 @@ public class Ucenik {
 
 	@GeneratedValue
 	@Id
-	private int id;
+	private Integer id;
 	
 	private String imeUcenik;
 	private String prezimeUcenik;
@@ -31,6 +32,7 @@ public class Ucenik {
 	private String datumRodenja;
 
 	@ManyToOne
+	@JsonBackReference
 	private Razred razred;
 
 	private String spol;	

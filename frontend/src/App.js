@@ -54,10 +54,10 @@ function App() {
         <Route path="/certificate" element={<Certificate />} />
         <Route path="/nastavnik" element={<Nastavnik />} />
         <Route path="/ucenik" element={<Ucenik />} />
-        <Route path="/admin" element={<Admin />} />
         <Route path="/djelatnik" element={<Djelatnik />} />
         <Route path="/satnicar" element={<Satnicar />} />
         <Route path="/ravnatelj" element={<Ravnatelj />} />
+        <Route path="/admin/*" element={<Admin />} />
       </Routes>
     </Router>
   );
