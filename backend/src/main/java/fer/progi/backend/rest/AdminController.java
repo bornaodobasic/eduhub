@@ -141,6 +141,16 @@ public class AdminController {
     	public Set<Aktivnost> getUcenikAktivnosti(@PathVariable String email) {
     	    return UcenikService.findUcenikAktivnosti(email);
     	}
+
+    @GetMapping("/ucenik/aktivnosti/add/{email}")
+	public Set<Aktivnost> getUceniciAktivnosti(@PathVariable String email) {
+	    return UcenikService.findUcenikAktivnosti(email);
+	}
+
+	@GetMapping("/ucenik/aktivnosti/delete/{email}")
+	public Set<Aktivnost> getNotUcenikAktivnosti(@PathVariable String email) {
+	    return UcenikAktivnostService.findNotUcenikAktivnosti(email);
+	}
     
     @PostMapping("/ucenik/aktivnosti/add/{email}")
     public ResponseEntity<String> addAktivnostUcenik( @PathVariable String email, @RequestBody List<String> naziviAktivnosti) {
@@ -172,6 +182,16 @@ public class AdminController {
     @GetMapping("/nastavnik/predmeti/{email}")
 	public Set<Predmet> getPredmetNastavnik(@PathVariable String email) {
 	    return NastavnikService.findNastavnikPredmeti(email);
+	}
+
+	@GetMapping("/nastavnik/predmeti/add/{email}")
+	public Set<Predmet> getPredmetiNastavnik(@PathVariable String email) {
+	    return NastavnikService.findNastavnikPredmeti(email);
+	}
+
+	 @GetMapping("/nastavnik/predmeti/delete/{email}")
+	public Set<Predmet> getNotPredmetNastavnik(@PathVariable String email) {
+	    return NastavnikPredmetService.findNotNastavnikPredmeti(email);
 	}
     
     @PostMapping("/nastavnik/predmeti/add/{email}")

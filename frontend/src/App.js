@@ -11,6 +11,7 @@ import Ucenik from './pages/ucenik/Ucenik';
 import Djelatnik from './pages/djelatnik/Djelatnik';
 import Satnicar from './pages/satnicar/Satnicar';
 import Ravnatelj from './pages/ravnatelj/Ravnatelj';
+import FileUpload from './components/FileUpload';
 
 function App() {
   const handleLogin = () => {
@@ -58,6 +59,7 @@ function App() {
         <Route path="/satnicar" element={<Satnicar />} />
         <Route path="/ravnatelj" element={<Ravnatelj />} />
         <Route path="/admin/*" element={<Admin />} />
+        <Route path="/upload" element={<FileUpload />} />
       </Routes>
     </Router>
   );

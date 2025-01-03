@@ -2,6 +2,7 @@ package fer.progi.backend.service.impl;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,11 +67,24 @@ public class UcenikAktivnostServiceJpa implements UcenikAktivnostService{
 		  else {
 			  return false;
 		  }
-		    
-	
-		  
 
 		 
+	}
+
+	@Override
+	public Set<Aktivnost> findNotUcenikAktivnosti(String email) {
+		Ucenik ucenik = ucenikRepo.findByEmail(email)
+	            .orElseThrow(() -> new RuntimeException("Nije pronađen učenik s emailom: " + email));
+
+	    Set<Aktivnost> aktivnostNotInUcenik = new HashSet<>();
+
+	    for(Aktivnost a : aktivnostRepo.findAll()) {
+			if(!ucenik.getAktivnosti().contains(a)) {
+				aktivnostNotInUcenik.add(a);
+			}
+		}
+
+		return aktivnostNotInUcenik;
 	}
 
 }

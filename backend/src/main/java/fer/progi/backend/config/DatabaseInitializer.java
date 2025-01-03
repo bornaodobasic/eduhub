@@ -1,7 +1,9 @@
 package fer.progi.backend.config;
 
+import fer.progi.backend.dao.PredmetRepository;
 import fer.progi.backend.dao.RazredRepository;
 import fer.progi.backend.dao.SmjerRepository;
+import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Razred;
 import fer.progi.backend.domain.Smjer;
 import jakarta.annotation.PostConstruct;
@@ -23,6 +25,8 @@ public class DatabaseInitializer {
 
     @Autowired
     private RazredRepository razredRepository;
+    @Autowired
+    private PredmetRepository predmetRepository;
 
     @PostConstruct
     public void init() {
@@ -68,6 +72,41 @@ public class DatabaseInitializer {
                     .collect(Collectors.toList());
 
             razredRepository.saveAll(razredi);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(getClass().getResourceAsStream("/db/predmet.csv"))
+            );
+
+            List<Predmet> predmeti = reader.lines()
+                    .skip(1)
+                    .map(line -> {
+                        String[] fields = line.split(",");
+                        String nazPredmet = fields[0].trim();
+                        //Integer brSatiTjedno = Integer.parseInt(fields[1].trim());
+                        String brSatiTjedno = fields[1].trim();
+                        String nazivSmjer = fields[2].trim();
+
+                        Smjer smjer = smjerRepository.findByNazivSmjer(nazivSmjer)
+                                .orElseThrow(() -> new IllegalArgumentException("Smjer nije pronađen: " + nazivSmjer));
+
+                        if (predmetRepository.existsByNazPredmet(nazPredmet)) {
+                            return null;
+                        }
+                        Predmet predmet = new Predmet();
+                        predmet.setNazPredmet(nazPredmet);
+                        predmet.setUkBrSatiTjedno(Integer.parseInt(brSatiTjedno));
+                        predmet.setSmjer(smjer);
+
+                        return predmet;
+                    })
+                    .filter(predmet -> predmet != null)
+                    .collect(Collectors.toList());
+
+            predmetRepository.saveAll(predmeti);
         } catch (Exception e) {
             e.printStackTrace();
         }

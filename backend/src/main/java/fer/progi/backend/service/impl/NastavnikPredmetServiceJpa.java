@@ -1,5 +1,6 @@
 package fer.progi.backend.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import jakarta.transaction.Transactional;
@@ -48,6 +49,22 @@ public class NastavnikPredmetServiceJpa implements NastavnikPredmetService{
 		predmetiZaUkloniti.forEach(p -> p.getNastavnici().remove(nastavnik));
 
 		return true;
+	}
+
+	@Override
+	public Set<Predmet> findNotNastavnikPredmeti(String email) {
+		Nastavnik nastavnik = nastavnikRepo.findByEmail(email)
+	            .orElseThrow(() -> new RuntimeException("Nastavnik nije pronađen s emailom: " + email));
+
+	    Set<Predmet> predmetiNotInNastavnik = new HashSet<>();
+
+	    for(Predmet p : predmetRepo.findAll()) {
+			if(!nastavnik.getPredmeti().contains(p)) {
+				predmetiNotInNastavnik.add(p);
+			}
+		}
+
+		return predmetiNotInNastavnik;
 	}
 
 }

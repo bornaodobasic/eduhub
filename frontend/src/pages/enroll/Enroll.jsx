@@ -148,11 +148,11 @@ const Enroll = () => {
                       required
                   >
                     <option value="">Odaberite željeni smjer</option>
-                    <option value="opca">Opća gimnazija</option>
-                    <option value="prirodoslovno-matematicka">
+                    <option value="opca1">Opća gimnazija</option>
+                    <option value="primat1">
                       Prirodoslovno-matematička gimnazija
                     </option>
-                    <option value="jezicna">Jezična gimnazija</option>
+                    <option value="jezicna1">Jezična gimnazija</option>
                   </select>
                 </div>
               </div>

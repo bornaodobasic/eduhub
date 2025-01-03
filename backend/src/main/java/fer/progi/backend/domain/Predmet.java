@@ -14,7 +14,7 @@ public class Predmet {
 	private Integer sifPredmet;
 	
 	private String nazPredmet;
-	private int ukBrSatiTjedno;
+	private Integer ukBrSatiTjedno;
 	
 	@ManyToOne
 	private Smjer smjer;
@@ -25,8 +25,5 @@ public class Predmet {
 			joinColumns = @JoinColumn(name = "sifPredmet"),
 			inverseJoinColumns = @JoinColumn(name = "sifNastavnik"))
 	private Set<Nastavnik> nastavnici;
-
-	
-	
 
 }
