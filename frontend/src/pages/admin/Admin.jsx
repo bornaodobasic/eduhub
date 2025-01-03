@@ -13,7 +13,118 @@ const Admin = () => {
     const [leftSidebarOptions, setLeftSidebarOptions] = useState([]);
     const [mainContent, setMainContent] = useState("");
 
+
     const roles = ["ucenik", "nastavnik", "ravnatelj", "satnicar", "djelatnik", "admin"]
+
+
+    const handlePregledPredmeta = async (email) => {
+        try {
+            const response = await fetch(`/nastavnik/predmeti/predaje/${email}`);
+            if (!response.ok) {
+                throw new Error("Greška prilikom dohvaćanja predmeta.");
+            }
+            const data = await response.json();
+            setMainContent(
+                <div>
+                    <h3>Popis svih predmeta koje nastavnik predaje</h3>
+                    <ul>
+                        {data.map((predmet) => (
+                            <li key={predmet.sifPredmet}>
+                                {predmet.nazPredmet} 
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        } catch (error) {
+            setMainContent(
+                <p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>
+            );
+        }
+    };
+
+    
+    const handleDodajPredmete = async (email) => {
+        try {
+            const response = await fetch(`/nastavnik/predmeti/nepredaje/${email}`);
+            if (!response.ok) {
+                throw new Error("Greška prilikom dohvaćanja predmeta.");
+            }
+            const data = await response.json();
+            setMainContent(
+                <div>
+                    <h3>Popis svih predmeta koje nastavnik ne predaje</h3>
+                    <ul>
+                        {data.map((predmet) => (
+                            <li key={predmet.sifPredmet}>
+                                {predmet.nazPredmet} 
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        } catch (error) {
+            setMainContent(
+                <p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>
+            );
+        }
+    };
+
+
+
+    const handlePregledAktivnosti = async (email) => {
+        try {
+            const response = await fetch(`/ucenik/aktivnosti/je/${email}`);
+            if (!response.ok) {
+                throw new Error("Greška prilikom dohvaćanja aktivnosti.");
+            }
+            const data = await response.json();
+            setMainContent(
+                <div>
+                    <h3>Popis svih aktivnosti koje učenik pohađa</h3>
+                    <ul>
+                        {data.map((aktivnost) => (
+                            <li key={aktivnost.sifAktivnost}>
+                                {aktivnost.oznAktivnost} 
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        } catch (error) {
+            setMainContent(
+                <p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>
+            );
+        }
+    };
+
+    
+    const handleDodajAktivnosti = async (email) => {
+        try {
+            const response = await fetch(`/ucenik/aktivnosti/nije/${email}`);
+            if (!response.ok) {
+                throw new Error("Greška prilikom dohvaćanja aktivnosti koje ne pohada.");
+            }
+            const data = await response.json();
+            setMainContent(
+                <div>
+                    <h3>Popis svih aktivnosti koje ucenik ne pohada</h3>
+                    <ul>
+                        {data.map((aktivnost) => (
+                             <li key={aktivnost.sifAktivnost}>
+                             {aktivnost.oznAktivnost} 
+                         </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        } catch (error) {
+            setMainContent(
+                <p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>
+            );
+        }
+    };
+    
 
     /* dohvat korisnika */
     const fetchUcenici = async () => {
@@ -469,37 +580,41 @@ const Admin = () => {
             case "Aktivnosti učenika":
                 const fetchAktivnostiUcenika = async () => {
                     try {
-                        const response = await fetch('/admin/ucenik'); 
+                        const response = await fetch('/admin/ucenik');
                         if (!response.ok) {
                             throw new Error("Greška prilikom dohvaćanja ucenika.");
                         }
-                        const ucenici = await response.json();
-
+                        const data = await response.json();
+            
                         setMainContent(
                             <div>
-                                <h3>Aktivnostiiiiiiii ucenika</h3>
+                                <h3>Popis svih učenika</h3>
                                 <ul>
-                                    {ucenici.map((ucenik) => (
-                                        <li key={ucenik.email}>
-                                            <b>{ucenik.imeUceik} {ucenik.prezimeUcenik}</b>
-                                            <button
-                                                onClick={() => handlePregledAktivnosti(ucenik.email)}
-                                                className="view-button"
-                                            >
-                                                Pregledaj aktivnosti
+                                    {data.map((ucenik) => (
+                                        <li key={ucenik.id}>
+                                            {ucenik.imeNastavnik} {ucenik.prezimeNastavnik} - {ucenik.email}
+                                            <button className="vibutton" onClick={() => handlePregledAktivnosti(ucenik.email)}>
+                                                Pregled aktivnosti
+                                            </button>
+                                            <button className="adbutton" onClick={() => handleDodajAktivnosti(ucenik.email)}>
+                                                Dodaj aktivnosti
                                             </button>
                                         </li>
                                     ))}
                                 </ul>
+
                             </div>
                         );
                     } catch (error) {
-                        setMainContent(<p>Došlo je do greške: {error.message}</p>);
+                        setMainContent(
+                            <p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>
+                        );
                     }
                 };
-
+            
                 fetchAktivnostiUcenika();
                 break;
+            
                 
     
             case "Dodaj nastavnika":
@@ -520,43 +635,48 @@ const Admin = () => {
             case "Pregled nastavnika":
                 fetchNastavnici();
                 break;
+            
 
             case "Predmeti nastavnika":
-                const fetchPredmetiNastavnika = async () => {
-                    try {
-                        const response = await fetch('/admin/nastavnik'); // Dohvati sve nastavnike
-                        if (!response.ok) {
-                            throw new Error("Greška prilikom dohvaćanja nastavnika.");
+                    const fetchPredmetiNastavnika = async () => {
+                        try {
+                            const response = await fetch('/admin/nastavnik');
+                            if (!response.ok) {
+                                throw new Error("Greška prilikom dohvaćanja nastavnika.");
+                            }
+                            const data = await response.json();
+                
+                            setMainContent(
+                                <div>
+                                    <h3>Popis svih nastavnika</h3>
+                                    <ul>
+                                        {data.map((nastavnik) => (
+                                            <li key={nastavnik.id}>
+                                                {nastavnik.imeNastavnik} {nastavnik.prezimeNastavnik} - {nastavnik.email}
+                                                <button className="vibutton" onClick={() => handlePregledPredmeta(nastavnik.email)}>
+                                                    Pregled predmeta
+                                                </button>
+                                                <button className="adbutton" onClick={() => handleDodajPredmete(nastavnik.email)}>
+                                                    Dodaj predmete
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                </div>
+                            );
+                        } catch (error) {
+                            setMainContent(
+                                <p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>
+                            );
                         }
-                        const nastavnici = await response.json();
+                    };
+                
+                    fetchPredmetiNastavnika();
+                    break;
+                
 
-                        setMainContent(
-                            <div>
-                                <h3>Predmeti nastavnika</h3>
-                                <ul>
-                                    {nastavnici.map((nastavnik) => (
-                                        <li key={nastavnik.email}>
-                                            <b>{nastavnik.imeNastavnik} {nastavnik.prezimeNastavnik}</b>
-                                            <button
-                                                onClick={() => handlePregledPredmeta(nastavnik.email)}
-                                                className="view-button"
-                                            >
-                                                Pregledaj predmete
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        );
-                    } catch (error) {
-                        setMainContent(<p>Došlo je do greške: {error.message}</p>);
-                    }
-                };
-
-                fetchPredmetiNastavnika();
-                break;
-
-
+            
             case "Dodaj ravnatelja":
                 setMainContent(
                     <div className="add">
@@ -637,56 +757,6 @@ const Admin = () => {
                 setMainContent("Odaberite opciju iz lijevog izbornika.");
         }
     }, [activeSidebarOption]);
-
-    const handlePregledPredmeta = async (email) => {
-        try {
-            const response = await fetch(`/admin/nastavnik/predmeti/${email}`);
-            if (!response.ok) {
-                throw new Error("Greška prilikom dohvaćanja predmeta nastavnika.");
-            }
-            const predmeti = await response.json();
-
-            setMainContent(
-                <div>
-                    <h3>Predmeti koje predaje nastavnik ({email}):</h3>
-                    <ul>
-                        {predmeti.map((predmet) => (
-                            <li key={predmet.sifPredmet}>
-                                {predmet.nazPredmet} - {predmet.ukBrSatiTjedno} sati tjedno
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            );
-        } catch (error) {
-            setMainContent(<p>Došlo je do greške: {error.message}</p>);
-        }
-    };
-
-    const handlePregledAktivnosti = async (email) => {
-        try {
-            const response = await fetch(`/admin/ucenik/aktivnosti/${email}`);
-            if (!response.ok) {
-                throw new Error("Greška prilikom dohvaćanja aktivnosti ucenika.");
-            }
-            const aktivnosti = await response.json();
-
-            setMainContent(
-                <div>
-                    <h3>Aktivnosti koje pohada učenik ({email}):</h3>
-                    <ul>
-                        {aktivnosti.map((aktivnost) => (
-                            <li key={aktivnost.sifAktivnost}>
-                                {aktivnost.oznAktivnost} 
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            );
-        } catch (error) {
-            setMainContent(<p>Došlo je do greške: {error.message}</p>);
-        }
-    };
 
 
     return (

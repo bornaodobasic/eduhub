@@ -142,12 +142,12 @@ public class AdminController {
     	    return UcenikService.findUcenikAktivnosti(email);
     	}
 
-    @GetMapping("/ucenik/aktivnosti/add/{email}")
+    @GetMapping("/ucenik/aktivnosti/je/{email}")
 	public Set<Aktivnost> getUceniciAktivnosti(@PathVariable String email) {
 	    return UcenikService.findUcenikAktivnosti(email);
 	}
 
-	@GetMapping("/ucenik/aktivnosti/delete/{email}")
+	@GetMapping("/ucenik/aktivnosti/nije/{email}")
 	public Set<Aktivnost> getNotUcenikAktivnosti(@PathVariable String email) {
 	    return UcenikAktivnostService.findNotUcenikAktivnosti(email);
 	}
@@ -184,12 +184,12 @@ public class AdminController {
 	    return NastavnikService.findNastavnikPredmeti(email);
 	}
 
-	@GetMapping("/nastavnik/predmeti/add/{email}")
+	@GetMapping("/nastavnik/predmeti/predaje/{email}")
 	public Set<Predmet> getPredmetiNastavnik(@PathVariable String email) {
 	    return NastavnikService.findNastavnikPredmeti(email);
 	}
 
-	 @GetMapping("/nastavnik/predmeti/delete/{email}")
+	 @GetMapping("/nastavnik/predmeti/nepredaje/{email}")
 	public Set<Predmet> getNotPredmetNastavnik(@PathVariable String email) {
 	    return NastavnikPredmetService.findNotNastavnikPredmeti(email);
 	}
