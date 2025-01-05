@@ -19,7 +19,7 @@ const Admin = () => {
 
     const handlePregledPredmeta = async (email) => {
         try {
-            const response = await fetch(`/nastavnik/predmeti/predaje/${email}`);
+            const response = await fetch(`/admin/nastavnik/predmeti/predaje/${email}`);
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja predmeta.");
             }
@@ -46,7 +46,7 @@ const Admin = () => {
     
     const handleDodajPredmete = async (email) => {
         try {
-            const response = await fetch(`/nastavnik/predmeti/nepredaje/${email}`);
+            const response = await fetch(`/admin/nastavnik/predmeti/nepredaje/${email}`);
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja predmeta.");
             }

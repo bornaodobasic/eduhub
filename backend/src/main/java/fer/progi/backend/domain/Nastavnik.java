@@ -1,14 +1,8 @@
 package fer.progi.backend.domain;
 
 import java.util.Set;
-
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -25,7 +19,7 @@ public class Nastavnik {
 	@Column(unique=true)
 	private String email;
 	
-	@ManyToMany(mappedBy = "nastavnici")
+	@ManyToMany(mappedBy = "nastavnici", fetch = FetchType.EAGER)
 	private Set<Predmet> predmeti;
 	
 }

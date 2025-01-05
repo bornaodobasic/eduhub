@@ -1,7 +1,6 @@
 package fer.progi.backend.domain;
 
 import java.util.Set;
-
 import jakarta.persistence.*;
 import lombok.Data;
 
