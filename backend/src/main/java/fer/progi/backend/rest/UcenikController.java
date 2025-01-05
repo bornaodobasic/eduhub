@@ -1,6 +1,7 @@
 package fer.progi.backend.rest;
 
 import fer.progi.backend.service.UcenikService;
+import fer.progi.backend.domain.Predmet;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,5 +41,12 @@ public class UcenikController {
 //            return ResponseEntity.badRequest().body("Dodavanje aktivnosti nije uspelo.");
 //        }
 //    	
-//    } 
+//    }
+
+	@GetMapping("/predmeti")
+	public List<Predmet> listPredmeti(String email) {
+        return ucenikService.listAllPredmeti(email);
+    }
+    
+
 }

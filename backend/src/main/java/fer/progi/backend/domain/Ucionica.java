@@ -11,7 +11,7 @@ public class Ucionica {
 	@Id
 	private String oznakaUc;
 	
-	private int kapacitet;
+	private Integer kapacitet;
 	
 	
 }

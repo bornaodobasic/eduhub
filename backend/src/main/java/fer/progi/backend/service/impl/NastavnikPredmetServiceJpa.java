@@ -68,7 +68,6 @@ public class NastavnikPredmetServiceJpa implements NastavnikPredmetService{
 	}
 
 
-
 	@Override
 	public Set<Predmet> findNotNastavnikPredmeti(String email) {
 		Nastavnik nastavnik = nastavnikRepo.findByEmail(email)
