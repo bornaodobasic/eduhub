@@ -12,37 +12,34 @@ const Admin = () => {
     const [activeSidebarOption, setActiveSidebarOption] = useState("");
     const [leftSidebarOptions, setLeftSidebarOptions] = useState([]);
     const [mainContent, setMainContent] = useState("");
-
+    const [selectedPredmeti, setSelectedPredmeti] = useState([]);
 
     const roles = ["ucenik", "nastavnik", "ravnatelj", "satnicar", "djelatnik", "admin"]
-
 
     const handlePregledPredmeta = async (email) => {
         try {
             const response = await fetch(`/admin/nastavnik/predmeti/predaje/${email}`);
             if (!response.ok) {
-                throw new Error("Greška prilikom dohvaćanja predmeta.");
+                throw new Error("Greška prilikom dohvaćanja predmeta nastavnika.");
             }
             const data = await response.json();
+    
             setMainContent(
                 <div>
-                    <h3>Popis svih predmeta koje nastavnik predaje</h3>
+                    <h3>Predmeti koje predaje nastavnik</h3>
                     <ul>
                         {data.map((predmet) => (
-                            <li key={predmet.sifPredmet}>
-                                {predmet.nazPredmet} 
-                            </li>
+                            <li key={predmet.sifPredmet}>{predmet.nazPredmet}</li>
                         ))}
                     </ul>
+                    <button onClick={() => handleDodajPredmete(email)}>Dodaj predmete</button>
+                    <button onClick={() => handleObrisiPredmete(email)}>Obriši predmete</button>    
                 </div>
             );
         } catch (error) {
-            setMainContent(
-                <p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>
-            );
+            setMainContent(<p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>);
         }
     };
-
     
     const handleDodajPredmete = async (email) => {
         try {
@@ -50,26 +47,144 @@ const Admin = () => {
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja predmeta.");
             }
-            const data = await response.json();
+            const data = await response.json(); 
+    
+            let selectedNazivi = []; 
+    
+            const handleCheckboxChange = (naziv, checked) => {
+                if (checked) {
+                    selectedNazivi.push(naziv); 
+                } else {
+                    selectedNazivi = selectedNazivi.filter((nazivPredmeta) => nazivPredmeta !== naziv); 
+                }
+            };
+    
+            const handleConfirm = async () => {
+                try {
+                    console.log("Šaljem na backend nazive predmeta:", selectedNazivi);
+    
+                    const response = await fetch(`/admin/nastavnik/predmeti/add/${email}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(selectedNazivi), 
+                    });
+    
+                    if (!response.ok) {
+                        const errorMessage = await response.text();
+                        throw new Error(`Greška sa servera: ${errorMessage}`);
+                    }
+    
+                    alert("Predmeti uspješno dodani!");
+    
+                    handlePregledPredmeta(email);
+                } catch (error) {
+                    console.error("Greška prilikom dodavanja predmeta:", error.message);
+                    alert(`Greška prilikom dodavanja predmeta: ${error.message}`);
+                }
+            };
+    
             setMainContent(
                 <div>
-                    <h3>Popis svih predmeta koje nastavnik ne predaje</h3>
+                    <h3>Dodaj predmete nastavniku</h3>
                     <ul>
                         {data.map((predmet) => (
                             <li key={predmet.sifPredmet}>
-                                {predmet.nazPredmet} 
+                                <input
+                                    type="checkbox"
+                                    onChange={(e) =>
+                                        handleCheckboxChange(predmet.nazPredmet, e.target.checked)
+                                    }
+                                />
+                                {predmet.nazPredmet}
                             </li>
                         ))}
                     </ul>
+                    <button onClick={handleConfirm}>Potvrdi</button>
                 </div>
             );
+    
         } catch (error) {
-            setMainContent(
-                <p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>
-            );
+            setMainContent(<p>Došlo je do greške: {error.message}</p>);
         }
     };
+    
+    
+    
+    const handleObrisiPredmete = async (email) => {
+        try {
 
+            const response = await fetch(`/admin/nastavnik/predmeti/predaje/${email}`);
+            if (!response.ok) {
+                throw new Error("Greška prilikom dohvaćanja predmeta.");
+            }
+            const data = await response.json(); 
+    
+            let selectedNazivi = []; 
+    
+            
+            const handleCheckboxChange = (naziv, checked) => {
+                if (checked) {
+                    selectedNazivi.push(naziv); 
+                } else {
+                    selectedNazivi = selectedNazivi.filter((nazivPredmeta) => nazivPredmeta !== naziv); 
+                }
+            };
+    
+            
+            const handleConfirm = async () => {
+                try {
+                    console.log("Šaljem na backend nazive predmeta za brisanje:", selectedNazivi);
+            
+                    const response = await fetch(`/admin/nastavnik/predmeti/delete/${email}`, {
+                        method: "DELETE", 
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(selectedNazivi), 
+                    });
+            
+                    if (!response.ok) {
+                        const errorMessage = await response.text();
+                        throw new Error(`Greška sa servera: ${errorMessage}`);
+                    }
+            
+                    alert("Predmeti uspješno obrisani!");
+            
+                    handlePregledPredmeta(email);
+                } catch (error) {
+                    console.error("Greška prilikom brisanja predmeta:", error.message);
+                    alert(`Greška prilikom brisanja predmeta: ${error.message}`);
+                }
+            };
+            
+            setMainContent(
+                <div>
+                    <h3>Obriši predmete nastavniku</h3>
+                    <ul>
+                        {data.map((predmet) => (
+                            <li key={predmet.sifPredmet}>
+                                <input
+                                    type="checkbox"
+                                    onChange={(e) =>
+                                        handleCheckboxChange(predmet.nazPredmet, e.target.checked)
+                                    }
+                                />
+                                {predmet.nazPredmet}
+                            </li>
+                        ))}
+                    </ul>
+                    <button onClick={handleConfirm}>Potvrdi</button>
+                </div>
+            );
+    
+        } catch (error) {
+            setMainContent(<p>Došlo je do greške: {error.message}</p>);
+        }
+    };
+    
+    
 
 
     const handlePregledAktivnosti = async (email) => {
@@ -615,8 +730,6 @@ const Admin = () => {
                 fetchAktivnostiUcenika();
                 break;
             
-                
-    
             case "Dodaj nastavnika":
                 setMainContent(
                     <div className="add">
@@ -636,7 +749,6 @@ const Admin = () => {
                 fetchNastavnici();
                 break;
             
-
             case "Predmeti nastavnika":
                     const fetchPredmetiNastavnika = async () => {
                         try {
@@ -656,9 +768,6 @@ const Admin = () => {
                                                 <button className="vibutton" onClick={() => handlePregledPredmeta(nastavnik.email)}>
                                                     Pregled predmeta
                                                 </button>
-                                                <button className="adbutton" onClick={() => handleDodajPredmete(nastavnik.email)}>
-                                                    Dodaj predmete
-                                                </button>
                                             </li>
                                         ))}
                                     </ul>
@@ -675,8 +784,6 @@ const Admin = () => {
                     fetchPredmetiNastavnika();
                     break;
                 
-
-            
             case "Dodaj ravnatelja":
                 setMainContent(
                     <div className="add">
