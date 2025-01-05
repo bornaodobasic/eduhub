@@ -101,8 +101,12 @@ public class AdminController {
 
     @DeleteMapping("/nastavnik/delete/{email}")
     public ResponseEntity<String> deleteNastavnik(@PathVariable String email) {
-        NastavnikService.deleteNastavnik(email);
-        return ResponseEntity.ok("Obrisan nastavnik s emailom " + email + ".");
+        boolean isDeleted = NastavnikService.deleteNastavnik(email);
+        if (isDeleted) {
+            return ResponseEntity.ok("Obrisan nastavnik s emailom " + email + ".");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nastavnik ne može biti obrisan jer predaje predmete.");
+        }
     }
 
     @GetMapping("/ravnatelj")
@@ -138,12 +142,12 @@ public class AdminController {
     }
     
     @GetMapping("/ucenik/aktivnosti/{email}")
-    	public Set<Aktivnost> getUcenikAktivnosti(@PathVariable String email) {
+    	public List<Aktivnost> getUcenikAktivnosti(@PathVariable String email) {
     	    return UcenikService.findUcenikAktivnosti(email);
     	}
 
     @GetMapping("/ucenik/aktivnosti/je/{email}")
-	public Set<Aktivnost> getUceniciAktivnosti(@PathVariable String email) {
+	public List<Aktivnost> getUceniciAktivnosti(@PathVariable String email) {
 	    return UcenikService.findUcenikAktivnosti(email);
 	}
 

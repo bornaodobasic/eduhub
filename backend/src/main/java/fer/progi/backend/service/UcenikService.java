@@ -17,6 +17,6 @@ public interface UcenikService {
     
     void deleteUcenik(String email);
 
-    Set<Aktivnost> findUcenikAktivnosti(String email);
+    List<Aktivnost> findUcenikAktivnosti(String email);
 
 }

@@ -64,9 +64,13 @@ public class NastavnikServiceJpa implements NastavnikService{
 	}
 
 	@Override
-	public void deleteNastavnik(String email) {
+	public boolean deleteNastavnik(String email) {
 		Nastavnik nastavnik = nastavnikRepo.findByEmail(email).orElse(null);
-		nastavnikRepo.delete(nastavnik);
+		if (nastavnik != null && (nastavnik.getPredmeti() == null || nastavnik.getPredmeti().isEmpty())) {
+			nastavnikRepo.delete(nastavnik);
+			return true;
+		}
+		return false;
 	}
 
 

@@ -189,7 +189,7 @@ const Admin = () => {
 
     const handlePregledAktivnosti = async (email) => {
         try {
-            const response = await fetch(`/ucenik/aktivnosti/je/${email}`);
+            const response = await fetch(`/admin/ucenik/aktivnosti/je/${email}`);
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja aktivnosti.");
             }
@@ -216,7 +216,7 @@ const Admin = () => {
     
     const handleDodajAktivnosti = async (email) => {
         try {
-            const response = await fetch(`/ucenik/aktivnosti/nije/${email}`);
+            const response = await fetch(`/admin/ucenik/aktivnosti/nije/${email}`);
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja aktivnosti koje ne pohada.");
             }

@@ -59,7 +59,7 @@ public class UcenikServiceJpa implements UcenikService {
     }
     
     @Override
-    public Set<Aktivnost> findUcenikAktivnosti(String email) {
+    public List<Aktivnost> findUcenikAktivnosti(String email) {
         Ucenik ucenik = ucenikRepo.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
         
