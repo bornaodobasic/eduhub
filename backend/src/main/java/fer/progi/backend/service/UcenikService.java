@@ -2,10 +2,10 @@ package fer.progi.backend.service;
 
 import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.domain.Ucenik;
+import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.rest.UpisDTO;
 
 import java.util.List;
-import java.util.Set;
 
 public interface UcenikService {
 
@@ -18,5 +18,7 @@ public interface UcenikService {
     void deleteUcenik(String email);
 
     List<Aktivnost> findUcenikAktivnosti(String email);
+
+    List<Predmet> listAllPredmeti(String email);
 
 }
