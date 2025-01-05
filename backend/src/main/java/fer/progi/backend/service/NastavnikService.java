@@ -20,5 +20,5 @@ public interface NastavnikService {
 	
 	void deleteNastavnik(String email);
 
-	Set<Predmet> findNastavnikPredmeti(String email);
+	List<Predmet> findNastavnikPredmeti(String email);
 }

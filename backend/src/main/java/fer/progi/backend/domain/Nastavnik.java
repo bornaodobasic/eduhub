@@ -1,7 +1,8 @@
 package fer.progi.backend.domain;
 
-import java.util.Set;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,17 @@ public class Nastavnik {
 	private String email;
 	
 	@ManyToMany(mappedBy = "nastavnici", fetch = FetchType.EAGER)
-	private Set<Predmet> predmeti;
+	@JsonBackReference
+	private List<Predmet> predmeti;
+
+	@Override
+	public String toString() {
+		return "Nastavnik{" +
+				"id=" + id +
+				", imeNastavnik='" + imeNastavnik + '\'' +
+				", prezimeNastavnik='" + prezimeNastavnik + '\'' +
+				", email='" + email + '\'' +
+				'}';
+	}
 	
 }

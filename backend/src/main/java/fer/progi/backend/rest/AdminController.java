@@ -180,12 +180,12 @@ public class AdminController {
     }
     
     @GetMapping("/nastavnik/predmeti/{email}")
-	public Set<Predmet> getPredmetNastavnik(@PathVariable String email) {
+	public List<Predmet> getPredmetNastavnik(@PathVariable String email) {
 	    return NastavnikService.findNastavnikPredmeti(email);
 	}
 
 	@GetMapping("/nastavnik/predmeti/predaje/{email}")
-	public Set<Predmet> getPredmetiNastavnik(@PathVariable String email) {
+	public List<Predmet> getPredmetiNastavnik(@PathVariable String email) {
 	    return NastavnikService.findNastavnikPredmeti(email);
 	}
 

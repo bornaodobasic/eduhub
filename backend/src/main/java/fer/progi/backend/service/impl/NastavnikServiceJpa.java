@@ -2,8 +2,6 @@ package fer.progi.backend.service.impl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,13 +68,15 @@ public class NastavnikServiceJpa implements NastavnikService{
 		Nastavnik nastavnik = nastavnikRepo.findByEmail(email).orElse(null);
 		nastavnikRepo.delete(nastavnik);
 	}
-	
+
+
 	@Override
-	public Set<Predmet> findNastavnikPredmeti(String email) {
+	public List<Predmet> findNastavnikPredmeti(String email) {
 		Nastavnik nastavnik = nastavnikRepo.findByEmail(email)
 	            .orElseThrow(() -> new RuntimeException("Nastavnik nije pronađen s emailom: " + email));
-	        
-	        return nastavnik.getPredmeti();
+
+		System.out.println("Predmeti: " + nastavnik.getPredmeti());
+		return nastavnik.getPredmeti();
 	}
 		
 }
