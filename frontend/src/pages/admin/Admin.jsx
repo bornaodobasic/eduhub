@@ -109,9 +109,7 @@ const Admin = () => {
             setMainContent(<p>Došlo je do greške: {error.message}</p>);
         }
     };
-    
-    
-    
+       
     const handleObrisiPredmete = async (email) => {
         try {
 
@@ -185,61 +183,172 @@ const Admin = () => {
     };
     
     
-
-
     const handlePregledAktivnosti = async (email) => {
         try {
             const response = await fetch(`/admin/ucenik/aktivnosti/je/${email}`);
             if (!response.ok) {
-                throw new Error("Greška prilikom dohvaćanja aktivnosti.");
+                throw new Error("Greška prilikom dohvaćanja aktivnosti učenika");
             }
             const data = await response.json();
+    
             setMainContent(
                 <div>
                     <h3>Popis svih aktivnosti koje učenik pohađa</h3>
                     <ul>
                         {data.map((aktivnost) => (
-                            <li key={aktivnost.sifAktivnost}>
-                                {aktivnost.oznAktivnost} 
-                            </li>
+                            <li key={aktivnost.sifAktivnost}>{aktivnost.oznAktivnost}</li>
                         ))}
                     </ul>
+                    <button onClick={() => handleDodajAktivnosti(email)}>Dodaj aktivnosti</button>    
+                    <button onClick={() => handleObrisiAktivnosti(email)}>Obriši aktivnosti</button>  
                 </div>
             );
         } catch (error) {
-            setMainContent(
-                <p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>
-            );
+            setMainContent(<p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>);
         }
     };
-
     
+
     const handleDodajAktivnosti = async (email) => {
         try {
             const response = await fetch(`/admin/ucenik/aktivnosti/nije/${email}`);
             if (!response.ok) {
-                throw new Error("Greška prilikom dohvaćanja aktivnosti koje ne pohada.");
+                throw new Error("Greška prilikom dohvaćanja predmeta.");
             }
-            const data = await response.json();
+            const data = await response.json(); 
+    
+            let selectedNazivi = []; 
+    
+            const handleCheckboxChange = (naziv, checked) => {
+                if (checked) {
+                    selectedNazivi.push(naziv); 
+                } else {
+                    selectedNazivi = selectedNazivi.filter((nazivAktivnosti) => nazivAktivnosti !== naziv); 
+                }
+            };
+    
+            const handleConfirm = async () => {
+                try {
+                    console.log("Šaljem na backend nazive predmeta:", selectedNazivi);
+    
+                    const response = await fetch(`/admin/ucenik/aktivnosti/add/${email}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(selectedNazivi), 
+                    });
+    
+                    if (!response.ok) {
+                        const errorMessage = await response.text();
+                        throw new Error(`Greška sa servera: ${errorMessage}`);
+                    }
+    
+                    alert("Aktivnosti uspješno dodane!");
+    
+                    handlePregledAktivnosti(email);
+                } catch (error) {
+                    console.error("Greška prilikom dodavanja aktivnosti:", error.message);
+                    alert(`Greška prilikom dodavanja aktivnosti: ${error.message}`);
+                }
+            };
+    
             setMainContent(
                 <div>
-                    <h3>Popis svih aktivnosti koje ucenik ne pohada</h3>
+                    <h3>Dodaj aktivnosti učeniku</h3>
                     <ul>
                         {data.map((aktivnost) => (
-                             <li key={aktivnost.sifAktivnost}>
-                             {aktivnost.oznAktivnost} 
-                         </li>
+                            <li key={aktivnost.sifAktivnost}>
+                                <input
+                                    type="checkbox"
+                                    onChange={(e) =>
+                                        handleCheckboxChange(aktivnost.oznAktivnost, e.target.checked)
+                                    }
+                                />
+                                {aktivnost.oznAktivnost}
+                            </li>
                         ))}
                     </ul>
+                    <button onClick={handleConfirm}>Potvrdi</button>
                 </div>
             );
+    
         } catch (error) {
-            setMainContent(
-                <p>Došlo je do greške prilikom dohvaćanja podataka: {error.message}</p>
-            );
+            setMainContent(<p>Došlo je do greške: {error.message}</p>);
         }
     };
     
+    const handleObrisiAktivnosti = async (email) => {
+        try {
+
+            const response = await fetch(`/admin/ucenik/aktivnosti/je/${email}`);
+            if (!response.ok) {
+                throw new Error("Greška prilikom dohvaćanja aktivnosti.");
+            }
+            const data = await response.json(); 
+    
+            let selectedNazivi = []; 
+    
+            
+            const handleCheckboxChange = (naziv, checked) => {
+                if (checked) {
+                    selectedNazivi.push(naziv); 
+                } else {
+                    selectedNazivi = selectedNazivi.filter((nazivAktivnosti) => nazivAktivnosti !== naziv); 
+                }
+            };
+    
+            
+            const handleConfirm = async () => {
+                try {
+                    console.log("Šaljem na backend nazive aktivnosti za brisanje:", selectedNazivi);
+            
+                    const response = await fetch(`/admin/ucenik/aktivnosti/delete/${email}`, {
+                        method: "DELETE", 
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(selectedNazivi), 
+                    });
+            
+                    if (!response.ok) {
+                        const errorMessage = await response.text();
+                        throw new Error(`Greška sa servera: ${errorMessage}`);
+                    }
+            
+                    alert("Aktivnosti uspješno obrisane!");
+            
+                    handlePregledAktivnosti(email);
+                } catch (error) {
+                    console.error("Greška prilikom brisanja aktivnosti:", error.message);
+                    alert(`Greška prilikom brisanja aktivnosti: ${error.message}`);
+                }
+            };
+            
+            setMainContent(
+                <div>
+                    <h3>Obriši aktivnosti učeniku</h3>
+                    <ul>
+                        {data.map((aktivnost) => (
+                            <li key={aktivnost.sifAktivnost}>
+                                <input
+                                    type="checkbox"
+                                    onChange={(e) =>
+                                        handleCheckboxChange(aktivnost.oznAktivnost, e.target.checked)
+                                    }
+                                />
+                                {aktivnost.oznAktivnost}
+                            </li>
+                        ))}
+                    </ul>
+                    <button onClick={handleConfirm}>Potvrdi</button>
+                </div>
+            );
+    
+        } catch (error) {
+            setMainContent(<p>Došlo je do greške: {error.message}</p>);
+        }
+    };
 
     /* dohvat korisnika */
     const fetchUcenici = async () => {
@@ -710,9 +819,6 @@ const Admin = () => {
                                             {ucenik.imeNastavnik} {ucenik.prezimeNastavnik} - {ucenik.email}
                                             <button className="vibutton" onClick={() => handlePregledAktivnosti(ucenik.email)}>
                                                 Pregled aktivnosti
-                                            </button>
-                                            <button className="adbutton" onClick={() => handleDodajAktivnosti(ucenik.email)}>
-                                                Dodaj aktivnosti
                                             </button>
                                         </li>
                                     ))}
