@@ -13,17 +13,13 @@ import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.service.NastavnikService;
 
 @RestController
-@RequestMapping("/nastavnik")
+@RequestMapping("/api/nastavnik")
 @PreAuthorize("hasAuthority('Nastavnik')")
 public class NastavnikController {
 	
 	@Autowired
 	private NastavnikService nastavnikService;
-	
-	@GetMapping("")
-	public List<Nastavnik> listNastavnik() {
-		return nastavnikService.listAll();
-	}
+
 	
 	@PostMapping("")
 	public Nastavnik dodajNastavnika(@RequestBody Nastavnik nastavnik) {
