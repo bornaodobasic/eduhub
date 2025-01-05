@@ -9,7 +9,7 @@ public interface PredmetRepository extends JpaRepository<Predmet, Integer>{
 	int countBySifPredmet(Integer sifPredmet);
 
 	Predmet findByNazPredmet(String nazPredmet);
-	Set<Predmet> findByNazPredmetIn(List<String> nazPredmet);
+	List<Predmet> findByNazPredmetIn(List<String> nazPredmet);
 
 	boolean existsByNazPredmet(String nazPredmet);
 
