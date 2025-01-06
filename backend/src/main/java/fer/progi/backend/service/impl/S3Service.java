@@ -4,11 +4,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -21,8 +24,8 @@ public class S3Service {
         this.s3Client = s3Client;
     }
 
-    public String uploadFile(MultipartFile file) throws IOException {
-        String key = UUID.randomUUID() + "_" + file.getOriginalFilename();
+    public String uploadFile(String path, MultipartFile file) throws IOException {
+        String key = path + "/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
 
         Path tempFile = Files.createTempFile("upload", file.getOriginalFilename());
         file.transferTo(tempFile.toFile());
@@ -38,6 +41,18 @@ public class S3Service {
         Files.delete(tempFile);
 
         return "File uploaded successfully. Key: " + key;
+    }
+
+    public void deleteFile(String key) {
+        s3Client.deleteObject(builder -> builder.bucket(bucketName).key(key).build());
+    }
+
+    public List<String> listFiles(String prefix) {
+        return s3Client.listObjectsV2(builder -> builder.bucket(bucketName).prefix(prefix).build())
+                .contents()
+                .stream()
+                .map(S3Object::key)
+                .collect(Collectors.toList());
     }
 
 }

@@ -18,7 +18,7 @@ import fer.progi.backend.service.DjelatnikService;
 
 
 @RestController
-@RequestMapping("/djelatnik")
+@RequestMapping("/api/djelatnik")
 @PreAuthorize("hasAuthority('Djelatnik')")
 public class DjelatnikController {
 	

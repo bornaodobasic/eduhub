@@ -18,7 +18,7 @@ const Admin = () => {
 
     const handlePregledPredmeta = async (email) => {
         try {
-            const response = await fetch(`/admin/nastavnik/predmeti/predaje/${email}`);
+            const response = await fetch(`/api/admin/nastavnik/predmeti/predaje/${email}`);
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja predmeta nastavnika.");
             }
@@ -43,7 +43,7 @@ const Admin = () => {
     
     const handleDodajPredmete = async (email) => {
         try {
-            const response = await fetch(`/admin/nastavnik/predmeti/nepredaje/${email}`);
+            const response = await fetch(`/api/admin/nastavnik/predmeti/nepredaje/${email}`);
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja predmeta.");
             }
@@ -63,7 +63,7 @@ const Admin = () => {
                 try {
                     console.log("Šaljem na backend nazive predmeta:", selectedNazivi);
     
-                    const response = await fetch(`/admin/nastavnik/predmeti/add/${email}`, {
+                    const response = await fetch(`/api/admin/nastavnik/predmeti/add/${email}`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -113,7 +113,7 @@ const Admin = () => {
     const handleObrisiPredmete = async (email) => {
         try {
 
-            const response = await fetch(`/admin/nastavnik/predmeti/predaje/${email}`);
+            const response = await fetch(`/api/admin/nastavnik/predmeti/predaje/${email}`);
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja predmeta.");
             }
@@ -135,7 +135,7 @@ const Admin = () => {
                 try {
                     console.log("Šaljem na backend nazive predmeta za brisanje:", selectedNazivi);
             
-                    const response = await fetch(`/admin/nastavnik/predmeti/delete/${email}`, {
+                    const response = await fetch(`/api/admin/nastavnik/predmeti/delete/${email}`, {
                         method: "DELETE", 
                         headers: {
                             "Content-Type": "application/json",
@@ -185,7 +185,7 @@ const Admin = () => {
     
     const handlePregledAktivnosti = async (email) => {
         try {
-            const response = await fetch(`/admin/ucenik/aktivnosti/je/${email}`);
+            const response = await fetch(`/api/admin/ucenik/aktivnosti/je/${email}`);
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja aktivnosti učenika");
             }
@@ -211,7 +211,7 @@ const Admin = () => {
 
     const handleDodajAktivnosti = async (email) => {
         try {
-            const response = await fetch(`/admin/ucenik/aktivnosti/nije/${email}`);
+            const response = await fetch(`/api/admin/ucenik/aktivnosti/nije/${email}`);
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja predmeta.");
             }
@@ -231,7 +231,7 @@ const Admin = () => {
                 try {
                     console.log("Šaljem na backend nazive predmeta:", selectedNazivi);
     
-                    const response = await fetch(`/admin/ucenik/aktivnosti/add/${email}`, {
+                    const response = await fetch(`/api/admin/ucenik/aktivnosti/add/${email}`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -281,7 +281,7 @@ const Admin = () => {
     const handleObrisiAktivnosti = async (email) => {
         try {
 
-            const response = await fetch(`/admin/ucenik/aktivnosti/je/${email}`);
+            const response = await fetch(`/api/admin/ucenik/aktivnosti/je/${email}`);
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja aktivnosti.");
             }
@@ -303,7 +303,7 @@ const Admin = () => {
                 try {
                     console.log("Šaljem na backend nazive aktivnosti za brisanje:", selectedNazivi);
             
-                    const response = await fetch(`/admin/ucenik/aktivnosti/delete/${email}`, {
+                    const response = await fetch(`/api/admin/ucenik/aktivnosti/delete/${email}`, {
                         method: "DELETE", 
                         headers: {
                             "Content-Type": "application/json",
@@ -353,7 +353,7 @@ const Admin = () => {
     /* dohvat korisnika */
     const fetchUcenici = async () => {
         try {
-            const response = await fetch('/admin/ucenik');
+            const response = await fetch('/api/admin/ucenik');
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja učenika.");
             }
@@ -382,7 +382,7 @@ const Admin = () => {
 
     const fetchNastavnici = async () => {
         try {
-            const response = await fetch('/admin/nastavnik');
+            const response = await fetch('/api/admin/nastavnik');
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja nastavnika.");
             }
@@ -411,7 +411,7 @@ const Admin = () => {
 
     const fetchRavnatelji = async () => {
         try {
-            const response = await fetch('/admin/ravnatelj');
+            const response = await fetch('/api/admin/ravnatelj');
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja nastavnika.");
             }
@@ -440,7 +440,7 @@ const Admin = () => {
 
     const fetcHSatnicari = async () => {
         try {
-            const response = await fetch('/admin/satnicar');
+            const response = await fetch('/api/admin/satnicar');
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja nastavnika.");
             }
@@ -469,7 +469,7 @@ const Admin = () => {
 
     const fetchcDjelatnici = async () => {
         try {
-            const response = await fetch('/admin/djelatnik');
+            const response = await fetch('/api/admin/djelatnik');
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja nastavnika.");
             }
@@ -498,7 +498,7 @@ const Admin = () => {
 
     const fetchAdmini = async () => {
         try {
-            const response = await fetch('/admin/admin');
+            const response = await fetch('/api/admin/admin');
             if (!response.ok) {
                 throw new Error("Greška prilikom dohvaćanja nastavnika.");
             }
@@ -542,7 +542,7 @@ const Admin = () => {
         };
 
         try {
-            const response = await fetch('/admin/ucenik/add', {
+            const response = await fetch('/api/admin/ucenik/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -569,7 +569,7 @@ const Admin = () => {
         };
 
         try {
-            const response = await fetch('/admin/nastavnik/add', {
+            const response = await fetch('/api/admin/nastavnik/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -596,7 +596,7 @@ const Admin = () => {
         };
 
         try {
-            const response = await fetch('/admin/ravnatelj/add', {
+            const response = await fetch('/api/admin/ravnatelj/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -623,7 +623,7 @@ const Admin = () => {
         };
 
         try {
-            const response = await fetch('/admin/djelatnik/add', {
+            const response = await fetch('/api/admin/djelatnik/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -650,7 +650,7 @@ const Admin = () => {
         };
 
         try {
-            const response = await fetch('/admin/satnicar/add', {
+            const response = await fetch('/api/admin/satnicar/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -677,7 +677,7 @@ const Admin = () => {
         };
 
         try {
-            const response = await fetch('/admin/admin/add', {
+            const response = await fetch('/api/admin/admin/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -701,7 +701,7 @@ const Admin = () => {
         if (!confirmDelete) return;
 
         try {
-            const response = await fetch(`/admin/${role}/delete/${email}`, {
+            const response = await fetch(`/api/admin/${role}/delete/${email}`, {
                 method: "DELETE",
             });
 
@@ -804,7 +804,7 @@ const Admin = () => {
             case "Aktivnosti učenika":
                 const fetchAktivnostiUcenika = async () => {
                     try {
-                        const response = await fetch('/admin/ucenik');
+                        const response = await fetch('/api/admin/ucenik');
                         if (!response.ok) {
                             throw new Error("Greška prilikom dohvaćanja ucenika.");
                         }
@@ -858,7 +858,7 @@ const Admin = () => {
             case "Predmeti nastavnika":
                     const fetchPredmetiNastavnika = async () => {
                         try {
-                            const response = await fetch('/admin/nastavnik');
+                            const response = await fetch('/api/admin/nastavnik');
                             if (!response.ok) {
                                 throw new Error("Greška prilikom dohvaćanja nastavnika.");
                             }

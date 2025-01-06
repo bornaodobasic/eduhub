@@ -16,7 +16,7 @@ import fer.progi.backend.service.RavnateljService;
 
 
 @RestController
-@RequestMapping("/ravnatelj")
+@RequestMapping("/api/ravnatelj")
 @PreAuthorize("hasAuthority('Ravnatelj')")
 public class RavnateljController {
 	

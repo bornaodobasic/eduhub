@@ -17,7 +17,7 @@ import fer.progi.backend.service.SatnicarService;
 
 
 @RestController
-@RequestMapping("/satnicar")
+@RequestMapping("/api/satnicar")
 @PreAuthorize("hasAuthority('Satnicar')")
 public class SatnicarController {
 	

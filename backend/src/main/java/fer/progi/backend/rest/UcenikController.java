@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/ucenik")
+@RequestMapping("/api/ucenik")
 @PreAuthorize("hasAuthority('Ucenik')")
 public class UcenikController {
 

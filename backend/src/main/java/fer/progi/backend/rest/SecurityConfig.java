@@ -226,12 +226,12 @@ public class SecurityConfig {
         http
                 .authorizeRequests(auth -> auth
                         .requestMatchers("/oauth2/authorization/**", "/login/**", "/static/**", "/index.html", "/", "/favicon.ico", "/logo192.png", "/manifest.json", "/h2-console/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("Admin")
-                        .requestMatchers("/nastavnik/**").hasAuthority("Nastavnik")
-                        .requestMatchers("/djelatnik/**").hasAuthority("Djelatnik")
-                        .requestMatchers("/ravnatelj/**").hasAuthority("Ravnatelj")
-                        .requestMatchers("/satnicar/**").hasAuthority("Satnicar")
-                        .requestMatchers("/ucenik/**").hasAuthority("Ucenik")
+                        .requestMatchers("/api/admin/**").hasAuthority("Admin")
+                        .requestMatchers("/api/nastavnik/**").hasAuthority("Nastavnik")
+                        .requestMatchers("/api/djelatnik/**").hasAuthority("Djelatnik")
+                        .requestMatchers("/api/ravnatelj/**").hasAuthority("Ravnatelj")
+                        .requestMatchers("/api/satnicar/**").hasAuthority("Satnicar")
+                        .requestMatchers("/api/ucenik/**").hasAuthority("Ucenik")
                         .requestMatchers("/upis").hasAuthority("Upis")
                         .anyRequest().authenticated()
                 )

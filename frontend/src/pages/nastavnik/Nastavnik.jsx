@@ -2,57 +2,134 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../../components/Header";
 import WeatherWidget from "../../components/WeatherWidget";
-import './Nastavnik.css';
+import "./Nastavnik.css";
 
 const Nastavnik = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [activeRole, setActiveRole] = useState("");
     const [activeSidebarOption, setActiveSidebarOption] = useState("");
-    const [leftSidebarOptions, setLeftSidebarOptions] = useState([]);
+    const [leftSidebarOptions, setLeftSidebarOptions] = useState(["Učenici", "Materijali", "Nekaj"]);
     const [mainContent, setMainContent] = useState("");
-
-
+    const [subjects, setSubjects] = useState([]);
 
     useEffect(() => {
-        switch (activeSidebarOption) {
-            case "Učenici":
-                setMainContent(
-                    <div className="add">
-                        <h4 className="add-title">Dodaj učenikaaaa</h4>
-                        <form onSubmit={handleUcenikSubmit} >
-                            <input type="text" name="imeUcenik" placeholder="Ime učenika" required />
-                            <input type="text" name="prezimeUcenik" placeholder="Prezime učenika" required />
-                            <input type="text" name="spol" placeholder="Spol (M/Ž)" required  />
-                            <input type="text"name="razred" placeholder="Razred" required />
-                            <input type="date" name="datumRodenja" required/>
-                            <input type="text" name="oib" placeholder="OIB" />
-                            <input type="text" name="email" placeholder="Email učenika" required/>
-
-                            <button type="submit">DODAJ</button>
-                        </form>
-                    </div>
-                );
-                break;
-
-            case "Materijali":
-                break;
-
-            case "Nekaj":
-                break;
-            
-            default:
-                setMainContent("Odaberite opciju iz lijevog izbornika.");
+        // Handle content change when sidebar option is selected
+        if (activeSidebarOption === "Materijali") {
+            fetchSubjectsAndMaterials();
+        } else {
+            setMainContent("Odaberite opciju iz lijevog izbornika.");
         }
     }, [activeSidebarOption]);
 
+    const fetchSubjectsAndMaterials = async () => {
+        try {
+            const response = await fetch("/api/nastavnik/predmeti", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (!response.ok) {
+                throw new Error("Failed to fetch subjects");
+            }
+            const data = await response.json();
+            setSubjects(data);
+            setMainContent(renderMaterials(data));
+        } catch (error) {
+            console.error("Error fetching subjects:", error);
+            setMainContent("Greška pri učitavanju predmeta.");
+        }
+    };
+
+    const renderMaterials = (subjects) => (
+        <div>
+            {subjects.map((subject) => (
+                <div key={subject.id} className="subject-section">
+                    <h3>{subject.nazPredmet}</h3>
+                    <button
+                        onClick={() => handleAddMaterial(subject.nazPredmet)}
+                        className="add-material-btn"
+                    >
+                        Dodaj materijal
+                    </button>
+                    <ul>
+                        {subject.materijali && subject.materijali.length > 0 ? (
+                            subject.materijali.map((material) => (
+                                <li key={material}>
+                                    <a
+                                        href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {material.split('/').pop()}
+                                    </a>
+                                    <button
+                                        onClick={() => handleDeleteMaterial(material)}
+                                        className="delete-material-btn"
+                                    >
+                                        Obriši
+                                    </button>
+                                </li>
+                            ))
+                        ) : (
+                            <p>Nema materijala za ovaj predmet.</p>
+                        )}
+                    </ul>
+                </div>
+            ))}
+        </div>
+    );
+
+    const handleAddMaterial = (subject) => {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.onchange = async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("predmet", subject);
+
+            try {
+                const response = await fetch("/api/nastavnik/materijali", {
+                    method: "POST",
+                    body: formData,
+                });
+                if (response.ok) {
+                    alert("Materijal uspješno dodan!");
+                    fetchSubjectsAndMaterials(); // Refresh materials
+                } else {
+                    alert("Greška pri dodavanju materijala.");
+                }
+            } catch (error) {
+                console.error("Error uploading file:", error);
+            }
+        };
+        fileInput.click();
+    };
+
+    const handleDeleteMaterial = async (key) => {
+        try {
+            const response = await fetch(`/api/nastavnik/materijali?key=${key}`, {
+                method: "DELETE",
+            });
+            if (response.ok) {
+                alert("Materijal uspješno obrisan!");
+                fetchSubjectsAndMaterials(); // Refresh materials
+            } else {
+                alert("Greška pri brisanju materijala.");
+            }
+        } catch (error) {
+            console.error("Error deleting file:", error);
+        }
+    };
 
     return (
         <div className="homepage">
             <Header />
             <div className="homepage-container">
-
                 <aside className="sidebar-left">
                     {leftSidebarOptions.map((option, index) => (
                         <button
@@ -70,7 +147,7 @@ const Nastavnik = () => {
                 </div>
 
                 <aside className="sidebar-right">
-                    <WeatherWidget></WeatherWidget>
+                    <WeatherWidget />
                 </aside>
             </div>
         </div>
