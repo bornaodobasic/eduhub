@@ -2,26 +2,58 @@ import React, { useState, useEffect } from 'react';
 import './WeatherWidget.css';
 
 const WeatherWidget = () => {
-  const [weather, setWeather] = useState(null);
+  const [weather, setWeather] = useState({
+    temperature: null,
+    city: "Zagreb",
+    icon: null,
+  });
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const response = await fetch(
-            'http://api.weatherapi.com/v1/current.json?key=75865835572b41f7a15192310241712&q=Zagreb'
+
+        const openWeatherApiKey = "a4f98e822447d3d5867c3d29dd0cef26";
+        const openWeatherResponse = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=Zagreb,hr&units=metric&appid=${openWeatherApiKey}`
         );
-        if (!response.ok) {
-          throw new Error('Podaci o vremenu ne mogu se dohvatiti');
+        const openWeatherData = await openWeatherResponse.json();
+
+        if (openWeatherResponse.ok) {
+          const icon = `http://openweathermap.org/img/wn/${openWeatherData.weather[0].icon}@2x.png`;
+
+
+          const weatherApiKey = "75865835572b41f7a15192310241712";
+          const weatherApiResponse = await fetch(
+              `http://api.weatherapi.com/v1/current.json?key=${weatherApiKey}&q=Zagreb`
+          );
+          const weatherApiData = await weatherApiResponse.json();
+
+          if (weatherApiResponse.ok) {
+            const temperature = weatherApiData.current.temp_c;
+
+            setWeather({
+              temperature: Math.round(temperature),
+              city: "Zagreb",
+              icon: icon,
+            });
+          } else {
+            throw new Error('Podaci o vremenu ne mogu se dohvatiti');
+          }
+        } else {
+          throw new Error('Ikona se ne može dohvatiti');
         }
-        const data = await response.json();
-        setWeather({
-          city: data.location.name,
-          icon: data.current.condition.icon,
-          temp: Math.round(data.current.temp_c),
-        });
-      } catch (err) {
-        setError(err.message);
+      } catch (error) {
+        console.error("Greška pri dohvatu podataka:", error);
+        setError(error.message);
+        setWeather(prevState => ({
+          ...prevState,
+          temperature: null,
+          icon: null,
+        }));
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -29,18 +61,18 @@ const WeatherWidget = () => {
   }, []);
 
   if (error) return <div className="weather-error">Error: {error}</div>;
-  if (!weather) return <div className="weather-loading">Loading...</div>;
+  if (loading) return <div className="weather-loading">Loading...</div>;
 
   return (
       <div className="weather-widget">
-        <img
-            src={`https:${weather.icon}`}
-            alt="Weather Icon"
-            className="weather-icon"
-        />
         <div className="weather-info">
-          <p className="temperature">{weather.temp}°C</p>
-          <h4 className="city">{weather.city}</h4>
+          <img
+              src={weather.icon}
+              alt="Weather Icon"
+              className="weather-icon"
+          />
+          <p>{weather.temperature}°C</p>
+          <h4>{weather.city}</h4>
         </div>
       </div>
   );

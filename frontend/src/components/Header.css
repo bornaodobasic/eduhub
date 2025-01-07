@@ -6,6 +6,7 @@
   background: linear-gradient(to right, #ff7eb3, #ff758c);
   color: white;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .user-name {
@@ -35,7 +36,7 @@
 .logout-form {
   position: absolute;
   top: 33px;
-  right: -22px;
+  right: 0px;
   border:none;
   padding: 0px;
   z-index: 10;
@@ -86,23 +87,23 @@
 
 @media (max-width: 768px) {
   .header {
-      z-index: 3;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      text-align: center;
-      padding: 0px 20px;
-      padding-right: 10px;
-      background: linear-gradient(to right, #ff7eb3, #ff758c);
-      color: white;
+    z-index: 3;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    text-align: center;
+    padding: 0px 20px;
+    padding-right: 10px;
+    background: linear-gradient(to right, #ff7eb3, #ff758c);
+    color: white;
   }
 
   .logo {
-      font-size: 16px;
+    font-size: 16px;
   }
 
   .icon {
-      height: 28px;
+    height: 28px;
   }
 }
