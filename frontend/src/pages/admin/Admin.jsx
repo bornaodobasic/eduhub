@@ -358,19 +358,36 @@ const Admin = () => {
                 throw new Error("Greška prilikom dohvaćanja učenika.");
             }
             const data = await response.json();
+    
             setMainContent(
                 <div>
                     <h3>Popis svih učenika</h3>
-                    <ul>
+                    
+                    <div className="tablicadiv">
                         {data.map((ucenik) => (
-                            <li key={ucenik.id}>
-                                {ucenik.imeUcenik} {ucenik.prezimeUcenik} - {ucenik.email}
-                                <button className="delete-button" onClick={() => handleDelete("ucenik",  ucenik.email)}>
+                            <div
+                                key={ucenik.id}
+                                className="tablicarow"
+                            >
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {ucenik.imeUcenik} {ucenik.prezimeUcenik}
+                                </div>
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {ucenik.email}
+                                </div>
+                                <button
+                                    className="delete-button"
+                                    onClick={() => handleDelete("ucenik", ucenik.email)}
+                                >
                                     X
                                 </button>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             );
         } catch (error) {
@@ -387,19 +404,36 @@ const Admin = () => {
                 throw new Error("Greška prilikom dohvaćanja nastavnika.");
             }
             const data = await response.json();
+    
             setMainContent(
                 <div>
                     <h3>Popis svih nastavnika</h3>
-                    <ul>
+                    
+                    <div className="tablicadiv">
                         {data.map((nastavnik) => (
-                            <li key={nastavnik.id}>
-                                {nastavnik.imeNastavnik} {nastavnik.prezimeNastavnik} - {nastavnik.email}
-                                <button className="delete-button" onClick={() => handleDelete("nastavnik",  nastavnik.email)}>
+                            <div
+                                key={nastavnik.id}
+                                className="tablicarow"
+                            >
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {nastavnik.imeNastavnik} {nastavnik.prezimeNastavnik}
+                                </div>
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {nastavnik.email}
+                                </div>
+                                <button
+                                    className="delete-button"
+                                    onClick={() => handleDelete("nastavnik", nastavnik.email)}
+                                >
                                     X
                                 </button>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             );
         } catch (error) {
@@ -408,27 +442,44 @@ const Admin = () => {
             );
         }
     };
-
+    
     const fetchRavnatelji = async () => {
         try {
             const response = await fetch('/api/admin/ravnatelj');
             if (!response.ok) {
-                throw new Error("Greška prilikom dohvaćanja nastavnika.");
+                throw new Error("Greška prilikom dohvaćanja ravnatelja.");
             }
             const data = await response.json();
+    
             setMainContent(
                 <div>
                     <h3>Popis svih ravnatelja</h3>
-                    <ul>
+                    
+                    <div className="tablicadiv">
                         {data.map((ravnatelj) => (
-                            <li key={ravnatelj.id}>
-                                {ravnatelj.imeRavnatelj} {ravnatelj.prezimeRavnatelj} - {ravnatelj.email}
-                                <button className="delete-button" onClick={() => handleDelete("ravnatelj", ravnatelj.email)}>
+                            <div
+                                key={ravnatelj.id}
+                                className="tablicarow"
+                            >
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {ravnatelj.imeRavnatelj} {ravnatelj.prezimeRavnatelj}
+                                </div>
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {ravnatelj.email}
+                                </div>
+                                <button
+                                    className="delete-button"
+                                    onClick={() => handleDelete("ravnatelj", ravnatelj.email)}
+                                >
                                     X
                                 </button>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             );
         } catch (error) {
@@ -442,22 +493,39 @@ const Admin = () => {
         try {
             const response = await fetch('/api/admin/satnicar');
             if (!response.ok) {
-                throw new Error("Greška prilikom dohvaćanja nastavnika.");
+                throw new Error("Greška prilikom dohvaćanja satničara.");
             }
             const data = await response.json();
+    
             setMainContent(
                 <div>
                     <h3>Popis svih satničara</h3>
-                    <ul>
+                    
+                    <div className="tablicadiv">
                         {data.map((satnicar) => (
-                            <li key={satnicar.id}>
-                                {satnicar.imeSatnicar} {satnicar.prezimeSatnicar} - {satnicar.email}
-                                <button className="delete-button" onClick={() => handleDelete("satnicar", satnicar.email)}>
+                            <div
+                                key={satnicar.id}
+                                className="tablicarow"
+                            >
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {satnicar.imeSatnicar} {satnicar.prezimeSatnicar}
+                                </div>
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {satnicar.email}
+                                </div>
+                                <button
+                                    className="delete-button"
+                                    onClick={() => handleDelete("satnicar", satnicar.email)}
+                                >
                                     X
                                 </button>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             );
         } catch (error) {
@@ -471,22 +539,39 @@ const Admin = () => {
         try {
             const response = await fetch('/api/admin/djelatnik');
             if (!response.ok) {
-                throw new Error("Greška prilikom dohvaćanja nastavnika.");
+                throw new Error("Greška prilikom dohvaćanja djelatnika.");
             }
             const data = await response.json();
+    
             setMainContent(
                 <div>
                     <h3>Popis svih djelatnika</h3>
-                    <ul>
+                    
+                    <div className="tablicadiv">
                         {data.map((djelatnik) => (
-                            <li key={djelatnik.id}>
-                                {djelatnik.imeDjel} {djelatnik.prezimeDjel} - {djelatnik.email}
-                                <button className="delete-button" onClick={() => handleDelete("djelatnik", djelatnik.email)}>
+                            <div
+                                key={djelatnik.id}
+                                className="tablicarow"
+                            >
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {djelatnik.imeDjel} {djelatnik.prezimeDjel}
+                                </div>
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {djelatnik.email}
+                                </div>
+                                <button
+                                    className="delete-button"
+                                    onClick={() => handleDelete("djelatnik", djelatnik.email)}
+                                >
                                     X
                                 </button>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             );
         } catch (error) {
@@ -500,22 +585,39 @@ const Admin = () => {
         try {
             const response = await fetch('/api/admin/admin');
             if (!response.ok) {
-                throw new Error("Greška prilikom dohvaćanja nastavnika.");
+                throw new Error("Greška prilikom dohvaćanja admina.");
             }
             const data = await response.json();
+    
             setMainContent(
                 <div>
                     <h3>Popis svih admina</h3>
-                    <ul>
+                    
+                    <div className="tablicadiv">
                         {data.map((admin) => (
-                            <li key={admin.id}>
-                                {admin.imeAdmin} {admin.prezimeAdmin} - {admin.email}
-                                <button className="delete-button" onClick={() => handleDelete("admin", admin.email)}>
+                            <div
+                                key={admin.id}
+                                className="tablicarow"
+                            >
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {admin.imeAdmin} {admin.prezimeAdmin}
+                                </div>
+                                <div
+                                    className="tablicacell"
+                                >
+                                    {admin.email}
+                                </div>
+                                <button
+                                    className="delete-button"
+                                    onClick={() => handleDelete("admin", admin.email)}
+                                >
                                     X
                                 </button>
-                            </li>
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             );
         } catch (error) {
@@ -524,7 +626,6 @@ const Admin = () => {
             );
         }
     };
-
 
     /* dodavanje korsnika */
     const handleUcenikSubmit = async (e) => {
