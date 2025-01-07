@@ -9,7 +9,7 @@ const WeatherWidget = () => {
     const fetchWeather = async () => {
       try {
         const response = await fetch(
-          'http://api.weatherapi.com/v1/current.json?key=75865835572b41f7a15192310241712&q=Zagreb'
+            'http://api.weatherapi.com/v1/current.json?key=75865835572b41f7a15192310241712&q=Zagreb'
         );
         if (!response.ok) {
           throw new Error('Podaci o vremenu ne mogu se dohvatiti');
@@ -18,7 +18,7 @@ const WeatherWidget = () => {
         setWeather({
           city: data.location.name,
           icon: data.current.condition.icon,
-          temp: data.current.temp_c,
+          temp: Math.round(data.current.temp_c),
         });
       } catch (err) {
         setError(err.message);
@@ -32,17 +32,17 @@ const WeatherWidget = () => {
   if (!weather) return <div className="weather-loading">Loading...</div>;
 
   return (
-    <div className="weather-widget">
-      <div className="weather-info">
-        <h4>{weather.city}</h4>
-        <p>{weather.temp}°C</p>
+      <div className="weather-widget">
+        <img
+            src={`https:${weather.icon}`}
+            alt="Weather Icon"
+            className="weather-icon"
+        />
+        <div className="weather-info">
+          <p className="temperature">{weather.temp}°C</p>
+          <h4 className="city">{weather.city}</h4>
+        </div>
       </div>
-      <img
-        src={`https:${weather.icon}`}
-        alt="Weather Icon"
-        className="weather-icon"
-      />
-    </div>
   );
 };
 
