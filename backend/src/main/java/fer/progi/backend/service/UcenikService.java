@@ -6,6 +6,7 @@ import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.rest.UpisDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UcenikService {
 
@@ -20,5 +21,7 @@ public interface UcenikService {
     List<Aktivnost> findUcenikAktivnosti(String email);
 
     List<Predmet> listAllPredmeti(String email);
+
+	Optional<Ucenik> findByEmailUcenik(String email);
 
 }

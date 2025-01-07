@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UcenikServiceJpa implements UcenikService {
@@ -73,5 +74,11 @@ public class UcenikServiceJpa implements UcenikService {
         return ucenik.getRazred().getSmjer().getPredmeti();
 
     }
+
+	@Override
+	public Optional<Ucenik> findByEmailUcenik(String email) {
+		return ucenikRepo.findByEmail(email);
+	
+	}
  
 }
