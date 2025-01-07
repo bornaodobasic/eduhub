@@ -18,7 +18,7 @@ public interface NastavnikService {
 
 	List<Nastavnik> findAllNastavniks();
 	
-	void deleteNastavnik(String email);
+	boolean deleteNastavnik(String email);
 
-	Set<Predmet> findNastavnikPredmeti(String email);
+	List<Predmet> findNastavnikPredmeti(String email);
 }

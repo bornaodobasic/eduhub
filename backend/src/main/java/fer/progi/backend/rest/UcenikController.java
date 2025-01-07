@@ -1,23 +1,32 @@
 package fer.progi.backend.rest;
 
+import fer.progi.backend.service.PDFService;
 import fer.progi.backend.service.UcenikService;
+import fer.progi.backend.domain.Predmet;
+import fer.progi.backend.domain.Ucenik;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/ucenik")
+@RequestMapping("/api/ucenik")
+@PreAuthorize("hasAuthority('Ucenik')")
 public class UcenikController {
 
     @Autowired
     private UcenikService ucenikService;
+    
+    @Autowired
+    private PDFService pdfService;
     
 //    @PostMapping("/dodajAktivnosti")
 //    public ResponseEntity<String> dodajAktivnosti(Authentication authentication, @RequestBody List<String> oznAktivnosti){
@@ -38,5 +47,35 @@ public class UcenikController {
 //            return ResponseEntity.badRequest().body("Dodavanje aktivnosti nije uspelo.");
 //        }
 //    	
-//    } 
+//    }
+
+	@GetMapping("/predmeti")
+	public List<Predmet> listPredmeti(String email) {
+        return ucenikService.listAllPredmeti(email);
+    }
+	
+	@GetMapping("/{email}/generirajPotvrdu")
+	public ResponseEntity<byte[]> generirajPotvrdu(@PathVariable String email) {
+	    Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
+
+	    if (ucenikOptional.isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404 ako učenik ne postoji
+	    }
+
+	    Ucenik ucenik = ucenikOptional.get();
+
+	   
+	    byte[] pdfBytes = pdfService.generatePDF(ucenik.getImeUcenik(), ucenik.getPrezimeUcenik());
+
+	    
+	    return ResponseEntity.ok()
+	            .header("Content-Disposition", "attachment; filename=potvrda_" 
+	                    + ucenik.getImeUcenik() + "_" + ucenik.getPrezimeUcenik() + ".pdf")
+	            .header("Content-Type", "application/pdf")
+	            .body(pdfBytes);
+
+
+    
+
+}
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/s3")
+@RequestMapping("/api/s3")
 public class S3Controller {
 
     private final S3Service s3Service;
@@ -19,7 +19,7 @@ public class S3Controller {
     public S3Controller(S3Service s3Service) {
         this.s3Service = s3Service;
     }
-
+/*
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
@@ -30,4 +30,6 @@ public class S3Controller {
             return ResponseEntity.status(500).body("Error uploading file");
         }
     }
+
+ */
 }

@@ -1,5 +1,6 @@
 package fer.progi.backend.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +33,7 @@ public class UcenikAktivnostServiceJpa implements UcenikAktivnostService{
           List<Aktivnost> aktivnosti = aktivnostRepo.findByOznAktivnostIn(naziviAktivnosti);
 
           if (ucenik.getAktivnosti() == null) {
-              ucenik.setAktivnosti(new HashSet<>());
+              ucenik.setAktivnosti(new ArrayList<>());
           }
           
           for(int i = 0; i < aktivnosti.size(); i++) {

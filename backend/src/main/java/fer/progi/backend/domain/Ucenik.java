@@ -1,10 +1,12 @@
 package fer.progi.backend.domain;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -45,9 +47,10 @@ public class Ucenik {
 			name = "ucenik_aktivnosti",
 			joinColumns = @JoinColumn(name = "id"),
 		inverseJoinColumns = @JoinColumn(name = "sifAktivnost"))
-	private Set<Aktivnost> aktivnosti = new HashSet<>();
-	
-	@Transient
-	private Set<Integer> sifreAktivnost;
+	@JsonManagedReference
+	private List<Aktivnost> aktivnosti;
+
+	//@Transient
+	//private Set<Integer> sifreAktivnost;
 	
 }

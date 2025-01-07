@@ -1,11 +1,13 @@
 package fer.progi.backend.config;
 
 import fer.progi.backend.dao.PredmetRepository;
+import fer.progi.backend.dao.UcionicaRepository;
 import fer.progi.backend.dao.RazredRepository;
 import fer.progi.backend.dao.SmjerRepository;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Razred;
 import fer.progi.backend.domain.Smjer;
+import fer.progi.backend.domain.Ucionica;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,11 +27,42 @@ public class DatabaseInitializer {
 
     @Autowired
     private RazredRepository razredRepository;
+
     @Autowired
     private PredmetRepository predmetRepository;
 
+    @Autowired
+    private UcionicaRepository ucionicaRepository;
+
+
     @PostConstruct
     public void init() {
+
+        try {
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(getClass().getResourceAsStream("/db/ucionica.csv"))
+                    );
+
+                    List<Ucionica> ucionice = reader.lines()
+                            .skip(1)
+                            .map(line -> {
+                                String[] fields = line.split(",");
+                                String oznaka = fields[0].trim();
+                                String kapacitet = fields[1].trim();
+
+                                Ucionica ucionica = new Ucionica();
+                                ucionica.setOznakaUc(oznaka);
+                                ucionica.setKapacitet(Integer.parseInt(kapacitet));
+                                return ucionica;
+                            })
+                            .filter(ucionica -> ucionica != null)
+                            .collect(Collectors.toList());
+
+                    ucionicaRepository.saveAll(ucionice);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
         try {
             List<Smjer> smjerovi = Files.lines(Paths.get(getClass().getResource("/db/smjer.csv").toURI()))
                     .skip(1)

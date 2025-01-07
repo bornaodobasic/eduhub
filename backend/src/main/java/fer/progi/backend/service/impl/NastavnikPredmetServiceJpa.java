@@ -3,6 +3,9 @@ package fer.progi.backend.service.impl;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import fer.progi.backend.domain.Aktivnost;
+import fer.progi.backend.domain.Ucenik;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +30,7 @@ public class NastavnikPredmetServiceJpa implements NastavnikPredmetService{
 		Nastavnik nastavnik = nastavnikRepo.findByEmail(email)
 	            .orElseThrow(() -> new RuntimeException("Nastavnik nije pronađen s emailom: " + email));
         
-		Set<Predmet> newPredmets = predmetRepo.findByNazPredmetIn(predmeti);
+		List<Predmet> newPredmets = predmetRepo.findByNazPredmetIn(predmeti);
 		
 		for(Predmet predmet : newPredmets) {
 			predmet.getNastavnici().add(nastavnik);
@@ -43,13 +46,27 @@ public class NastavnikPredmetServiceJpa implements NastavnikPredmetService{
 		Nastavnik nastavnik = nastavnikRepo.findByEmail(email)
 	            .orElseThrow(() -> new RuntimeException("Nastavnik nije pronađen s emailom: " + email));
 
-		Set<Predmet> predmetiZaUkloniti = predmetRepo.findByNazPredmetIn(predmeti);
+		List<Predmet> predmetiZaUkloniti = predmetRepo.findByNazPredmetIn(predmeti);
 		
 		nastavnik.getPredmeti().removeAll(predmetiZaUkloniti);
 		predmetiZaUkloniti.forEach(p -> p.getNastavnici().remove(nastavnik));
 
-		return true;
+		if (nastavnik.getPredmeti() != null) {
+			nastavnik.getPredmeti().removeAll(predmetiZaUkloniti);
+			nastavnikRepo.save(nastavnik);
+
+			for(int i = 0; i < predmetiZaUkloniti.size(); i++) {
+				predmetiZaUkloniti.get(i).getNastavnici().remove(nastavnik);
+				predmetRepo.save(predmetiZaUkloniti.get(i));
+			}
+			return true;
+		}
+		else {
+			return false;
+		}
+
 	}
+
 
 	@Override
 	public Set<Predmet> findNotNastavnikPredmeti(String email) {

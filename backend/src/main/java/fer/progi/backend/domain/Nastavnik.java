@@ -1,14 +1,9 @@
 package fer.progi.backend.domain;
 
-import java.util.Set;
+import java.util.List;
 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -25,7 +20,18 @@ public class Nastavnik {
 	@Column(unique=true)
 	private String email;
 	
-	@ManyToMany(mappedBy = "nastavnici")
-	private Set<Predmet> predmeti;
+	@ManyToMany(mappedBy = "nastavnici", fetch = FetchType.EAGER)
+	@JsonBackReference
+	private List<Predmet> predmeti;
+
+	@Override
+	public String toString() {
+		return "Nastavnik{" +
+				"id=" + id +
+				", imeNastavnik='" + imeNastavnik + '\'' +
+				", prezimeNastavnik='" + prezimeNastavnik + '\'' +
+				", email='" + email + '\'' +
+				'}';
+	}
 	
 }
