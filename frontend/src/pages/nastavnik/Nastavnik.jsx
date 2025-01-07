@@ -12,9 +12,9 @@ const Nastavnik = () => {
     const [leftSidebarOptions, setLeftSidebarOptions] = useState(["Učenici", "Materijali", "Nekaj"]);
     const [mainContent, setMainContent] = useState("");
     const [subjects, setSubjects] = useState([]);
+    const [expandedSubject, setExpandedSubject] = useState(null);
 
     useEffect(() => {
-        // Handle content change when sidebar option is selected
         if (activeSidebarOption === "Materijali") {
             fetchSubjectsAndMaterials();
         } else {
@@ -42,44 +42,62 @@ const Nastavnik = () => {
         }
     };
 
-    const renderMaterials = (subjects) => (
-        <div>
+    const renderMaterials = () => (
+        <div className="subjects-container">
             {subjects.map((subject) => (
                 <div key={subject.id} className="subject-section">
-                    <h3>{subject.nazPredmet}</h3>
-                    <button
-                        onClick={() => handleAddMaterial(subject.nazPredmet)}
-                        className="add-material-btn"
+                    {/* Glavni naslov predmeta */}
+                    <h3
+                        className={`subject-title ${
+                            expandedSubject === subject.nazPredmet ? "active" : ""
+                        }`}
+                        onClick={() => toggleSubject(subject.nazPredmet)}
                     >
-                        Dodaj materijal
-                    </button>
-                    <ul>
-                        {subject.materijali && subject.materijali.length > 0 ? (
-                            subject.materijali.map((material) => (
-                                <li key={material}>
-                                    <a
-                                        href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {material.split('/').pop()}
-                                    </a>
-                                    <button
-                                        onClick={() => handleDeleteMaterial(material)}
-                                        className="delete-material-btn"
-                                    >
-                                        Obriši
-                                    </button>
-                                </li>
-                            ))
-                        ) : (
-                            <p>Nema materijala za ovaj predmet.</p>
-                        )}
-                    </ul>
+                        {subject.nazPredmet}
+                    </h3>
+                    
+                    {/* Materijali predmeta - prikazuju se samo ako je predmet otvoren */}
+                    {expandedSubject === subject.nazPredmet && (
+                        <div className="materials-list">
+                            <ul>
+                                {subject.materijali && subject.materijali.length > 0 ? (
+                                    subject.materijali.map((material) => (
+                                        <li key={material} className="material-item">
+                                            <a
+                                                href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                {material.split("/").pop()}
+                                            </a>
+                                            <button
+                                                onClick={() => handleDeleteMaterial(material)}
+                                                className="delete-material-btn"
+                                            >
+                                                Obriši
+                                            </button>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <p>Nema materijala za ovaj predmet.</p>
+                                )}
+                            </ul>
+                            <button
+                                onClick={() => handleAddMaterial(subject.nazPredmet)}
+                                className="add-material-btn"
+                            >
+                                Dodaj materijal
+                            </button>
+                        </div>
+                    )}
                 </div>
             ))}
         </div>
     );
+
+    const toggleSubject = (subjectName) => {
+        setExpandedSubject((prev) => (prev === subjectName ? null : subjectName));
+    };
 
     const handleAddMaterial = (subject) => {
         const fileInput = document.createElement("input");
@@ -143,7 +161,7 @@ const Nastavnik = () => {
                 </aside>
 
                 <div className="main-content">
-                    <div className="content">{mainContent}</div>
+                    {activeSidebarOption === "Materijali" ? renderMaterials() : <div className="content">{mainContent}</div>}
                 </div>
 
                 <aside className="sidebar-right">

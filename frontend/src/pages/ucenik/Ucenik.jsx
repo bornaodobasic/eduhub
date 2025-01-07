@@ -21,26 +21,8 @@ const Ucenik = () => {
         { name: "Glazbena kultura"},
     ];
 
-    const [userEmail, setUserEmail] = useState("Loading..."); 
+    const userEmail = "uceniknew@eduxhub.onmicrosoft.com"
 
-
-        const fetchUserEmail = async () => {
-          try {
-            const response = await fetch('/api/user/email', { credentials: 'include' });
-            if (response.ok) {
-              const data = await response.json();
-              setUserEmail(data.email || "NoEmail"); 
-            } else {
-              console.error('Failed to fetch user email:', response.status);
-              setUserEmail("NoEmail");
-            }
-          } catch (error) {
-            console.error('Error fetching user email:', error);
-            setUserEmail("NoEmail");
-          }
-        };
-
-        fetchUserEmail();
 
     const handleDownloadPotvrda = async () => {
         try {
@@ -105,7 +87,7 @@ const Ucenik = () => {
                     
 
                     <button onClick={handleDownloadPotvrda}>
-                         POTVRDA za {userEmail}
+                         POTVRDA
                     </button>
                     </div>
                     
