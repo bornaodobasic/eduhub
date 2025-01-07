@@ -1,7 +1,8 @@
 
+
 import React, { useState, useEffect } from 'react';
 import './Header.css';
-
+import pngIcon from './logout.png'
 const Header = () => {
   const [userName, setUserName] = useState("Loading..."); // Default placeholder name
   const [showLogout, setShowLogout] = useState(false);
@@ -59,12 +60,18 @@ const Header = () => {
           </svg>
 
           {showLogout && (
-            <div className="logout-form">
-              <button className="logout-btn" onClick={handleLogout}>
-                Odjava
-              </button>
-            </div>
+              <div className="logout-form">
+                <button className="logout-btn" onClick={handleLogout}>
+                  <img
+                      className="logout-icon"
+                      src={pngIcon}
+                      alt="Logout Icon"
+                  />
+                  Odjava
+                </button>
+              </div>
           )}
+
         </div>
       </div>
     </header>

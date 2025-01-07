@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "../../components/Header"; 
+import WeatherWidget from "../../components/WeatherWidget";
 import "../../components/MainContent.css"; 
 
 const Satnicar = () => {
@@ -38,19 +39,7 @@ const Satnicar = () => {
                     <div className="empty-container"></div>
                     
                     <div className="weather-widget-container">
-                        <div className="weather-widget">
-                            <div className="weather-icon">
-                                <img 
-                                    src={require("../../components/5.png")} 
-                                    alt="Weather Icon" 
-                                    style={{ width: "50px", height: "50px" }} 
-                                />
-                            </div> 
-                         
-                            <p>21°C</p> 
-                            
-                            <p>Zagreb, Hrvatska</p>
-                        </div>
+                        <WeatherWidget></WeatherWidget>
                     </div>
                 </aside>
             </div>
