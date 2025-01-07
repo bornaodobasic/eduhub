@@ -11,7 +11,6 @@ body, html {
   color: #333;
 }
 
-
 .homepage {
   display: flex;
   flex-direction: column;
@@ -219,36 +218,110 @@ h1 {
   text-align: left;
 }
 
-.tablicadiv{
-  margin-top: 1vh;
-  display:table;
+.table-container {
+  margin: 20px auto;
+  width: 90%;
+  overflow-x: auto;
+}
+
+.styled-table {
   border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 18px;
+  min-width: 400px;
+  width: 100%;
+  text-align: left;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
-.tablicarow{
-  display: table-row;
-   margin-bottom: 8px;
+.styled-table thead tr {
+  background-color: #4CAF50;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
 }
 
-.tablicacell{
-    display: table-cell;
-    padding: 8px;
-    border-style:solid;
-    border-color: black;
-    border-width: 1px;
-    white-space: nowrap;
+.styled-table th,
+.styled-table td {
+  padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid #4CAF50;
 }
 
 .delete-button {
-  margin-left: 10px;
   color: white;
   background-color: red;
   border: none;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 6px 12px;
   border-radius: 4px;
-  display: inline-block;
+  font-size: 14px;
 }
+
+/* Centriranje naslova */
+.main-content-center h3, .main-content-center h4 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Stilizacija desnog sidebara */
+.sidebar-right-admin {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-left: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Forma u desnom sidebaru */
+.sidebar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sidebar-form input, .sidebar-form select {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.sidebar-form button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sidebar-form button:hover {
+  background-color: #0056b3;
+}
+
+
 
 @media only screen and (max-width: 768px){
 .homepage-container-admin {

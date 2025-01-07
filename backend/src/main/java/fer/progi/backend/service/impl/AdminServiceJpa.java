@@ -67,7 +67,7 @@ public class AdminServiceJpa implements AdminService {
     public Djelatnik addDjelatnik(AddDTO addDTO) {
         Djelatnik djelatnik = new Djelatnik();
         djelatnik.setImeDjel(addDTO.getIme());
-        djelatnik.setImeDjel(addDTO.getPrezime());
+        djelatnik.setPrezimeDjel(addDTO.getPrezime());
         djelatnik.setEmail(addDTO.getEmail());
 
         return djelatnikRepo.save(djelatnik);
