@@ -1,5 +1,6 @@
 package fer.progi.backend.rest;
 
+import fer.progi.backend.service.MailService;
 import fer.progi.backend.service.PDFService;
 import fer.progi.backend.service.UcenikService;
 import fer.progi.backend.domain.Predmet;
@@ -27,6 +28,9 @@ public class UcenikController {
     
     @Autowired
     private PDFService pdfService;
+    
+    @Autowired 
+    private MailService mailService;
     
 //    @PostMapping("/dodajAktivnosti")
 //    public ResponseEntity<String> dodajAktivnosti(Authentication authentication, @RequestBody List<String> oznAktivnosti){
@@ -59,7 +63,7 @@ public class UcenikController {
 	    Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
 
 	    if (ucenikOptional.isEmpty()) {
-	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404 ako učenik ne postoji
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); 
 	    }
 
 	    Ucenik ucenik = ucenikOptional.get();
@@ -73,9 +77,30 @@ public class UcenikController {
 	                    + ucenik.getImeUcenik() + "_" + ucenik.getPrezimeUcenik() + ".pdf")
 	            .header("Content-Type", "application/pdf")
 	            .body(pdfBytes);
+	    
+	}
 
+	 @GetMapping("/{email}/posaljiMail")
+	 public ResponseEntity<String> posaljiNaMail(@PathVariable String email){
+		 
+		    Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
+
+		    if (ucenikOptional.isEmpty()) {
+		        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); 
+		    }
+
+		    Ucenik ucenik = ucenikOptional.get();
+		    
+		    byte[] pdfBytes = pdfService.generatePDF(ucenik.getImeUcenik(), ucenik.getPrezimeUcenik());
+		    
+		    mailService.sendMail(email, pdfBytes, "potvrda_" + ucenik.getImeUcenik() + "_" + ucenik.getPrezimeUcenik() + ".pdf" );
+		    
+		    return ResponseEntity.ok("Mail uspješno poslan");  
+
+		 
+	 }
 
     
 
 }
-}
+
