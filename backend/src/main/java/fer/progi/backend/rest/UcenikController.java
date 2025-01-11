@@ -6,7 +6,16 @@ import fer.progi.backend.service.UcenikService;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Ucenik;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +67,7 @@ public class UcenikController {
         return ucenikService.listAllPredmeti(email);
     }
 	
-	@GetMapping("/{email}/generirajPotvrdu")
+	@PostMapping("/{email}/generirajPotvrdu")
 	public ResponseEntity<byte[]> generirajPotvrdu(@PathVariable String email) {
 	    Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
 
@@ -70,11 +79,26 @@ public class UcenikController {
 
 	   
 	    byte[] pdfBytes = pdfService.generatePDF(ucenik.getImeUcenik(), ucenik.getPrezimeUcenik());
+	    
+	    
+        String csvFilePath = "database/zahjtevi.csv";
+
+        try {
+        
+            try (BufferedWriter writerCSV = Files.newBufferedWriter(Paths.get(csvFilePath), StandardOpenOption.APPEND);
+                 PrintWriter pw = new PrintWriter(writerCSV)) {
+
+                String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                pw.println(ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + currentDateTime);
+            }
+
+        } catch (IOException e) {
+           
+        }
 
 	    
 	    return ResponseEntity.ok()
-	            .header("Content-Disposition", "attachment; filename=potvrda_" 
-	                    + ucenik.getImeUcenik() + "_" + ucenik.getPrezimeUcenik() + ".pdf")
+	            .header("Content-Disposition", "attachment; filename=potvrda.pdf")
 	            .header("Content-Type", "application/pdf")
 	            .body(pdfBytes);
 	    
