@@ -5,6 +5,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+
 @Entity
 @Data
 public class VrijemeSata {
@@ -13,8 +16,8 @@ public class VrijemeSata {
 	@GeneratedValue
 	private Integer id;
 
-	private String dan;
-	private String pocetakSata;
-	private String krajSata;
+	private DayOfWeek dan;
+	private LocalTime pocetakSata;
+	private LocalTime krajSata;
 
 }

@@ -20,13 +20,19 @@ public class Predmet {
 	@ManyToOne
 	@JsonBackReference
 	private Smjer smjer;
-	
-	@ManyToMany(cascade = CascadeType.ALL)
+
+	/*
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "predmet_nastavnik",
 			joinColumns = @JoinColumn(name = "sifPredmet"),
 			inverseJoinColumns = @JoinColumn(name = "sifNastavnik"))
 	@JsonManagedReference
+	private List<Nastavnik> nastavnici;
+*/
+
+	@ManyToMany(mappedBy = "predmeti", fetch = FetchType.EAGER)
+	@JsonBackReference
 	private List<Nastavnik> nastavnici;
 
 	@Override

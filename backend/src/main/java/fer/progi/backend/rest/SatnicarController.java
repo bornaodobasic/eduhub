@@ -3,6 +3,7 @@ package fer.progi.backend.rest;
 
 import java.util.List;
 
+import fer.progi.backend.service.RazredPredmetNastavnikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,10 @@ public class SatnicarController {
 	
 	@Autowired
 	private SatnicarService SatnicarService;
-	
+
+	@Autowired
+	private RazredPredmetNastavnikService razredPredmetNastavnikService;
+
 	@GetMapping("")
 	public List<Satnicar> listSatnicar() {
 		return SatnicarService.listAll();
@@ -32,6 +36,16 @@ public class SatnicarController {
 	@PostMapping("")
 	public Satnicar dodajSatnicar(@RequestBody Satnicar satnicar) {
 		return SatnicarService.dodajSatnicara(satnicar);
+	}
+
+	@GetMapping("/dodijeli")
+	public void dodijeli() {
+		razredPredmetNastavnikService.dodijeliNastavnike();
+	}
+
+	@GetMapping("/brojsati")
+	public void brojsati() {
+		razredPredmetNastavnikService.sati();
 	}
 
 }
