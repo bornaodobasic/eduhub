@@ -61,23 +61,30 @@ const Nastavnik = () => {
                         <div className="materials-list">
                             <ul>
                                 {subject.materijali && subject.materijali.length > 0 ? (
-                                    subject.materijali.map((material) => (
-                                        <li key={material} className="material-item">
-                                            <a
-                                                href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                {material.split("/").pop()}
-                                            </a>
-                                            <button
-                                                onClick={() => handleDeleteMaterial(material)}
-                                                className="delete-material-btn"
-                                            >
-                                                Obriši
-                                            </button>
-                                        </li>
-                                    ))
+                                    subject.materijali.map((material) => {
+                                        // Izračunavanje čitljivog imena fajla
+                                        const readableName = material.includes("_")
+                                            ? material.substring(material.lastIndexOf("_") + 1)
+                                            : material;
+
+                                        return (
+                                            <li key={material} className="material-item">
+                                                <a
+                                                    href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    {readableName}
+                                                </a>
+                                                <button
+                                                    onClick={() => handleDeleteMaterial(material)}
+                                                    className="delete-material-btn"
+                                                >
+                                                    Obriši
+                                                </button>
+                                            </li>
+                                        );
+                                    })
                                 ) : (
                                     <p>Nema materijala za ovaj predmet.</p>
                                 )}

@@ -83,7 +83,7 @@ public class UcenikController {
 	    
         String csvFilePath = "database/zahjtevi.csv";
 
-        try {
+      
         
             try (BufferedWriter writerCSV = Files.newBufferedWriter(Paths.get(csvFilePath), StandardOpenOption.APPEND);
                  PrintWriter pw = new PrintWriter(writerCSV)) {
@@ -91,10 +91,11 @@ public class UcenikController {
                 String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 pw.println(ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + currentDateTime);
             }
+            catch (Exception e) {
+		
+			}
 
-        } catch (IOException e) {
-           
-        }
+       
 
 	    
 	    return ResponseEntity.ok()
