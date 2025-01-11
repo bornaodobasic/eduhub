@@ -23,5 +23,7 @@ public interface UcenikService {
     List<Predmet> listAllPredmeti(String email);
 
 	Optional<Ucenik> findByEmailUcenik(String email);
+	
+	boolean dodajAktivnostiPoNazivu(String email, List<String> oznAktivnosti);
 
 }

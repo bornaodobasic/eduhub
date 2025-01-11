@@ -124,6 +124,7 @@ public class AdminServiceJpa implements AdminService {
         ucenik.setDatumRodenja(adminAddUcenikDTO.getDatumRodenja());
         ucenik.setRazred(razredService.findRazred(adminAddUcenikDTO.getRazred()));
         ucenik.setEmail(adminAddUcenikDTO.getEmail());
+        ucenik.setVjeronauk(adminAddUcenikDTO.getVjeronauk());
         return ucenikRepo.save(ucenik);
     }
 

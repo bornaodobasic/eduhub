@@ -12,6 +12,7 @@ public class UpisDTO {
     private String smjer;
     private String datumRodenja;
     private String oib;
+    private Boolean vjeronauk;
     
 
 }

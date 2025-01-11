@@ -15,5 +15,5 @@ public interface AktivnostService {
 
 	Aktivnost findBySifAktivnost(Integer id);
 
-	
+	List<Aktivnost> findByOznAktivnosti(List<String> oznAktivnosti);
 }

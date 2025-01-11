@@ -12,4 +12,5 @@ public class AdminAddUcenikDTO {
     private String datumRodenja;
     private String oib;
     private String email;
+    private Boolean vjeronauk;
 }
