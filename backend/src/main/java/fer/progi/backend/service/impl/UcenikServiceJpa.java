@@ -7,6 +7,7 @@ import fer.progi.backend.domain.Razred;
 import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.rest.UpisDTO;
+import fer.progi.backend.service.AktivnostService;
 import fer.progi.backend.service.RazredService;
 import fer.progi.backend.service.UcenikService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class UcenikServiceJpa implements UcenikService {
 
     @Autowired
     private RazredService razredService;
+    
+    @Autowired
+    private AktivnostService aktivnostService;
 
     @Override
     public boolean findByEmail(String email) {
@@ -39,6 +43,7 @@ public class UcenikServiceJpa implements UcenikService {
         ucenik.setDatumRodenja(upisDTO.getDatumRodenja());
         ucenik.setOib(upisDTO.getOib());
         ucenik.setEmail(email);
+        ucenik.setVjeronauk(upisDTO.getVjeronauk());
 
         Razred razred = razredService.getBestClass(upisDTO.getSmjer());
         ucenik.setRazred(razred);
@@ -71,7 +76,22 @@ public class UcenikServiceJpa implements UcenikService {
     public List<Predmet> listAllPredmeti(String email) {
         Ucenik ucenik = ucenikRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
 
-        return ucenik.getRazred().getSmjer().getPredmeti();
+        List<Predmet> listaPredmeta = ucenik.getRazred().getSmjer().getPredmeti();
+        
+        if(ucenik.getVjeronauk()) {
+        	for(Predmet p : listaPredmeta) {
+        		if(p.getNazPredmet().startsWith("Etika")) {
+        			listaPredmeta.remove(p);
+        		}
+        	}
+        } else if(!ucenik.getVjeronauk()) {
+        	for(Predmet p : listaPredmeta) {
+        		if(p.getNazPredmet().startsWith("Vjeronauk")) {
+        			listaPredmeta.remove(p);
+        		}
+        	}
+        }
+        return listaPredmeta;
 
     }
 
@@ -79,6 +99,17 @@ public class UcenikServiceJpa implements UcenikService {
 	public Optional<Ucenik> findByEmailUcenik(String email) {
 		return ucenikRepo.findByEmail(email);
 	
+	}
+	
+	@Override
+	public boolean dodajAktivnostiPoNazivu(String email, List<String> oznAktivnosti) {
+		
+		Ucenik ucenik = ucenikRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
+		List<Aktivnost> listaAktivnosti = aktivnostService.findByOznAktivnosti(oznAktivnosti);		
+		ucenik.setAktivnosti(listaAktivnosti);
+		
+		return true;
+		
 	}
  
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UcionicaServiceJpa implements UcionicaService {
@@ -23,4 +24,20 @@ public class UcionicaServiceJpa implements UcionicaService {
     public Ucionica dodajUcionica(Ucionica ucionica) {
         return ucionicaRepo.save(ucionica);
     }
+    
+	@Override
+	public List<Ucionica> findAllUcionice() {
+		return ucionicaRepo.findAll();
+	}
+
+	@Override
+	public void deleteUcionica(String oznakaUc) {
+		ucionicaRepo.deleteById(oznakaUc);
+		
+	}
+
+	@Override
+	public Optional<Ucionica> findById(String oznakaUc) {
+			return ucionicaRepo.findById(oznakaUc);
+		}
 }

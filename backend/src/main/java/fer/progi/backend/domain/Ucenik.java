@@ -42,6 +42,8 @@ public class Ucenik {
 	@Column(unique=true)
 	private String email;
 	
+	private Boolean vjeronauk;
+	
 	@ManyToMany
 	@JoinTable(
 			name = "ucenik_aktivnosti",
