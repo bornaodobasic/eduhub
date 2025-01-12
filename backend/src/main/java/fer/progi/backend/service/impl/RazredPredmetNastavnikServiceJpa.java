@@ -86,4 +86,18 @@ public class RazredPredmetNastavnikServiceJpa implements RazredPredmetNastavnikS
         }
     }
 
+    public RazredPredmetNastavnik findRP(Razred razred, Predmet predmet) {
+        return rpnRepo.findByRazredAndPredmet(razred, predmet);
+    }
+
+    @Override
+    public void saveAll(List<RazredPredmetNastavnik> rpn) {
+        rpnRepo.saveAll(rpn);
+    }
+
+    @Override
+    public List<RazredPredmetNastavnik> findByNastavnik(Nastavnik nastavnik) {
+        return rpnRepo.findByNastavnik(nastavnik);
+    }
+
 }

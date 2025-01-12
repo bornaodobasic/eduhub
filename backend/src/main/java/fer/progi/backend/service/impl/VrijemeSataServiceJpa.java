@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VrijemeSataServiceJpa implements VrijemeSataService {
@@ -17,6 +18,11 @@ public class VrijemeSataServiceJpa implements VrijemeSataService {
     @Override
     public List<VrijemeSata> listAll() {
         return vrijemeSataRepo.findAll();
+    }
+
+    @Override
+    public Optional<VrijemeSata> findById(Integer id) {
+        return vrijemeSataRepo.findById(id);
     }
 
 }

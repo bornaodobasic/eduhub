@@ -1,10 +1,6 @@
 package fer.progi.backend.domain;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
@@ -15,8 +11,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Transient;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
@@ -52,7 +46,4 @@ public class Ucenik {
 	@JsonManagedReference
 	private List<Aktivnost> aktivnosti;
 
-	//@Transient
-	//private Set<Integer> sifreAktivnost;
-	
 }
