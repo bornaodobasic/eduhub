@@ -32,8 +32,8 @@ public class NastavnikServiceJpa implements NastavnikService{
 			return nastavnikRepo.findById(sifNastavnik)
 					.orElseThrow(() -> new RuntimeException("Nije pronađen nastavnik"));
 		}
-	public boolean findByEmail(String email) {
-		return nastavnikRepo.findByEmail(email).isPresent();
+	public Optional<Nastavnik> findByEmail(String email) {
+		return nastavnikRepo.findByEmail(email);
 	}
 
 	public Nastavnik getOrCreateNastavnik(String email) {

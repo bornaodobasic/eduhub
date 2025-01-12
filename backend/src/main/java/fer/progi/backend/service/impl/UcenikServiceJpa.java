@@ -4,6 +4,7 @@ package fer.progi.backend.service.impl;
 import fer.progi.backend.dao.UcenikRepository;
 import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.domain.Razred;
+import fer.progi.backend.domain.Smjer;
 import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.rest.UpisDTO;
@@ -69,10 +70,25 @@ public class UcenikServiceJpa implements UcenikService {
 
     @Override
     public List<Predmet> listAllPredmeti(String email) {
-        Ucenik ucenik = ucenikRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
+        Ucenik ucenik = ucenikRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
 
-        return ucenik.getRazred().getSmjer().getPredmeti();
+        Razred razred = ucenik.getRazred();
+        if (razred == null) {
+            throw new RuntimeException("Učenik nema dodijeljen razred!");
+        }
 
+        Smjer smjer = razred.getSmjer();
+        if (smjer == null) {
+            throw new RuntimeException("Razred učenika nema dodijeljen smjer!");
+        }
+
+        List<Predmet> predmeti = smjer.getPredmeti();
+        if (predmeti == null || predmeti.isEmpty()) {
+            throw new RuntimeException("Smjer nema dodijeljene predmete!");
+        }
+
+        return predmeti;
     }
 
 	@Override
