@@ -7,7 +7,15 @@ import fer.progi.backend.service.impl.S3Service;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Ucenik;
 
+import java.io.BufferedWriter;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,21 +53,6 @@ public class UcenikController {
 
         return mailoviUcenika;
     }
-
-	@GetMapping("/predmeti")
-	public ResponseEntity<List<Predmet>> dohvatiSveupisanePredmete(Authentication authentification){
-
-
-		OidcUser ulogiranKorisnik = (OidcUser) authentification.getPrincipal();
-		String email = ulogiranKorisnik.getPreferredUsername();
-		System.out.println(email);
-
-		List<Predmet> predmeti = ucenikService.listAllPredmeti(email);
-
-		return ResponseEntity.ok(predmeti);
-	}
-
-
 
     @PostMapping("/dodajAktivnosti")
     public ResponseEntity<String> dodajAktivnosti(Authentication authentication, @RequestBody List<String> oznAktivnosti){
@@ -105,7 +98,7 @@ public class UcenikController {
 
         
             try (BufferedWriter writerCSV = Files.newBufferedWriter(Paths.get(csvFilePath), StandardOpenOption.APPEND);
-                 PrintWriter pw = new PrintWriter(writerCSV)) {
+				 PrintWriter pw = new PrintWriter(writerCSV)) {
 
                 String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 pw.println(ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + currentDateTime);

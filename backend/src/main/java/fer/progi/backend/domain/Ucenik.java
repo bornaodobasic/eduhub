@@ -38,7 +38,6 @@ public class Ucenik {
 	
 	private Boolean vjeronauk;
 
-	@ManyToMany
 	@ManyToMany(cascade = jakarta.persistence.CascadeType.MERGE, fetch = jakarta.persistence.FetchType.EAGER)
 	@JoinTable(
 			name = "ucenik_aktivnosti",

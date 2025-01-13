@@ -4,7 +4,6 @@ package fer.progi.backend.service.impl;
 import fer.progi.backend.dao.UcenikRepository;
 import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.domain.Razred;
-import fer.progi.backend.domain.Smjer;
 import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.rest.UpisDTO;
@@ -78,33 +77,13 @@ public class UcenikServiceJpa implements UcenikService {
         Ucenik ucenik = ucenikRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
 
-        Razred razred = ucenik.getRazred();
-        if (razred == null) {
-            throw new RuntimeException("Učenik nema dodijeljen razred!");
-        }
+        List<Predmet> predmeti = ucenik.getRazred().getSmjer().getPredmeti();
 
-        Smjer smjer = razred.getSmjer();
-        if (smjer == null) {
-            throw new RuntimeException("Razred učenika nema dodijeljen smjer!");
-        }
-
-        List<Predmet> predmeti = smjer.getPredmeti();
-        if (predmeti == null || predmeti.isEmpty()) {
-            throw new RuntimeException("Smjer nema dodijeljene predmete!");
-        }
 
         if(ucenik.getVjeronauk()) {
-            for(Predmet p : predmeti) {
-                if(p.getNazPredmet().startsWith("Etika")) {
-                    listaPredmeta.remove(p);
-                }
-            }
-        } else if(!ucenik.getVjeronauk()) {
-            for(Predmet p : predmeti) {
-                if(p.getNazPredmet().startsWith("Vjeronauk")) {
-                    listaPredmeta.remove(p);
-                }
-            }
+            predmeti.removeIf(p -> p.getNazPredmet().startsWith("Etika"));
+        } else {
+            predmeti.removeIf(p -> p.getNazPredmet().startsWith("Vjeronauk"));
         }
 
         return predmeti;
