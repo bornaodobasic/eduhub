@@ -7,27 +7,25 @@ Cilj projekta je razviti programsku podršku za stvaranje web aplikacije “EduH
 # Funkcijski zahtjevi
 |ID zahtjeva|Opis|
 |-------|---------|
-|F-001|Sustav omogućuje korisnicima registraciju to jest stvaranje novog korisničkog računa pomoću osobnih podataka.|
-|F-002|Sustav omogućuje upis u prvi razred.|
-|F-003|Sustav omogućuje prijavu korisnika.|
-|F-004|Sustav omogućuje odjavu korisnika.|
-|F-005|Sustav omogućuje pregled rasporeda sati.|
-|F-006|Sustav omogućuje pregled dostupnih resursa.|
-|F-007|Sustav omogućuje pregled sadržaja kolegija i aktivnosti.|
-|F-008|Sustav omogućuje komunikaciju s ostalim korisnicima.|
-|F-009|Sustav nastavnicima omogućuje dodavanje nastavnih materijala.|
-|F-010|Sustav ravnatelju i djelatnicima službe omogućuje pregled izvještaja|
-|F-011|Sustav pohranjuje podatke o korisnicima.|
-|F-012|Sustav pohranjuje podatke o nastavnim materijalima, njihovim pregledima i pristupima.|
-|F-013|Sustav poslužuje potrebne podatke vezane za prognozu.|
-|F-014|Sustav omogućuje slanje elektroničke pošte korisnicima.|
-|F-015|Sustav omogućuje prikaz navigacije korisnicima.|
+|F-001|Sustav omogućuje upis u prvi razred.|
+|F-002|Sustav omogućuje prijavu korisnika.|
+|F-003|Sustav omogućuje odjavu korisnika.|
+|F-004|Sustav omogućuje pregled rasporeda sati.|
+|F-005|Sustav omogućuje pregled dostupnih resursa.|
+|F-006|Sustav omogućuje pregled sadržaja kolegija i aktivnosti.|
+|F-007|Sustav omogućuje komunikaciju s ostalim korisnicima.|
+|F-008|Sustav nastavnicima omogućuje dodavanje nastavnih materijala.|
+|F-009|Sustav ravnatelju i djelatnicima službe omogućuje pregled izvještaja|
+|F-010|Sustav pohranjuje podatke o korisnicima.|
+|F-011|Sustav pohranjuje podatke o nastavnim materijalima, njihovim pregledima i pristupima.|
+|F-012|Sustav poslužuje potrebne podatke vezane za prognozu.|
+|F-013|Sustav omogućuje slanje elektroničke pošte korisnicima.|
+|F-014|Sustav omogućuje prikaz navigacije korisnicima.|
 
 # Tehnologije
 # Članovi tima
 Batinić Lana - dokumentacija  
 Bilješko Marija - front-end       
-Ivančić Ante - dokumentacija   
 Odobašić Borna - back-end, baza podataka   
 Rožić Donatela - back-end    
 Stolar Maja - back-end    
