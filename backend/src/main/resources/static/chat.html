@@ -4,181 +4,341 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
-    <style>
-        #chat-box { 
-            height: 300px; 
-            border: 1px solid #ccc; 
-            overflow-y: scroll; 
-            padding: 10px; 
-        }
-        #message-input { width: 100%; }
-        .message { 
-            margin: 5px 0; 
-            padding: 10px; 
-            border-radius: 10px; 
-            max-width: 60%; 
-        }
-        .message.sent { 
-            background-color: #d1e7dd; /* Zelena boja za poslane poruke */
-            align-self: flex-end; 
-            text-align: right;
-        }
-        .message.received { 
-            background-color: #f8d7da; /* Crvena boja za primljene poruke */
-            align-self: flex-start; 
-            text-align: left;
-        }
-        .message-container { 
-            display: flex; 
-            flex-direction: column; 
-        }
-    </style>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #fff0f5; /* Svijetloružičasta pozadina */
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    #chat-container {
+        width: 80%;
+        max-width: 900px;
+        background-color: #ffe4e1; /* Lagano roze za glavni okvir */
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #ff69b4; /* Roze za naglasak */
+    }
+
+    #chat-box {
+        height: 300px;
+        border: 1px solid #ffb6c1; /* Svijetloroze obrub */
+        overflow-y: scroll;
+        padding: 10px;
+        margin: 20px 0;
+        border-radius: 5px;
+        background-color: #fffafc; /* Neutralna nijansa roze za chat */
+    }
+
+    .message {
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 10px;
+        max-width: 60%;
+    }
+
+    .message.sent {
+        background-color: #f8bbd0; /* Roze za poslane poruke */
+        align-self: flex-end;
+        text-align: right;
+    }
+
+    .message.received {
+        background-color: #ffc1e3; /* Svijetlije roze za primljene poruke */
+        align-self: flex-start;
+        text-align: left;
+    }
+
+    .message-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    button {
+        background-color: #ff1493; /* Jaka roze za dugmad */
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #c71585; /* Tamnija roze na hover */
+    }
+
+    .form-group {
+        margin: 10px 0;
+    }
+
+    #group-list-container,
+    #create-group-container {
+        margin: 20px 0;
+    }
+
+    #group-list-container ul,
+    #create-group-container ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    #group-list-container li,
+    #create-group-container li {
+        padding: 5px;
+        border: 1px solid #ffc0cb; /* Neutralno roze obrub */
+        margin: 5px 0;
+        border-radius: 5px;
+        background-color: #ffe4e1; /* Svijetloroze pozadina za liste */
+    }
+</style>
+
 </head>
 <body>
-    <h2>Chat</h2>
+    <div id="chat-container">
+        <h2>Chat</h2>
+        <!-- Dropdown za odabir učenika ili grupe -->
+        <div class="form-group">
+            <label for="recipient">Odaberi primatelja ili grupu:</label>
+            <select id="recipient">
+                <option value="">--Odaberi primatelja ili grupu--</option>
+            </select>
+        </div>
+        <!-- Polje za unos poruke -->
+        <textarea id="message-input" placeholder="Unesi poruku..."></textarea>
+        <button id="send-btn">Pošaljite</button>
+        <!-- Prikaz poruka -->
+        <div id="chat-box" class="message-container"></div>
 
-    <!-- Dropdown za odabir učenika -->
-    <label for="recipient">Odaberi primatelja:</label>
-    <select id="recipient">
-        <option value="">--Odaberi učenika--</option>
-    </select>
+        <!-- Gumbi za grupe -->
+        <div id="group-controls">
+            <button id="create-group-btn">Kreiraj grupu</button>
+            <button id="view-groups-btn">Moje grupe</button>
+        </div>
 
-    <!-- Polje za unos poruke -->
-    <textarea id="message-input" placeholder="Unesi poruku..."></textarea>
-    <button id="send-btn">Pošaljite</button>
+        <!-- Forma za kreiranje grupe -->
+        <div id="create-group-container" style="display: none;">
+            <h3>Kreiraj novu grupu</h3>
+            <input type="text" id="group-name" placeholder="Unesite ime grupe">
+            <h4>Odaberite članove:</h4>
+            <ul id="student-list"></ul>
+            <button id="save-group-btn">Spremi grupu</button>
+        </div>
 
-    <!-- Prikaz poruka -->
-    <div id="chat-box" class="message-container"></div>
+        <!-- Lista grupa -->
+        <div id="group-list-container" style="display: none;">
+            <h3>Moje grupe</h3>
+            <ul id="group-list"></ul>
+        </div>
+    </div>
 
     <script>
-        var socket = new WebSocket("ws://localhost:8080/ws/chat");
-        var recipientSelect = document.getElementById("recipient");
-        var sendButton = document.getElementById("send-btn");
-        var messageInput = document.getElementById("message-input");
-        let currentUserEmail = fetch("/api/user/emailOnly").then(response => {
-        if (!response.ok) {
-            throw new Error("Greška prilikom dohvaćanja korisničkog emaila");
-        }
-        return response.text(); // Ovdje dohvaćamo običan string umjesto JSON-a
-        })
+        let currentUserEmail;
+
+        // Dohvati email trenutnog korisnika
+        fetch("/api/user/emailOnly")
+            .then(response => response.text())
             .then(email => {
-        currentUserEmail = email; // Sprema se direktno string vrijednost
-        console.log("Trenutni korisnik:", currentUserEmail);
-    })
-    .catch(error => console.error("Greška:", error));
-
-
-        // Dohvaćanje liste učenika i popunjavanje dropdown menija
-        function fetchUcenici() {
-            fetch('/api/ucenik/')
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data); // Ispisivanje odgovora u konzolu
-                    if (Array.isArray(data)) {  // Provjera da li je data niz
-                        data.forEach(email => {
-                            var option = document.createElement("option");
-                            option.value = email;  // Svakom optionu dodajemo email
-                            option.textContent = email;  // Prikazuje email u dropdown-u
-                            recipientSelect.appendChild(option);
-                        });
-                    } else {
-                        console.error("Podaci nisu u ispravnom formatu");
-                    }
-                })
-                .catch(error => console.error("Greška prilikom dohvaćanja učenika:", error));
-        }
-
-        // Povezivanje na WebSocket
-        socket.onopen = function() {
-            console.log("Povezivanje na WebSocket server...");
-        };
-
-        socket.onmessage = function(event) {
+                currentUserEmail = email.trim();
+                initializeChat();
+            });
+            
+            function fetchMessages(korisnik1, korisnik2) {
+    fetch(`/api/chat/messages?korisnik1=${korisnik1}&korisnik2=${korisnik2}`)
+        .then(response => response.json())
+        .then(messages => {
             const chatBox = document.getElementById("chat-box");
-            const message = JSON.parse(event.data);
+            chatBox.innerHTML = "";  // Očistite chat-box prije nego što učitate nove poruke
+            messages.forEach(message => {
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message");
 
-            const messageElement = document.createElement("div");
-            messageElement.classList.add("message");
+                if (message.posiljatelj === korisnik1) {
+                    messageElement.classList.add("sent");
+                    messageElement.textContent = `Ti: ${message.sadrzaj}`;
+                } else {
+                    messageElement.classList.add("received");
+                    messageElement.textContent = `${korisnik2}: ${message.sadrzaj}`;
+                }
 
-            // Provjera pošiljatelja
-            if (message.posiljatelj === currentUserEmail) {
-                messageElement.classList.add("sent");
-                messageElement.textContent = `Ti: ${message.sadrzaj}`;
-            } else {
-                messageElement.classList.add("received");
-                messageElement.textContent = `${message.posiljatelj}: ${message.sadrzaj}`;
-            }
-
-            chatBox.appendChild(messageElement);
+                chatBox.appendChild(messageElement);
+            });
             chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll to bottom
-        };
+        })
+        .catch(error => console.error("Greška prilikom dohvaćanja poruka:", error));
+}
 
-        socket.onclose = function() {
-            console.log("Veza s WebSocket serverom je prekinuta.");
-        };
+function fetchGroupMessages(grupaNaziv) {
+    fetch(`/api/chat/messagesGrupa?grupaNaziv=${grupaNaziv}`)
+        .then(response => response.json())
+        .then(messages => {
+            const chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML = "";  // Očistite chat-box prije nego što učitate nove poruke
+            messages.forEach(message => {
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message");
 
-        // Slanje poruke
-        sendButton.onclick = function() {
+                if (message.posiljatelj === currentUserEmail) {
+                    messageElement.classList.add("sent");
+                    messageElement.textContent = `Ti: ${message.sadrzaj}`;
+                } else {
+                    messageElement.classList.add("received");
+                    messageElement.textContent = `${message.posiljatelj}: ${message.sadrzaj}`;
+                }
 
-            if (!currentUserEmail) {
-        alert("Trenutni korisnik nije pravilno učitan. Pokušajte ponovno.");
-        return;
-    }
-            var recipient = recipientSelect.value;
-            var messageContent = messageInput.value;
+                chatBox.appendChild(messageElement);
+            });
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll to bottom
+        })
+        .catch(error => console.error("Greška prilikom dohvaćanja poruka za grupu:", error));
+}
 
-            if (!recipient || !messageContent) {
-                alert("Molimo odaberite primatelja i unesite poruku!");
-                return;
-            }
+        function initializeChat() {
+        	    const recipientSelect = document.getElementById("recipient");
 
-            var message = {
-                posiljatelj: currentUserEmail, // Trenutno ulogirani korisnik
-                primatelj: recipient,
-                sadrzaj: messageContent,
-                oznakaVremena: new Date().toISOString() // Trenutno vrijeme
+    // Event listener za promjenu primatelja ili grupe
+    recipientSelect.addEventListener("change", function() {
+        const selectedRecipient = recipientSelect.value;
+        if (selectedRecipient && selectedRecipient.includes('grupa')) {
+            fetchGroupMessages(selectedRecipient); // Dohvati poruke za grupu
+        } else if (selectedRecipient) {
+            fetchMessages(currentUserEmail, selectedRecipient); // Dohvati poruke između dva korisnika
+        }
+    });
+            const socket = new WebSocket(`ws://localhost:8080/ws/chat?email=${encodeURIComponent(currentUserEmail)}`);
+            const messageInput = document.getElementById("message-input");
+            const sendButton = document.getElementById("send-btn");
+
+            // Inicijaliziraj WebSocket događaje
+            socket.onopen = () => console.log("WebSocket povezan.");
+            socket.onmessage = event => displayMessage(JSON.parse(event.data));
+            socket.onclose = () => console.log("WebSocket zatvoren.");
+
+            // Slanje poruke
+            sendButton.onclick = () => {
+                const recipient = recipientSelect.value;
+                const content = messageInput.value;
+                if (!recipient || !content) return alert("Odaberite primatelja i unesite poruku!");
+
+                const message = {
+                    posiljatelj: currentUserEmail,
+                    primatelj: recipient,
+                    sadrzaj: content,
+                    oznakaVremena: new Date().toISOString()
+                };
+                socket.send(JSON.stringify(message));
+                displayMessage(message);
+                messageInput.value = "";
             };
 
-            socket.send(JSON.stringify(message)); // Slanje poruke
-            messageInput.value = ""; // Očisti polje za unos
-        };
-
-        // Inicijalizacija - povezivanje na WebSocket i dohvaćanje učenika
-        fetchUcenici();
-
-        // Dohvaćanje povijesti poruka
-        function fetchMessages() {
-            fetch(`/api/chat/messages?korisnik1=${currentUserEmail}&korisnik2=${recipientSelect.value}`)
+            // Dohvati učenike i popuni dropdown
+            fetch('/api/ucenik')
                 .then(response => response.json())
-                .then(messages => {
-                    const chatBox = document.getElementById("chat-box");
-                    
-                    messages.forEach(message => {
-                        const messageElement = document.createElement("div");
-                        messageElement.classList.add("message");
-
-                        if (message.posiljatelj === currentUserEmail) {
-                            messageElement.classList.add("sent");
-                            messageElement.textContent = `Ti: ${message.sadrzaj}`;
-                        } else {
-                            messageElement.classList.add("received");
-                            messageElement.textContent = `${recipientSelect.value}: ${message.sadrzaj}`;
-                        }
-
-                        chatBox.appendChild(messageElement);
+                .then(students => {
+                    students.forEach(student => {
+                        const option = document.createElement("option");
+                        option.value = student;
+                        option.textContent = student;
+                        recipientSelect.appendChild(option);
                     });
+                });
 
-                    chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll to bottom
-                })
-                .catch(error => console.error("Greška prilikom dohvaćanja poruka:", error));
+            // Prikaži poruke
+            function displayMessage(message) {
+                const chatBox = document.getElementById("chat-box");
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message", message.posiljatelj === currentUserEmail ? "sent" : "received");
+                messageElement.textContent = `Ti: ${message.sadrzaj}`;
+                chatBox.appendChild(messageElement);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
         }
 
-        // Promjena primatelja
-        recipientSelect.addEventListener("change", fetchMessages);
+// Kreiraj novu grupu
+document.getElementById("create-group-btn").onclick = () => {
+    document.getElementById("create-group-container").style.display = "block";
+    document.getElementById("group-list-container").style.display = "none";
+
+    // Dohvati listu učenika za odabir članova
+    fetch('/api/ucenik')
+        .then(response => response.json())
+        .then(students => {
+            const studentList = document.getElementById("student-list");
+            studentList.innerHTML = "";
+            students.forEach(student => {
+                const li = document.createElement("li");
+                li.innerHTML = `<input type="checkbox" value="${student}"> ${student}`;
+                studentList.appendChild(li);
+            });
+        });
+};
+
+// Spremi novu grupu
+document.getElementById("save-group-btn").onclick = () => {
+    const imeGrupe = document.getElementById("group-name").value;
+    const clanovi = Array.from(document.querySelectorAll("#student-list input:checked")).map(cb => cb.value);
+    
+    if (!imeGrupe || clanovi.length === 0) {
+        return alert("Unesite ime grupe i odaberite članove!");
+    }
+
+    // Kreiranje objekta koji će biti poslan u POST zahtjevu
+    const groupData = {
+        imeGrupe: imeGrupe,
+        clanovi: clanovi
+    };
+
+    // Slanje podataka na backend
+    fetch('/api/chat/kreirajGrupu', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(groupData)
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("Grupa uspješno kreirana!");
+        } else {
+            alert("Greška prilikom kreiranja grupe!");
+        }
+    })
+    .catch(error => {
+        console.error("Greška:", error);
+        alert("Došlo je do greške pri slanju podataka!");
+    })
+    .finally(() => {
+        document.getElementById("create-group-container").style.display = "none";
+    });
+};
+
+
+        // Prikaži liste grupa
+        document.getElementById("view-groups-btn").onclick = () => {
+            document.getElementById("create-group-container").style.display = "none";
+            document.getElementById("group-list-container").style.display = "block";
+
+            fetch('/api/chat/grupe')
+                .then(response => response.json())
+                .then(groups => {
+                    const groupList = document.getElementById("group-list");
+                    groupList.innerHTML = "";
+                    groups.forEach(group => {
+                        const li = document.createElement("li");
+                        li.textContent = group;
+                        groupList.appendChild(li);
+                    });
+                });
+        };
     </script>
 </body>
 </html>
-
-
-
-

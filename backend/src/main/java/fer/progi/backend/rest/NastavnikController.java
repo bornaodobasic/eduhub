@@ -3,9 +3,6 @@ package fer.progi.backend.rest;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +39,20 @@ public class NastavnikController {
         return nastavnikService.dodajNastavnik(nastavnik);
     }
 
+    @GetMapping("/")
+    public List<String> getNastavniciMailovi(Authentication authentication) {
+    	List<String> mailoviNastavnika = new ArrayList<>();
 
+    	OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+ 	    String email = oidcUser.getAttribute("preferred_username");
+
+    	for(Nastavnik n :nastavnikService.findAllNastavniks()) {
+    		if(!n.getEmail().equals(email))
+    		mailoviNastavnika.add(n.getEmail());
+    	}
+
+    	return mailoviNastavnika;
+    }
 
 /*
 	@GetMapping("/predmeti")
@@ -104,7 +114,7 @@ public class NastavnikController {
             return ResponseEntity.status(500).body("OOPS! Something went wrong");
         }
     }
-    
+
     @GetMapping("/materijali/izvjestaj")
     public List<PristupMaterijaliDTO> pregledPristupaMaterijalima(Authentication authentication) throws ParseException {
         String csvFilePath = "/db/materijali.csv";
@@ -119,24 +129,24 @@ public class NastavnikController {
             OidcUser ulogiranKorisnik = (OidcUser) authentication.getPrincipal();
             String email = ulogiranKorisnik.getPreferredUsername();
 
-           
+
             List<Predmet> predmetiNastavnika = nastavnikService.findNastavnikPredmeti(email);
 
             while ((line = reader.readLine()) != null) {
 
-                String[] row = line.split(",");   
-                
+                String[] row = line.split(",");
+
                 for(Predmet p : predmetiNastavnika) {
                 	if(p.getNazPredmet().equals(row[4])) {
                 		System.out.println(p.getNazPredmet());
                 		System.out.println(row[4]);
                 		System.out.println("----------------------------------------------------------");
                 		   listaPristupMaterijalima.add(new PristupMaterijaliDTO(
-                                   row[0], 
-                                   row[1], 
+                                   row[0],
+                                   row[1],
                                    simpleDateFormat.parse(row[2].trim()),
-                                   row[3], 
-                                   row[4] 
+                                   row[3],
+                                   row[4]
                            ));
                 	}
                 }

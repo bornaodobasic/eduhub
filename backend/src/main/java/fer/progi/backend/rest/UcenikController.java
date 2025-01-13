@@ -42,16 +42,17 @@ public class UcenikController {
     private MailService mailService;
 
     @Autowired
-    S3Service s3Service;
-
-
+    private S3Service s3Service;
+    
     @GetMapping("/")
     public List<String> getUceniciMailovi() {
-        List<String> mailoviUcenika = new ArrayList<>();
-        for (Ucenik u : ucenikService.findAllUceniks()) {
-            mailoviUcenika.add(u.getEmail());
-        }
-        return mailoviUcenika;
+    	List<String> mailoviUcenika = new ArrayList<>();
+    	
+    	for(Ucenik u :ucenikService.findAllUceniks()) {
+    		mailoviUcenika.add(u.getEmail());
+    	}
+    	
+    	return mailoviUcenika;
     }
 
     @PostMapping("/dodajAktivnosti")
