@@ -1,14 +1,17 @@
 package fer.progi.backend.rest;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import fer.progi.backend.domain.Predmet;
+import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.service.impl.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +36,20 @@ public class NastavnikController {
         return nastavnikService.dodajNastavnik(nastavnik);
     }
 
-
+    @GetMapping("/")
+    public List<String> getNastavniciMailovi(Authentication authentication) {
+    	List<String> mailoviNastavnika = new ArrayList<>();
+    	
+    	OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+ 	    String email = oidcUser.getAttribute("preferred_username");
+    	
+    	for(Nastavnik n :nastavnikService.findAllNastavniks()) {
+    		if(!n.getEmail().equals(email))
+    		mailoviNastavnika.add(n.getEmail());
+    	}
+    	
+    	return mailoviNastavnika;
+    }
 
 /*
 	@GetMapping("/predmeti")

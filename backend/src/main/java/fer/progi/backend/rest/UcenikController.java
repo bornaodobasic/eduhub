@@ -33,11 +33,15 @@ public class UcenikController {
     @Autowired 
     private MailService mailService;
     
-    @GetMapping("/")
-    public List<String> getUceniciMailovi() {
+    @GetMapping("")
+    public List<String> getUceniciMailovi(Authentication authentication) {
     	List<String> mailoviUcenika = new ArrayList<>();
     	
+    	OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+ 	    String email = oidcUser.getAttribute("preferred_username");
+    	
     	for(Ucenik u :ucenikService.findAllUceniks()) {
+    		if(!u.getEmail().equals(email))
     		mailoviUcenika.add(u.getEmail());
     	}
     	

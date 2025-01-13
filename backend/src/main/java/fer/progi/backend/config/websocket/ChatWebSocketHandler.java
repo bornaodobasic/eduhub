@@ -17,11 +17,15 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     private final List<WebSocketSession> sessions = new ArrayList<>();
+    private final Map<String, List<ChatMessage>> userMessages = new ConcurrentHashMap<>();
+    private final Map<String, List<ChatMessage>> groupMessages = new ConcurrentHashMap<>();
 
     @Autowired
     private ChatServiceJpa chatService;
@@ -29,8 +33,16 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        sessions.add(session);
-        System.out.println("Nova veza s klijentom: " + session.getId());
+    	
+    	String email = session.getUri().getQuery().split("=")[1];
+        session.getAttributes().put("email", email); // Spremajte email u atribute sesije
+        sessions.add(session); // Dodajte sesiju u aktivne veze
+        System.out.println("Nova veza s korisnikom: " + email);
+//        List<ChatMessage> previousMessages = userMessages.getOrDefault(user, new ArrayList<>());
+//        for (ChatMessage message : previousMessages) {
+//            session.sendMessage(new TextMessage(message.getSadrzaj()));
+//        }
+        
     }
 
     @Override
@@ -42,15 +54,39 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         ChatMessage chatMessage = parseMessage(payload); // Metoda za parsiranje poruke u ChatMessage
         
         System.out.println(chatMessage);
+       
 
-        // Pohrani poruku u bazu podataka
-        chatService.saveMessage(chatMessage);
-
-        // Šalje poruku primatelju
-        sendToPrimatelj(chatMessage);
+        // Provjeri je li poruka namijenjena grupi ili pojedincu
+        if (chatMessage.getImeGrupe() != null) {
+        	groupMessages.computeIfAbsent(chatMessage.getImeGrupe(), k -> new ArrayList<>()).add(chatMessage);
+            chatService.saveMessage(chatMessage);
+            sendToGrupa(chatMessage); // Pošalji poruku grupi
+        } else {
+            userMessages.computeIfAbsent(chatMessage.getPrimatelj(), k -> new ArrayList<>()).add(chatMessage);//pohrani poruku u memoriju
+            chatService.saveMessage(chatMessage);//spremi poruku u bazu
+            sendToPrimatelj(chatMessage); // Pošalji poruku pojedincu
+        }
     }
 
-    @Override
+    private void sendToGrupa(ChatMessage chatMessage) {
+        TextMessage textMessage = new TextMessage(chatMessage.getSadrzaj());
+        List<String> members = chatService.getMembersEmails(chatMessage.getImeGrupe()); // Dohvati članove grupe
+
+        for (WebSocketSession session : sessions) {
+            try {
+                String sessionUserEmail = session.getUri().getQuery().split("=")[1];
+                if (members.contains(sessionUserEmail)) {
+                    session.sendMessage(textMessage);
+                    System.out.println("Poruka poslana članu grupe: " + sessionUserEmail);
+                }
+            } catch (IOException e) {
+                System.err.println("Greška prilikom slanja poruke članu grupe: " + e.getMessage());
+            }
+        }
+		
+	}
+
+	@Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
         System.out.println("Veza s klijentom prekinuta: " + session.getId());
@@ -61,12 +97,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         TextMessage textMessage = new TextMessage(chatMessage.getSadrzaj());
         for (WebSocketSession session : sessions) {
             try {
-                String sessionUser = session.getPrincipal().getName();
-                System.out.println("Sesija: " + sessionUser);
+                String sessionUserEmail = session.getUri().getQuery().split("=")[1];
 
-                if (sessionUser.equals(chatMessage.getPrimatelj())) {
+                if (sessionUserEmail.equals(chatMessage.getPrimatelj())) {
                     session.sendMessage(textMessage);
-                    System.out.println("Poruka poslana primatelju: " + sessionUser);
+                    System.out.println("Poruka poslana primatelju: " + sessionUserEmail);
+                } else {
+                	System.out.println("Poruka je poslana, ali primatelj nije online");
                 }
             } catch (IOException e) {
                 System.err.println("Greška prilikom slanja poruke: " + e.getMessage());
@@ -75,7 +112,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     }
 
 
-    // Metoda za parsiranje JSON poruke u ChatMessage objekt
+ // Metoda za parsiranje JSON poruke u ChatMessage objekt
     private ChatMessage parseMessage(String payload) {
         ChatMessage chatMessage = new ChatMessage();
         
@@ -84,6 +121,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         // Razdvoji ključ:vrijednost parove
         String[] pairs = payload.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"); // Regex za točno razdvajanje parova
+
+        String primatelj = null;
+        String imeGrupe = null;
 
         for (String pair : pairs) {
             // Razdvoji ključ i vrijednost po dvotočki
@@ -97,7 +137,10 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                     chatMessage.setPosiljatelj(value);
                     break;
                 case "primatelj":
-                    chatMessage.setPrimatelj(value);
+                    primatelj = value;
+                    break;
+                case "imeGrupe":
+                    imeGrupe = value;
                     break;
                 case "sadrzaj":
                     chatMessage.setSadrzaj(value);
@@ -109,9 +152,19 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                     break;
             }
         }
-        
+
+        // Logika za razlikovanje osobnog i grupnog chata
+        if (imeGrupe != null && !imeGrupe.isEmpty()) {
+            chatMessage.setImeGrupe(imeGrupe);
+            chatMessage.setPrimatelj(null);
+        } else if (primatelj != null && !primatelj.isEmpty()) {
+            chatMessage.setPrimatelj(primatelj);
+            chatMessage.setImeGrupe(null);
+        }
+
         return chatMessage;
     }
+
 
 }
 

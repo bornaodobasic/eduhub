@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fer.progi.backend.config.websocket.ChatWebSocketHandler;
+import fer.progi.backend.domain.ChatGroup;
 import fer.progi.backend.domain.ChatMessage;
 import fer.progi.backend.service.impl.ChatServiceJpa;
 
@@ -54,7 +55,35 @@ public class ChatController {
 		String email = oidcUser.getAttribute("preferred_username");
 		return email;
 	}
+	
+	@PostMapping("/kreirajGrupu")
+	public void kreirajGrupu(@RequestBody ChatGroup chatGroup, Authentication authentication) {
+		List<String> clanovi = chatGroup.getClanovi();
+		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+		String email = oidcUser.getAttribute("preferred_username");
+		clanovi.add(email);
+		chatService.kreirajGrupu(clanovi, chatGroup.getImeGrupe());
+	
+	}
+	
+	@GetMapping("/grupe")
+	public List<String> listaGrupa(Authentication authentication) {
+		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+		String email = oidcUser.getAttribute("preferred_username");
+		return chatService.getImenaGrupa(email);
+	}
+	
+	@GetMapping("/groupMessages")
+	public ResponseEntity<List<ChatMessage>> getMessagesForGroup(
+	        @RequestParam(name = "imeGrupe") String imeGrupe) {
+	    
+	    // Dohvati poruke za grupu koristeći servis
+	    List<ChatMessage> groupMessages = chatService.getMessagesForGroup(imeGrupe);
 
+	    return ResponseEntity.ok(groupMessages); // Ako ima poruka, vraća ih kao JSON
+	}
+
+	
     
     
 }

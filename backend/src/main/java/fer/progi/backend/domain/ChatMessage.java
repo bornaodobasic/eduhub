@@ -18,7 +18,7 @@ public class ChatMessage {
 
     private String posiljatelj;
     private String primatelj; // null za grupne poruke
-    private String grupaId;   // null za privatne poruke
+    private String imeGrupe;   // null za privatne poruke
     private String sadrzaj;
 
     private LocalDateTime oznakaVremena = LocalDateTime.now();
