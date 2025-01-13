@@ -53,6 +53,11 @@ public class SatServiceJpa implements SatService {
         }
     }
 
+    @Override
+    public List<Sat> listAll() {
+        return satRepo.findAll();
+    }
+
     private void dodijeliNastavnike() {
         List<Razred> sviRazredi = razredService.listAll();
         List<RazredPredmetNastavnik> razredPredmetNastavnik = new ArrayList<>();

@@ -2,17 +2,15 @@ package fer.progi.backend.service.impl;
 
 
 import fer.progi.backend.dao.UcenikRepository;
-import fer.progi.backend.domain.Aktivnost;
-import fer.progi.backend.domain.Razred;
-import fer.progi.backend.domain.Ucenik;
-import fer.progi.backend.domain.Predmet;
+import fer.progi.backend.domain.*;
+import fer.progi.backend.rest.RasporedDTO;
 import fer.progi.backend.rest.UpisDTO;
-import fer.progi.backend.service.AktivnostService;
-import fer.progi.backend.service.RazredService;
-import fer.progi.backend.service.UcenikService;
+import fer.progi.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +25,12 @@ public class UcenikServiceJpa implements UcenikService {
 
     @Autowired
     private AktivnostService aktivnostService;
+
+    @Autowired
+    private RazredPredmetNastavnikService rpnService;
+
+    @Autowired
+    private SatService satService;
 
     @Override
     public boolean findByEmail(String email) {
@@ -105,5 +109,31 @@ public class UcenikServiceJpa implements UcenikService {
 		return true;
 
 	}
+
+    @Override
+    public List<RasporedDTO> getRaspored(String email) {
+        Ucenik ucenik = ucenikRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
+        Razred razred = ucenik.getRazred();
+        List<Predmet> predmeti = listAllPredmeti(email);
+        List<RazredPredmetNastavnik> rpnLista = new ArrayList<>();
+
+        for(Predmet p : predmeti) {
+            rpnLista.add(rpnService.findRP(razred, p));
+        }
+        List<Sat> satiUcenika = satService.listAll().stream().filter(sat -> rpnLista.contains(sat.getRpn())).toList();
+        List<RasporedDTO> raspored = new ArrayList<>();
+
+        for(Sat sat : satiUcenika) {
+            RasporedDTO rasporedDTO = new RasporedDTO();
+            rasporedDTO.setDan(sat.getVrijemeSata().getDan());
+            rasporedDTO.setPredmet(sat.getRpn().getPredmet().getNazPredmet());
+            rasporedDTO.setUcionica(sat.getUcionica().getOznakaUc());
+            rasporedDTO.setNastavnik(sat.getRpn().getNastavnik().getImeNastavnik() + " " + sat.getRpn().getNastavnik().getPrezimeNastavnik());
+            rasporedDTO.setKrajSata(sat.getVrijemeSata().getKrajSata());
+            rasporedDTO.setPocetakSata(sat.getVrijemeSata().getPocetakSata());
+            raspored.add(rasporedDTO);
+        }
+        return raspored.stream().sorted(Comparator.comparing(RasporedDTO::getDan)).toList();
+    }
 
 }

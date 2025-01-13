@@ -3,6 +3,7 @@ package fer.progi.backend.service;
 import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.domain.Predmet;
+import fer.progi.backend.rest.RasporedDTO;
 import fer.progi.backend.rest.UpisDTO;
 
 import java.util.List;
@@ -25,5 +26,7 @@ public interface UcenikService {
 	Optional<Ucenik> findByEmailUcenik(String email);
 	
 	boolean dodajAktivnostiPoNazivu(String email, List<String> oznAktivnosti);
+
+    List<RasporedDTO> getRaspored(String email);
 
 }

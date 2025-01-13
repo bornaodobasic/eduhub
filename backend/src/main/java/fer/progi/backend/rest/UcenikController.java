@@ -6,9 +6,7 @@ import fer.progi.backend.service.UcenikService;
 import fer.progi.backend.service.impl.S3Service;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Ucenik;
-
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -21,7 +19,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -222,6 +219,11 @@ public class UcenikController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
+    }
+
+    @GetMapping("/{email}/raspored")
+    public List<RasporedDTO> getRaspored(@PathVariable String email) {
+        return ucenikService.getRaspored(email);
     }
 
 
