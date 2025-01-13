@@ -1,0 +1,8 @@
+.empty-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-left {
+    overflow-y: auto; 
+}

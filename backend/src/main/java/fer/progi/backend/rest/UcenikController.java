@@ -88,7 +88,6 @@ public class UcenikController {
 		
 			}
 
-       
 
 	    
 	    return ResponseEntity.ok()
@@ -98,7 +97,7 @@ public class UcenikController {
 	    
 	}
 
-	 @GetMapping("/{email}/posaljiMail")
+	 @PostMapping("/{email}/posaljiMail")
 	 public ResponseEntity<String> posaljiNaMail(@PathVariable String email){
 		 
 		    Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
