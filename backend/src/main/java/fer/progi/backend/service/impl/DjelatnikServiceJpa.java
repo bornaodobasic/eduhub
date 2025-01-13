@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import fer.progi.backend.domain.Ucenik;
+import fer.progi.backend.rest.AddDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import fer.progi.backend.dao.DjelatnikRepository;
@@ -32,11 +33,13 @@ public class DjelatnikServiceJpa implements DjelatnikService{
 		}
 
 		@Override
-		public boolean createIfNeeded(String email) {
-        	Optional<Djelatnik> optionalDjelatnik = djelatnikRepo.findByEmail(email);
+		public boolean createIfNeeded(AddDTO addDTO) {
+        	Optional<Djelatnik> optionalDjelatnik = djelatnikRepo.findByEmail(addDTO.getEmail());
 			if (optionalDjelatnik.isEmpty()) {
 				Djelatnik djelatnik = new Djelatnik();
-				djelatnik.setEmail(email);
+				djelatnik.setEmail(addDTO.getEmail());
+				djelatnik.setImeDjel(addDTO.getIme());
+				djelatnik.setPrezimeDjel(addDTO.getPrezime());
 				djelatnikRepo.save(djelatnik);
 			}
 			return true;

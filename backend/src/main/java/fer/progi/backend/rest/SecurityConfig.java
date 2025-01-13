@@ -97,36 +97,42 @@ public class SecurityConfig {
                 String email;
                 boolean present = false;
                 boolean exists = true;
+                AddDTO addDTO = new AddDTO();
 
-                //if(!razredService.findByNazRazred("1a")) razredService.dodajRazred("1a", "opca");
-                //if(!razredService.findByNazRazred("1b")) razredService.dodajRazred("1b", "prirodoslovno-matematicka");
-                //if(!razredService.findByNazRazred("1c")) razredService.dodajRazred("1c", "jezicna");
 
                 if (principal instanceof Jwt) {
                     Jwt jwt = (Jwt) principal;
                     List<String> roles = jwt.getClaimAsStringList("roles");
-                    role = roles != null && !roles.isEmpty() ? roles.get(0) : null;
+                    role = roles != null && !roles.isEmpty() ? roles.getFirst() : null;
 
                     email = jwt.getClaimAsString("preferred_username");
+                    String userFullName = jwt.getClaimAsString("name");
                     System.out.println(email);
+                    addDTO.setEmail(email);
+
+                    int firstSpace = userFullName.indexOf(' ');
+                    String firstName = userFullName.substring(0, firstSpace);
+                    String lastName = userFullName.substring(firstSpace + 1);
+                    addDTO.setIme(firstName);
+                    addDTO.setPrezime(lastName);
 
                     if (role.equals("Admin")) {
-                        present = adminService.createIfNeeded(email);
+                        present = adminService.createIfNeeded(addDTO);
                     } else if (role.equals("Nastavnik")) {
-                        present = nastavnikService.createIfNeeded(email);
+                        present = nastavnikService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Djelatnik")) {
-                        present = djelatnikService.createIfNeeded(email);
+                        present = djelatnikService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Satnicar")) {
-                        present = satnicarService.createIfNeeded(email);
+                        present = satnicarService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Ucenik")) {
                         exists = ucenikService.findByEmail(email);
                         present = true;
 
                     } else if (role.equals("Ravnatelj")) {
-                        present  = ravnateljService.createIfNeeded(email);
+                        present  = ravnateljService.createIfNeeded(addDTO);
                     }
 
                     if (!exists) {
@@ -141,29 +147,39 @@ public class SecurityConfig {
                     OidcUser oidcUser = (OidcUser) principal;
                     List<String> roles = (List<String>) oidcUser.getAttributes().get("roles");
 
-                    role = roles != null && !roles.isEmpty() ? roles.get(0) : null;
+                    role = roles != null && !roles.isEmpty() ? roles.getFirst() : null;
 
                     email = (String) oidcUser.getAttributes().get("preferred_username");
+                    String userFullName = (String) oidcUser.getAttributes().get("name");
+
+
+                    addDTO.setEmail(email);
+                    int firstSpace = userFullName.indexOf(' ');
+                    String firstName = userFullName.substring(0, firstSpace);
+                    String lastName = userFullName.substring(firstSpace + 1);
+                    addDTO.setIme(firstName);
+                    addDTO.setPrezime(lastName);
+
                     System.out.println(email);
                     System.out.println(role);
 
                     if (role.equals("Admin")) {
-                        present = adminService.createIfNeeded(email);
+                        present = adminService.createIfNeeded(addDTO);
                     } else if (role.equals("Nastavnik")) {
-                        present = nastavnikService.createIfNeeded(email);
+                        present = nastavnikService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Djelatnik")) {
-                        present = djelatnikService.createIfNeeded(email);
+                        present = djelatnikService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Satnicar")) {
-                        present = satnicarService.createIfNeeded(email);
+                        present = satnicarService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Ucenik")) {
                         exists = ucenikService.findByEmail(email);
                         present = true;
 
                     } else if (role.equals("Ravnatelj")) {
-                        present  = ravnateljService.createIfNeeded(email);
+                        present  = ravnateljService.createIfNeeded(addDTO);
                     }
 
                     if (!exists) {

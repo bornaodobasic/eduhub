@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Ravnatelj;
+import fer.progi.backend.rest.AddDTO;
 
 
 public interface RavnateljService {
@@ -13,8 +14,7 @@ public interface RavnateljService {
 	
 	Ravnatelj dodajRavnatelj(Ravnatelj ravnatelj);
 
-	boolean createIfNeeded(String email);
-
+	boolean createIfNeeded(AddDTO addDTO);
 	List<Ravnatelj> findAllRavnateljs();
 	void deleteRavnatelj(String email);
 	

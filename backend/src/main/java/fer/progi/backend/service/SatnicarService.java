@@ -6,6 +6,7 @@ import java.util.Optional;
 import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Satnicar;
 import fer.progi.backend.domain.Satnicar;
+import fer.progi.backend.rest.AddDTO;
 
 
 public interface SatnicarService {
@@ -14,7 +15,7 @@ public interface SatnicarService {
 	
 	Satnicar dodajSatnicara (Satnicar satnicar);
 
-	boolean createIfNeeded(String email);
+	boolean createIfNeeded(AddDTO addDTO);
 
 	List<Satnicar> findAllSatnicars();
 	void deleteSatnicar(String email);

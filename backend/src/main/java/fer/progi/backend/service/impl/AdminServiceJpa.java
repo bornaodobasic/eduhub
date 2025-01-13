@@ -104,11 +104,13 @@ public class AdminServiceJpa implements AdminService {
     }
 
     @Override
-    public boolean createIfNeeded(String email) {
-        Optional<Admin> optionalAdmin = adminRepo.findByEmail(email);
+    public boolean createIfNeeded(AddDTO addDTO) {
+        Optional<Admin> optionalAdmin = adminRepo.findByEmail(addDTO.getEmail());
         if (optionalAdmin.isEmpty()) {
             Admin admin = new Admin();
-            admin.setEmail(email);
+            admin.setEmail(addDTO.getEmail());
+            admin.setImeAdmin(addDTO.getIme());
+            admin.setPrezimeAdmin(addDTO.getPrezime());
             adminRepo.save(admin);
         }
         return true;

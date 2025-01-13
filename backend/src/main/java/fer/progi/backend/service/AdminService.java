@@ -17,7 +17,7 @@ public interface AdminService {
 	Ravnatelj addRavnatelj (AddDTO addDTO);
 	Satnicar addSatnicar (AddDTO addDTO);
 	Ucenik addUcenik (AdminAddUcenikDTO adminAddUcenikDTO);
-	boolean createIfNeeded(String email);
+	boolean createIfNeeded(AddDTO addDTO);
 	List<Admin> findAllAdmins();
 	void deleteAdmin(String email);
 }

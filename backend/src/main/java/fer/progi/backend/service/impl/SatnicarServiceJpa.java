@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Ucenik;
+import fer.progi.backend.rest.AddDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +35,13 @@ public class SatnicarServiceJpa implements SatnicarService {
     }
 
     @Override
-    public boolean createIfNeeded(String email) {
-        Optional<Satnicar> optionalSatnicar = satnicarRepo.findByEmail(email);
+    public boolean createIfNeeded(AddDTO addDTO) {
+        Optional<Satnicar> optionalSatnicar = satnicarRepo.findByEmail(addDTO.getEmail());
         if (optionalSatnicar.isEmpty()) {
             Satnicar satnicar = new Satnicar();
-            satnicar.setEmail(email);
+            satnicar.setEmail(addDTO.getEmail());
+            satnicar.setImeSatnicar(addDTO.getIme());
+            satnicar.setPrezimeSatnicar(addDTO.getPrezime());
             satnicarRepo.save(satnicar);
         }
         return true;

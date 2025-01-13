@@ -79,38 +79,38 @@ public class RavnateljController {
     	}
     }
 
-	 @GetMapping("/pogledajIzdanePotvrde")
-	    public List<ZahtjeviDTO> pregledIzdanihPotvrda() throws ParseException {
-	        String csvFilePath = "database/zahjtevi.csv";
-	        List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
+	@GetMapping("/pogledajIzdanePotvrde")
+	public List<ZahtjeviDTO> pregledIzdanihPotvrda() throws ParseException {
+		String csvFilePath = "database/zahjtevi.csv";
+		List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
 
-	        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-	            String line;
-	            boolean isFirstLine = true;
+		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+			String line;
+			boolean isFirstLine = true;
 
-	            while ((line = br.readLine()) != null) {
-	                if (isFirstLine) {
-	                    isFirstLine = false;
-	                    continue;
-	                }
+			while ((line = br.readLine()) != null) {
+				if (isFirstLine) {
+					isFirstLine = false;
+					continue;
+				}
 
-	                System.out.println(line);
-	                String[] row = line.split(",");
-	                if (row.length == 3) {
-	                    System.out.println(row[2]);
-	                    listaZahtjeva.add(new ZahtjeviDTO(
-	                            row[0],
-	                            row[1],
-	                            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(row[2])
-	                    ));
-	                }
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
+				System.out.println(line);
+				String[] row = line.split(",");
+				if (row.length == 3) {
+					System.out.println(row[2]);
+					listaZahtjeva.add(new ZahtjeviDTO(
+							row[0],
+							row[1],
+							new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(row[2])
+					));
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-	        return listaZahtjeva;
-	    }
+		return listaZahtjeva;
+	}
 
 
 	    @GetMapping("/pogledajIzdanePotvrdeImePrezime")

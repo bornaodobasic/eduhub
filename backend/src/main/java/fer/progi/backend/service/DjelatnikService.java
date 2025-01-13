@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Djelatnik;
+import fer.progi.backend.rest.AddDTO;
 
 
 public interface DjelatnikService {
@@ -13,7 +14,7 @@ public interface DjelatnikService {
 	
 	Djelatnik dodajDjelatnik (Djelatnik djelatnik);
 
-	boolean createIfNeeded(String email);
+	boolean createIfNeeded(AddDTO addDTO);
 
 	List<Djelatnik> findAllDjelatniks();
 	void deleteDjelatnik(String email);

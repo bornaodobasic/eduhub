@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Predmet;
+import fer.progi.backend.rest.AddDTO;
 
 public interface NastavnikService {
 	
@@ -14,7 +15,7 @@ public interface NastavnikService {
 
 	Nastavnik findBySifNastavnik(Integer sifNastavnik);
 
-	boolean createIfNeeded(String email);
+	boolean createIfNeeded(AddDTO addDTO);
 
 	List<Nastavnik> findAllNastavniks();
 	

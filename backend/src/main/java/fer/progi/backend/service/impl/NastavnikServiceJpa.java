@@ -2,6 +2,8 @@ package fer.progi.backend.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+
+import fer.progi.backend.rest.AddDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,11 +50,13 @@ public class NastavnikServiceJpa implements NastavnikService{
 	}
 
 	@Override
-	public boolean createIfNeeded(String email) {
-		Optional<Nastavnik> optionalNastavnik = nastavnikRepo.findByEmail(email);
+	public boolean createIfNeeded(AddDTO addDTO) {
+		Optional<Nastavnik> optionalNastavnik = nastavnikRepo.findByEmail(addDTO.getEmail());
 		if (optionalNastavnik.isEmpty()) {
 			Nastavnik nastavnik = new Nastavnik();
-			nastavnik.setEmail(email);
+			nastavnik.setEmail(addDTO.getEmail());
+			nastavnik.setImeNastavnik(addDTO.getIme());
+			nastavnik.setPrezimeNastavnik(addDTO.getPrezime());
 			nastavnikRepo.save(nastavnik);
 		}
 		return true;

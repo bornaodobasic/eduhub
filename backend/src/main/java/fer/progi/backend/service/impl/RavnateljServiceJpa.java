@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Ucenik;
+import fer.progi.backend.rest.AddDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,11 +37,13 @@ public class RavnateljServiceJpa implements RavnateljService{
 		}
 
 		@Override
-		public boolean createIfNeeded(String email) {
-        	Optional<Ravnatelj> optionalRavnatelj = ravnateljRepo.findByEmail(email);
+		public boolean createIfNeeded(AddDTO addDTO) {
+        	Optional<Ravnatelj> optionalRavnatelj = ravnateljRepo.findByEmail(addDTO.getEmail());
 			if (optionalRavnatelj.isEmpty()) {
 				Ravnatelj ravnatelj = new Ravnatelj();
-				ravnatelj.setEmail(email);
+				ravnatelj.setEmail(addDTO.getEmail());
+				ravnatelj.setImeRavnatelj(addDTO.getIme());
+				ravnatelj.setPrezimeRavnatelj(addDTO.getPrezime());
 				ravnateljRepo.save(ravnatelj);
 			}
 			return true;
