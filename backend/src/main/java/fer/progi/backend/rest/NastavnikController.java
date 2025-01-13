@@ -1,14 +1,22 @@
 package fer.progi.backend.rest;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import fer.progi.backend.domain.Predmet;
+import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.service.impl.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
@@ -95,5 +103,53 @@ public class NastavnikController {
             return ResponseEntity.status(500).body("OOPS! Something went wrong");
         }
     }
+    
+    @GetMapping("/materijali/izvjestaj")
+    public List<PristupMaterijaliDTO> pregledPristupaMaterijalima(Authentication authentication) throws ParseException {
+        String csvFilePath = "database/materijali.csv";
+        List<PristupMaterijaliDTO> listaPristupMaterijalima = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+            String line;
+            boolean isFirstLine = true;
+
+       
+            OidcUser ulogiranKorisnik = (OidcUser) authentication.getPrincipal();
+            String email = ulogiranKorisnik.getPreferredUsername();
+
+           
+            List<Predmet> predmetiNastavnika = nastavnikService.findNastavnikPredmeti(email);
+
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false; 
+                    continue;
+                }
+
+                String[] row = line.split(",");   
+                
+                for(Predmet p : predmetiNastavnika) {
+                	if(p.getNazPredmet().equals(row[4])) {
+                		System.out.println(p.getNazPredmet());
+                		System.out.println(row[4]);
+                		System.out.println("----------------------------------------------------------");
+                		   listaPristupMaterijalima.add(new PristupMaterijaliDTO(
+                                   row[0], 
+                                   row[1], 
+                                   new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(row[2]), 
+                                   row[3], 
+                                   row[4] 
+                           ));
+                	}
+                }
+            }
+            System.out.println(listaPristupMaterijalima);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return listaPristupMaterijalima;
+    }
+
 
 }

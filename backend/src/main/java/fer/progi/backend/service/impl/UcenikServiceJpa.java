@@ -4,6 +4,7 @@ package fer.progi.backend.service.impl;
 import fer.progi.backend.dao.UcenikRepository;
 import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.domain.Razred;
+import fer.progi.backend.domain.Smjer;
 import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.rest.UpisDTO;
@@ -24,7 +25,7 @@ public class UcenikServiceJpa implements UcenikService {
 
     @Autowired
     private RazredService razredService;
-    
+
     @Autowired
     private AktivnostService aktivnostService;
 
@@ -74,25 +75,39 @@ public class UcenikServiceJpa implements UcenikService {
 
     @Override
     public List<Predmet> listAllPredmeti(String email) {
-        Ucenik ucenik = ucenikRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
+        Ucenik ucenik = ucenikRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
 
-        List<Predmet> listaPredmeta = ucenik.getRazred().getSmjer().getPredmeti();
-        
-        if(ucenik.getVjeronauk()) {
-        	for(Predmet p : listaPredmeta) {
-        		if(p.getNazPredmet().startsWith("Etika")) {
-        			listaPredmeta.remove(p);
-        		}
-        	}
-        } else if(!ucenik.getVjeronauk()) {
-        	for(Predmet p : listaPredmeta) {
-        		if(p.getNazPredmet().startsWith("Vjeronauk")) {
-        			listaPredmeta.remove(p);
-        		}
-        	}
+        Razred razred = ucenik.getRazred();
+        if (razred == null) {
+            throw new RuntimeException("Učenik nema dodijeljen razred!");
         }
-        return listaPredmeta;
 
+        Smjer smjer = razred.getSmjer();
+        if (smjer == null) {
+            throw new RuntimeException("Razred učenika nema dodijeljen smjer!");
+        }
+
+        List<Predmet> predmeti = smjer.getPredmeti();
+        if (predmeti == null || predmeti.isEmpty()) {
+            throw new RuntimeException("Smjer nema dodijeljene predmete!");
+        }
+
+        if(ucenik.getVjeronauk()) {
+            for(Predmet p : predmeti) {
+                if(p.getNazPredmet().startsWith("Etika")) {
+                    listaPredmeta.remove(p);
+                }
+            }
+        } else if(!ucenik.getVjeronauk()) {
+            for(Predmet p : predmeti) {
+                if(p.getNazPredmet().startsWith("Vjeronauk")) {
+                    listaPredmeta.remove(p);
+                }
+            }
+        }
+
+        return predmeti;
     }
 
 	@Override
@@ -100,16 +115,16 @@ public class UcenikServiceJpa implements UcenikService {
 		return ucenikRepo.findByEmail(email);
 	
 	}
-	
+
 	@Override
 	public boolean dodajAktivnostiPoNazivu(String email, List<String> oznAktivnosti) {
-		
+
 		Ucenik ucenik = ucenikRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
-		List<Aktivnost> listaAktivnosti = aktivnostService.findByOznAktivnosti(oznAktivnosti);		
+		List<Aktivnost> listaAktivnosti = aktivnostService.findByOznAktivnosti(oznAktivnosti);
 		ucenik.setAktivnosti(listaAktivnosti);
-		
+
 		return true;
-		
+
 	}
- 
+
 }

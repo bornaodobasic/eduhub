@@ -37,8 +37,9 @@ public class Ucenik {
 	private String email;
 	
 	private Boolean vjeronauk;
-	
+
 	@ManyToMany
+	@ManyToMany(cascade = jakarta.persistence.CascadeType.MERGE, fetch = jakarta.persistence.FetchType.EAGER)
 	@JoinTable(
 			name = "ucenik_aktivnosti",
 			joinColumns = @JoinColumn(name = "id"),

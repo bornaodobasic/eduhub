@@ -20,10 +20,10 @@ public class NameDisplayController {
 	@GetMapping("/api/user/email")
 	public Map<String, String> getUserEmail(Authentication authentication) {
 		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-		String email = oidcUser.getAttribute("prefered_username");
+		String email = oidcUser.getAttribute("preferred_username");
 		return Map.of("email", email);
 	}
-	
+
 	@GetMapping("/api/user/emailOnly")
 	public String getUserEmailString(Authentication authentication) {
 	    if (authentication == null || authentication.getPrincipal() == null) {

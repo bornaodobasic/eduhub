@@ -7,6 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -211,18 +218,10 @@ public class AdminController {
        
     }
     
-    @DeleteMapping("/nastavnik/predmeti/delete/{email}")
-    public ResponseEntity<String> deletePredmetNastavnik(@PathVariable String email,  @RequestBody List<String> predmeti ){
-    	boolean rezultat = NastavnikPredmetService.ukloniPredmetNastavnik(email, predmeti);
-         
-         if (rezultat) {
-             return ResponseEntity.ok("Predmeti uspješno uklonjeni nastavniku");
-         } else {
-             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                     .body("Došlo je do problema prilikom uklanjanja predmeta nastavniku.");
-         }
-    	
-    }
+   
+
+    
+    
 
 }
 

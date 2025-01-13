@@ -2,7 +2,10 @@ package fer.progi.backend.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
@@ -54,5 +57,39 @@ public class S3Service {
                 .map(S3Object::key)
                 .collect(Collectors.toList());
     }
+    
+    public byte[] getFile(String key) {
+        return s3Client.getObject(
+                GetObjectRequest.builder()
+                        .bucket(bucketName) 
+                        .key(key)           
+                        .build(),
+                ResponseTransformer.toBytes()
+        ).asByteArray();
+    }
+    
+    public String findFileBySuffix(String suffix) {
+       
+        List<S3Object> allObjects = s3Client.listObjectsV2(builder -> builder.bucket(bucketName).build())
+                .contents();
+
+        return allObjects.stream()
+                .map(S3Object::key)
+                .filter(key -> key.endsWith(suffix))
+                .findFirst()
+                .orElse(null); 
+    }
+    
+    public String extractPrefix(String key) {
+       
+        int slashIndex = key.indexOf('/');
+        if (slashIndex != -1) {
+            return key.substring(0, slashIndex);
+        }
+        return null; 
+    }
+
+
+
 
 }
