@@ -4,6 +4,7 @@ package fer.progi.backend.rest;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,23 +34,23 @@ import fer.progi.backend.service.UcionicaService;
 @RequestMapping("/api/ravnatelj")
 @PreAuthorize("hasAuthority('Ravnatelj')")
 public class RavnateljController {
-	
-	@Autowired
-	private RavnateljService RavnateljService;
-	
-	@Autowired
-	private UcionicaService ucionicaService;
 
-	@GetMapping("")
-	public List<Ravnatelj> listRavnatelj() {
-		return RavnateljService.listAll();
-	}
-	
-	@PostMapping("")
-	public Ravnatelj dodajRavnatelja(@RequestBody Ravnatelj ravnatelj) {
-		return RavnateljService.dodajRavnatelj(ravnatelj);
-	}
-	
+    @Autowired
+    private RavnateljService RavnateljService;
+
+    @Autowired
+    private UcionicaService ucionicaService;
+
+    @GetMapping("")
+    public List<Ravnatelj> listRavnatelj() {
+        return RavnateljService.listAll();
+    }
+
+    @PostMapping("")
+    public Ravnatelj dodajRavnatelja(@RequestBody Ravnatelj ravnatelj) {
+        return RavnateljService.dodajRavnatelj(ravnatelj);
+    }
+
     @GetMapping("/ucionice")
     public List<Ucionica> listAllUcionice() {
         return ucionicaService.findAllUcionice();
@@ -69,87 +70,77 @@ public class RavnateljController {
 
     @PutMapping("/ucionica/promijeniKapacitet")
     public ResponseEntity<String> promijeniKapacitet(@PathVariable String oznakaUc, @RequestParam Integer noviKapacitet) {
-    	if(ucionicaService.findById(oznakaUc).isPresent()) {
-    		ucionicaService.findById(oznakaUc).get().setKapacitet(noviKapacitet);
-    		return ResponseEntity.ok("Učionici uspješno promijenjen kapacitet");
-    	} else {
-    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        if (ucionicaService.findById(oznakaUc).isPresent()) {
+            ucionicaService.findById(oznakaUc).get().setKapacitet(noviKapacitet);
+            return ResponseEntity.ok("Učionici uspješno promijenjen kapacitet");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Došlo je do problema prilikom mijenjanja kapaciteta učionice");
 
-    	}
+        }
     }
 
-	@GetMapping("/pogledajIzdanePotvrde")
-	public List<ZahtjeviDTO> pregledIzdanihPotvrda() throws ParseException {
-		String csvFilePath = "database/zahjtevi.csv";
-		List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
+    @GetMapping("/pogledajIzdanePotvrde")
+    public List<ZahtjeviDTO> pregledIzdanihPotvrda() throws ParseException {
 
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-			String line;
-			boolean isFirstLine = true;
+        List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-			while ((line = br.readLine()) != null) {
-				if (isFirstLine) {
-					isFirstLine = false;
-					continue;
-				}
-
-				System.out.println(line);
-				String[] row = line.split(",");
-				if (row.length == 3) {
-					System.out.println(row[2]);
-					listaZahtjeva.add(new ZahtjeviDTO(
-							row[0],
-							row[1],
-							new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(row[2])
-					));
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return listaZahtjeva;
-	}
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(getClass().getResourceAsStream("/db/zahtjevi.csv")))) {
 
 
-	    @GetMapping("/pogledajIzdanePotvrdeImePrezime")
-	    public List<ZahtjeviDTO> pregledIzdanihPotvrdaImePrezime(@RequestParam String imeUcenik, @RequestParam String prezimeUcenik) throws ParseException {
-	        String csvFilePath = "database/zahjtevi.csv";
-	        List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
+            String line = reader.readLine();
+            if (line == null) return listaZahtjeva;
 
-	        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-	            String line;
-	            boolean isFirstLine = true;
+            while ((line = reader.readLine()) != null) {
+                String[] row = line.split(",");
+                if (row.length == 3) {
+                    listaZahtjeva.add(new ZahtjeviDTO(
+                            row[0],
+                            row[1],
+                            dateFormat.parse(row[2].trim())
+                    ));
+                } else {
+                    System.err.println("Invalid row: " + line);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading CSV file: " + e.getMessage());
+        }
 
-	            while ((line = br.readLine()) != null) {
-	                if (isFirstLine) {
-	                    isFirstLine = false;
-	                    continue;
-	                }
+        return listaZahtjeva;
+    }
 
-	                String[] row = line.split(",");
+    @GetMapping("/pogledajIzdanePotvrdeImePrezime")
+    public List<ZahtjeviDTO> pregledIzdanihPotvrdaImePrezime(@RequestParam String imeUcenik, @RequestParam String prezimeUcenik) throws ParseException {
 
-	                if (row[0].equals(imeUcenik) && row[1].equals(prezimeUcenik)) {
-	                	  if (row.length == 3) {
-	                          listaZahtjeva.add(new ZahtjeviDTO(
-	                                  row[0],
-	                                  row[1],
-	                                  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(row[2])
-	                          ));
-	                      }
+        List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-					}
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(getClass().getResourceAsStream("/db/zahtjevi.csv")))) {
 
 
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
+            String line = reader.readLine();
+            if (line == null) return listaZahtjeva;
 
-	        return listaZahtjeva;
-	    }
+            while ((line = reader.readLine()) != null) {
+                String[] row = line.split(",");
+                if (row.length == 3 && row[0].equals(imeUcenik) && row[1].equals(prezimeUcenik)) {
+                    listaZahtjeva.add(new ZahtjeviDTO(
+                            row[0],
+                            row[1],
+                            dateFormat.parse(row[2].trim())
+                    ));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading CSV file: " + e.getMessage());
+        }
 
+        return listaZahtjeva;
+    }
 
 }
 

@@ -3,6 +3,7 @@ package fer.progi.backend.rest;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -106,25 +107,22 @@ public class NastavnikController {
     
     @GetMapping("/materijali/izvjestaj")
     public List<PristupMaterijaliDTO> pregledPristupaMaterijalima(Authentication authentication) throws ParseException {
-        String csvFilePath = "database/materijali.csv";
+        String csvFilePath = "/db/materijali.csv";
         List<PristupMaterijaliDTO> listaPristupMaterijalima = new ArrayList<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-            String line;
-            boolean isFirstLine = true;
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(getClass().getResourceAsStream("/db/materijali.csv")))) {
 
-       
+            String line = reader.readLine();
+
             OidcUser ulogiranKorisnik = (OidcUser) authentication.getPrincipal();
             String email = ulogiranKorisnik.getPreferredUsername();
 
            
             List<Predmet> predmetiNastavnika = nastavnikService.findNastavnikPredmeti(email);
 
-            while ((line = br.readLine()) != null) {
-                if (isFirstLine) {
-                    isFirstLine = false; 
-                    continue;
-                }
+            while ((line = reader.readLine()) != null) {
 
                 String[] row = line.split(",");   
                 
@@ -136,7 +134,7 @@ public class NastavnikController {
                 		   listaPristupMaterijalima.add(new PristupMaterijaliDTO(
                                    row[0], 
                                    row[1], 
-                                   new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(row[2]), 
+                                   simpleDateFormat.parse(row[2].trim()),
                                    row[3], 
                                    row[4] 
                            ));

@@ -4,6 +4,7 @@ package fer.progi.backend.rest;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,7 +32,8 @@ public class DjelatnikController {
 	
 	@Autowired
 	private DjelatnikService DjelatnikService;
-	
+	private String csvFilePath;
+
 	@GetMapping("")
 	public List<Djelatnik> listDjelatnik() {
 		return DjelatnikService.listAll();
@@ -42,77 +44,68 @@ public class DjelatnikController {
 	public Djelatnik dodajDjelatnik(@RequestBody Djelatnik djelatnik) {
 		return DjelatnikService.dodajDjelatnik(djelatnik);
 	}
-	
-	 @GetMapping("/pogledajIzdanePotvrde")
-	    public List<ZahtjeviDTO> pregledIzdanihPotvrda() throws ParseException {
-	        String csvFilePath = "database/zahjtevi.csv";
-	        List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
 
-	        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-	            String line;
-	            boolean isFirstLine = true; 
+	@GetMapping("/pogledajIzdanePotvrde")
+	public List<ZahtjeviDTO> pregledIzdanihPotvrda() throws ParseException {
 
-	            while ((line = br.readLine()) != null) {
-	                if (isFirstLine) {
-	                    isFirstLine = false; 
-	                    continue;
-	                }
+		List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	                System.out.println(line);
-	                String[] row = line.split(",");
-	                if (row.length == 3) {
-	                    System.out.println(row[2]);
-	                    listaZahtjeva.add(new ZahtjeviDTO(
-	                            row[0],
-	                            row[1],
-	                            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(row[2]) 
-	                    ));
-	                }
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(getClass().getResourceAsStream("/db/zahtjevi.csv")))) {
 
-	        return listaZahtjeva;
-	    }
-	   
-	    
-	    @GetMapping("/pogledajIzdanePotvrdeImePrezime")
-	    public List<ZahtjeviDTO> pregledIzdanihPotvrdaImePrezime(@RequestParam String imeUcenik, @RequestParam String prezimeUcenik) throws ParseException {
-	        String csvFilePath = "database/zahjtevi.csv";
-	        List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
 
-	        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-	            String line;
-	            boolean isFirstLine = true; 
+			String line = reader.readLine();
+			if (line == null) return listaZahtjeva;
 
-	            while ((line = br.readLine()) != null) {
-	                if (isFirstLine) {
-	                    isFirstLine = false; 
-	                    continue;
-	                }
+			while ((line = reader.readLine()) != null) {
+				String[] row = line.split(",");
+				if (row.length == 3) {
+					listaZahtjeva.add(new ZahtjeviDTO(
+							row[0],
+							row[1],
+							dateFormat.parse(row[2].trim())
+					));
+				} else {
+					System.err.println("Invalid row: " + line);
+				}
+			}
+		} catch (IOException e) {
+			System.err.println("Error reading CSV file: " + e.getMessage());
+		}
 
-	                String[] row = line.split(",");
-	                
-	                if (row[0].equals(imeUcenik) && row[1].equals(prezimeUcenik)) {
-	                	  if (row.length == 3) {
-	                          listaZahtjeva.add(new ZahtjeviDTO(
-	                                  row[0],
-	                                  row[1],
-	                                  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(row[2]) 
-	                          ));
-	                      }
-						
-					}
-	                
-	              
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
+		return listaZahtjeva;
+	}
 
-	        return listaZahtjeva;
-	    }
+	@GetMapping("/pogledajIzdanePotvrdeImePrezime")
+	public List<ZahtjeviDTO> pregledIzdanihPotvrdaImePrezime(@RequestParam String imeUcenik, @RequestParam String prezimeUcenik) throws ParseException {
+
+		List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(getClass().getResourceAsStream("/db/zahtjevi.csv")))) {
+
+
+			String line = reader.readLine();
+			if (line == null) return listaZahtjeva;
+
+			while ((line = reader.readLine()) != null) {
+				String[] row = line.split(",");
+				if (row.length == 3 && row[0].equals(imeUcenik) && row[1].equals(prezimeUcenik)) {
+					listaZahtjeva.add(new ZahtjeviDTO(
+							row[0],
+							row[1],
+							dateFormat.parse(row[2].trim())
+					));
+				}
+			}
+		} catch (IOException e) {
+			System.err.println("Error reading CSV file: " + e.getMessage());
+		}
+
+		return listaZahtjeva;
+	}
 	   
 
 }
