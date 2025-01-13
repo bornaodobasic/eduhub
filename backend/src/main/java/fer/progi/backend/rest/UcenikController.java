@@ -145,7 +145,8 @@ public class UcenikController {
 	 @GetMapping("{predmet}/materijali/download")
 	 public ResponseEntity<byte[]> downloadMaterialBySuffix(@RequestParam String suffix, Authentication authentification) {
 	     try {
-	     
+	    	 
+	    	 System.out.println(suffix);
 	         String key = s3Service.findFileBySuffix(suffix);
 	         if (key == null) {
 	             return ResponseEntity.status(404).body(null);
