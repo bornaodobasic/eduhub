@@ -6,16 +6,7 @@ import fer.progi.backend.service.UcenikService;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Ucenik;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +32,17 @@ public class UcenikController {
     @Autowired 
     private MailService mailService;
     
+    @GetMapping("/")
+    public List<String> getUceniciMailovi() {
+    	List<String> mailoviUcenika = new ArrayList<>();
+
+    	for(Ucenik u :ucenikService.findAllUceniks()) {
+    		mailoviUcenika.add(u.getEmail());
+    	}
+
+    	return mailoviUcenika;
+    }
+
     @PostMapping("/dodajAktivnosti")
     public ResponseEntity<String> dodajAktivnosti(Authentication authentication, @RequestBody List<String> oznAktivnosti){
     	  LocalDate krajnjiRok = LocalDate.of(2025, 9, 1);
@@ -78,12 +80,12 @@ public class UcenikController {
 
 	   
 	    byte[] pdfBytes = pdfService.generatePDF(ucenik.getImeUcenik(), ucenik.getPrezimeUcenik());
-	    
-	    
+
+
         String csvFilePath = "database/zahjtevi.csv";
 
         try {
-        
+
             try (BufferedWriter writerCSV = Files.newBufferedWriter(Paths.get(csvFilePath), StandardOpenOption.APPEND);
                  PrintWriter pw = new PrintWriter(writerCSV)) {
 
@@ -92,10 +94,10 @@ public class UcenikController {
             }
 
         } catch (IOException e) {
-           
+
         }
 
-	    
+
 	    return ResponseEntity.ok()
 	            .header("Content-Disposition", "attachment; filename=potvrda.pdf")
 	            .header("Content-Type", "application/pdf")

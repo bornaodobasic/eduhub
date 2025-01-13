@@ -10,17 +10,27 @@ import java.util.Map;
 @RestController
 public class NameDisplayController {
 
-    @GetMapping("/api/user")
-    public Map<String, String> getUserInfo(Authentication authentication) {
-        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-        String name = oidcUser.getAttribute("name");
-        return Map.of("name", name);
-    }
+	@GetMapping("/api/user")
+	public Map<String, String> getUserInfo(Authentication authentication) {
+		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+		String name = oidcUser.getAttribute("name");
+		return Map.of("name", name);
+	}
 
-    @GetMapping("/api/user/email")
-    public Map<String, String> getUserEmail(Authentication authentication) {
-        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
-        String email = oidcUser.getAttribute("preffered_username");
-        return Map.of("email", email);
-    }
+	@GetMapping("/api/user/email")
+	public Map<String, String> getUserEmail(Authentication authentication) {
+		OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+		String email = oidcUser.getAttribute("prefered_username");
+		return Map.of("email", email);
+	}
+	
+	@GetMapping("/api/user/emailOnly")
+	public String getUserEmailString(Authentication authentication) {
+	    if (authentication == null || authentication.getPrincipal() == null) {
+	        return "Nema prijavljenog korisnika";  // Vratite neki default odgovor ili grešku
+	    }
+	    OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+	    String email = oidcUser.getAttribute("preferred_username");
+	    return email;
+	}
 }
