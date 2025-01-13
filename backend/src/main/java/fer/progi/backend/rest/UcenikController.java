@@ -7,6 +7,7 @@ import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Ucenik;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,17 @@ public class UcenikController {
     
     @Autowired 
     private MailService mailService;
+    
+    @GetMapping("/")
+    public List<String> getUceniciMailovi() {
+    	List<String> mailoviUcenika = new ArrayList<>();
+    	
+    	for(Ucenik u :ucenikService.findAllUceniks()) {
+    		mailoviUcenika.add(u.getEmail());
+    	}
+    	
+    	return mailoviUcenika;
+    }
     
     @PostMapping("/dodajAktivnosti")
     public ResponseEntity<String> dodajAktivnosti(Authentication authentication, @RequestBody List<String> oznAktivnosti){

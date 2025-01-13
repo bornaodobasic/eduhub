@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <style>
+        #chat-box { 
+            height: 300px; 
+            border: 1px solid #ccc; 
+            overflow-y: scroll; 
+            padding: 10px; 
+        }
+        #message-input { width: 100%; }
+        .message { 
+            margin: 5px 0; 
+            padding: 10px; 
+            border-radius: 10px; 
+            max-width: 60%; 
+        }
+        .message.sent { 
+            background-color: #d1e7dd; /* Zelena boja za poslane poruke */
+            align-self: flex-end; 
+            text-align: right;
+        }
+        .message.received { 
+            background-color: #f8d7da; /* Crvena boja za primljene poruke */
+            align-self: flex-start; 
+            text-align: left;
+        }
+        .message-container { 
+            display: flex; 
+            flex-direction: column; 
+        }
+    </style>
+</head>
+<body>
+    <h2>Chat</h2>
+
+    <!-- Dropdown za odabir učenika -->
+    <label for="recipient">Odaberi primatelja:</label>
+    <select id="recipient">
+        <option value="">--Odaberi učenika--</option>
+    </select>
+
+    <!-- Polje za unos poruke -->
+    <textarea id="message-input" placeholder="Unesi poruku..."></textarea>
+    <button id="send-btn">Pošaljite</button>
+
+    <!-- Prikaz poruka -->
+    <div id="chat-box" class="message-container"></div>
+
+    <script>
+        var socket = new WebSocket("ws://localhost:8080/ws/chat");
+        var recipientSelect = document.getElementById("recipient");
+        var sendButton = document.getElementById("send-btn");
+        var messageInput = document.getElementById("message-input");
+        let currentUserEmail = fetch("/api/user/emailOnly").then(response => {
+        if (!response.ok) {
+            throw new Error("Greška prilikom dohvaćanja korisničkog emaila");
+        }
+        return response.text(); // Ovdje dohvaćamo običan string umjesto JSON-a
+        })
+            .then(email => {
+        currentUserEmail = email; // Sprema se direktno string vrijednost
+        console.log("Trenutni korisnik:", currentUserEmail);
+    })
+    .catch(error => console.error("Greška:", error));
+
+
+        // Dohvaćanje liste učenika i popunjavanje dropdown menija
+        function fetchUcenici() {
+            fetch('/api/ucenik/')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Ispisivanje odgovora u konzolu
+                    if (Array.isArray(data)) {  // Provjera da li je data niz
+                        data.forEach(email => {
+                            var option = document.createElement("option");
+                            option.value = email;  // Svakom optionu dodajemo email
+                            option.textContent = email;  // Prikazuje email u dropdown-u
+                            recipientSelect.appendChild(option);
+                        });
+                    } else {
+                        console.error("Podaci nisu u ispravnom formatu");
+                    }
+                })
+                .catch(error => console.error("Greška prilikom dohvaćanja učenika:", error));
+        }
+
+        // Povezivanje na WebSocket
+        socket.onopen = function() {
+            console.log("Povezivanje na WebSocket server...");
+        };
+
+        socket.onmessage = function(event) {
+            const chatBox = document.getElementById("chat-box");
+            const message = JSON.parse(event.data);
+
+            const messageElement = document.createElement("div");
+            messageElement.classList.add("message");
+
+            // Provjera pošiljatelja
+            if (message.posiljatelj === currentUserEmail) {
+                messageElement.classList.add("sent");
+                messageElement.textContent = `Ti: ${message.sadrzaj}`;
+            } else {
+                messageElement.classList.add("received");
+                messageElement.textContent = `${message.posiljatelj}: ${message.sadrzaj}`;
+            }
+
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll to bottom
+        };
+
+        socket.onclose = function() {
+            console.log("Veza s WebSocket serverom je prekinuta.");
+        };
+
+        // Slanje poruke
+        sendButton.onclick = function() {
+
+            if (!currentUserEmail) {
+        alert("Trenutni korisnik nije pravilno učitan. Pokušajte ponovno.");
+        return;
+    }
+            var recipient = recipientSelect.value;
+            var messageContent = messageInput.value;
+
+            if (!recipient || !messageContent) {
+                alert("Molimo odaberite primatelja i unesite poruku!");
+                return;
+            }
+
+            var message = {
+                posiljatelj: currentUserEmail, // Trenutno ulogirani korisnik
+                primatelj: recipient,
+                sadrzaj: messageContent,
+                oznakaVremena: new Date().toISOString() // Trenutno vrijeme
+            };
+
+            socket.send(JSON.stringify(message)); // Slanje poruke
+            messageInput.value = ""; // Očisti polje za unos
+        };
+
+        // Inicijalizacija - povezivanje na WebSocket i dohvaćanje učenika
+        fetchUcenici();
+
+        // Dohvaćanje povijesti poruka
+        function fetchMessages() {
+            fetch(`/api/chat/messages?korisnik1=${currentUserEmail}&korisnik2=${recipientSelect.value}`)
+                .then(response => response.json())
+                .then(messages => {
+                    const chatBox = document.getElementById("chat-box");
+                    
+                    messages.forEach(message => {
+                        const messageElement = document.createElement("div");
+                        messageElement.classList.add("message");
+
+                        if (message.posiljatelj === currentUserEmail) {
+                            messageElement.classList.add("sent");
+                            messageElement.textContent = `Ti: ${message.sadrzaj}`;
+                        } else {
+                            messageElement.classList.add("received");
+                            messageElement.textContent = `${recipientSelect.value}: ${message.sadrzaj}`;
+                        }
+
+                        chatBox.appendChild(messageElement);
+                    });
+
+                    chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll to bottom
+                })
+                .catch(error => console.error("Greška prilikom dohvaćanja poruka:", error));
+        }
+
+        // Promjena primatelja
+        recipientSelect.addEventListener("change", fetchMessages);
+    </script>
+</body>
+</html>
+
+
+
+

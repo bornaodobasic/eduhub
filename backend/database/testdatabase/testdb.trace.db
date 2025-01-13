@@ -1644,3 +1644,9 @@ INSERT INTO AKTIVNOST (oznAktivnost) VALUES ('Dodatna Hrvatski') [42122-224]
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Thread.java:1583)
+2025-01-12 23:44:47.159938+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "POSILJATELJ CHARACTER VARYING(255)": "'UsernamePasswordAuthenticationToken [Principal=Name: [xzTy6oXbPND8ndxRdXrvf-WPo... (971)"; SQL statement:
+insert into chat_message (grupa_id,oznaka_vremena,posiljatelj,primatelj,sadrzaj,id) values (?,?,?,?,?,default) [22001-224]
+2025-01-13 01:00:59.031429+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CHAT_MESSAGE" not found; SQL statement:
+select cm1_0.id,cm1_0.grupa_id,cm1_0.oznaka_vremena,cm1_0.posiljatelj,cm1_0.primatelj,cm1_0.sadrzaj from chat_message cm1_0 where (cm1_0.posiljatelj=? and cm1_0.primatelj=?) or (cm1_0.posiljatelj=? and cm1_0.primatelj=?) order by cm1_0.oznaka_vremena [42102-224]
