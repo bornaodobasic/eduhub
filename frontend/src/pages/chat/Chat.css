@@ -1,4 +1,5 @@
 
+
 .chat-container {
     width: 80%;
     max-width: 900px;
@@ -49,6 +50,12 @@ h2 {
 }
 
 button {
+    background-color: #ff1493;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 button:hover {
