@@ -275,7 +275,7 @@ const Admin = () => {
         const handleSubmit = async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-
+    
             const data = {
                 imeUcenik: formData.get("imeUcenik"),
                 prezimeUcenik: formData.get("prezimeUcenik"),
@@ -284,24 +284,25 @@ const Admin = () => {
                 datumRodenja: formData.get("datumRodenja"),
                 oib: formData.get("oib"),
                 email: formData.get("email"),
+                vjeronauk: formData.get("predmet") === "Vjeronauk", // true if Vjeronauk, false if Etika
             };
-
+    
             try {
                 const response = await fetch(`/api/admin/ucenik/add`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(data),
                 });
-
+    
                 if (!response.ok) throw new Error("Greška prilikom dodavanja učenika.");
-
+    
                 alert("Učenik dodan.");
                 fetchRoleData("ucenik");
             } catch (error) {
                 alert(`Greška: ${error.message}`);
             }
         };
-
+    
         return (
             <form onSubmit={handleSubmit} className="sidebar-form">
                 <input type="text" name="imeUcenik" placeholder="Ime učenika" required />
@@ -311,11 +312,19 @@ const Admin = () => {
                 <input type="date" name="datumRodenja" required />
                 <input type="text" name="oib" placeholder="OIB" required />
                 <input type="email" name="email" placeholder="Email učenika" required />
+    
+                <label>
+                    <select name="predmet" required>
+                        <option value="Vjeronauk">Vjeronauk</option>
+                        <option value="Etika">Etika</option>
+                    </select>
+                </label>
+    
                 <button type="submit">Dodaj učenika</button>
             </form>
         );
     };
-
+    
     const RoleForm = ({ role }) => {
         const handleSubmit = async (e) => {
             e.preventDefault();
