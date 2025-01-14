@@ -224,7 +224,8 @@ const Ucenik = () => {
                 </aside>
 
                 <div className="main-content">
-                    <Timetable />
+                    <Timetable email={userEmail} />
+
                     {activeSidebarOption === "Predmeti" ? renderSubjects() : <div className="content">{mainContent}</div>}
                 </div>
 

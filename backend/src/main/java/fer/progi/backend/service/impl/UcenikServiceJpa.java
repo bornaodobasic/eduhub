@@ -133,7 +133,10 @@ public class UcenikServiceJpa implements UcenikService {
             rasporedDTO.setPocetakSata(sat.getVrijemeSata().getPocetakSata());
             raspored.add(rasporedDTO);
         }
-        return raspored.stream().sorted(Comparator.comparing(RasporedDTO::getDan)).toList();
+        return raspored.stream()
+                .sorted(Comparator.comparing(RasporedDTO::getDan)
+                        .thenComparing(RasporedDTO::getPocetakSata))  // Sorting by start time
+                .toList();
     }
 
 }
