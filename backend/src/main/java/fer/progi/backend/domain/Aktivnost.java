@@ -9,8 +9,8 @@ import lombok.Data;
 @Data
 public class Aktivnost {
 	
+	@GeneratedValue
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int sifAktivnost;
 	
 	private String oznAktivnost;

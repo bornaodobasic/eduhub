@@ -2,8 +2,10 @@ package fer.progi.backend.rest;
 
 import fer.progi.backend.service.MailService;
 import fer.progi.backend.service.PDFService;
+import fer.progi.backend.service.UcenikAktivnostService;
 import fer.progi.backend.service.UcenikService;
 import fer.progi.backend.service.impl.S3Service;
+import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Ucenik;
 import java.io.BufferedWriter;
@@ -19,6 +21,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +38,9 @@ public class UcenikController {
 
     @Autowired
     private UcenikService ucenikService;
+    
+    @Autowired
+    private UcenikAktivnostService ucenikServiceAktivnosti;
 
     @Autowired
     private PDFService pdfService;
@@ -44,16 +51,30 @@ public class UcenikController {
     @Autowired
     private S3Service s3Service;
     
-    @GetMapping("/")
-    public List<String> getUceniciMailovi() {
+    @GetMapping("")
+    public List<String> getUceniciMailovi(Authentication authentication) {
     	List<String> mailoviUcenika = new ArrayList<>();
     	
+    	OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+ 	    String email = oidcUser.getAttribute("preferred_username");
+    	
     	for(Ucenik u :ucenikService.findAllUceniks()) {
+    		if(!u.getEmail().equals(email))
     		mailoviUcenika.add(u.getEmail());
     	}
     	
     	return mailoviUcenika;
     }
+    
+    @GetMapping("/aktivnosti/je/{email}")
+	public List<Aktivnost> getUceniciAktivnosti(@PathVariable String email) {
+	    return ucenikService.findUcenikAktivnosti(email);
+	}
+    
+	@GetMapping("/aktivnosti/nije/{email}")
+	public Set<Aktivnost> getNotUcenikAktivnosti(@PathVariable String email) {
+	    return ucenikServiceAktivnosti.findNotUcenikAktivnosti(email);
+	}
 
     @PostMapping("/dodajAktivnosti")
     public ResponseEntity<String> dodajAktivnosti(Authentication authentication, @RequestBody List<String> oznAktivnosti) {
