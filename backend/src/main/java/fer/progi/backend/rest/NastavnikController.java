@@ -3,6 +3,8 @@ package fer.progi.backend.rest;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -106,50 +108,74 @@ public class NastavnikController {
     
     @GetMapping("/materijali/izvjestaj")
     public List<PristupMaterijaliDTO> pregledPristupaMaterijalima(Authentication authentication) throws ParseException {
-        String csvFilePath = "database/materijali.csv";
         List<PristupMaterijaliDTO> listaPristupMaterijalima = new ArrayList<>();
+        String csvFileKey = "materijali/materijali.csv"; // Ključ CSV datoteke na S3
+        Path tempFilePath = null;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-            String line;
-            boolean isFirstLine = true;
-
-       
-            OidcUser ulogiranKorisnik = (OidcUser) authentication.getPrincipal();
-            String email = ulogiranKorisnik.getPreferredUsername();
+        try {
+           
+            tempFilePath = Files.createTempFile("temp-materijali", ".csv");
+            System.out.println(tempFilePath);
 
            
+            byte[] csvContent = s3Service.getFile(csvFileKey);
+            Files.write(tempFilePath, csvContent);
+
+            
+            OidcUser ulogiranKorisnik = (OidcUser) authentication.getPrincipal();
+            String email = ulogiranKorisnik.getPreferredUsername();
             List<Predmet> predmetiNastavnika = nastavnikService.findNastavnikPredmeti(email);
 
-            while ((line = br.readLine()) != null) {
-                if (isFirstLine) {
-                    isFirstLine = false; 
-                    continue;
-                }
+          
+            try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
+                String line;
+                boolean isFirstLine = true;
 
-                String[] row = line.split(",");   
-                
-                for(Predmet p : predmetiNastavnika) {
-                	if(p.getNazPredmet().equals(row[4])) {
-                		System.out.println(p.getNazPredmet());
-                		System.out.println(row[4]);
-                		System.out.println("----------------------------------------------------------");
-                		   listaPristupMaterijalima.add(new PristupMaterijaliDTO(
-                                   row[0], 
-                                   row[1], 
-                                   new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(row[2]), 
-                                   row[3], 
-                                   row[4] 
-                           ));
-                	}
+                while ((line = reader.readLine()) != null) {
+                    
+                    if (isFirstLine) {
+                        isFirstLine = false;
+                        continue;
+                    }
+
+                    
+                    if (line.trim().isEmpty()) {
+                        continue;
+                    }
+
+                    String[] row = line.split(",");
+
+                    
+                    for (Predmet p : predmetiNastavnika) {
+                        if (p.getNazPredmet().equals(row[4])) {
+                            listaPristupMaterijalima.add(new PristupMaterijaliDTO(
+                                    row[0], 
+                                    row[1], 
+                                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(row[2]), 
+                                    row[3], 
+                                    row[4]  
+                            ));
+                        }
+                    }
                 }
             }
-            System.out.println(listaPristupMaterijalima);
         } catch (IOException e) {
             e.printStackTrace();
+            System.err.println("Error handling CSV file: " + e.getMessage());
+        } finally {
+           
+            if (tempFilePath != null) {
+                try {
+                    Files.delete(tempFilePath);
+                } catch (IOException e) {
+                    System.err.println("Error deleting temporary file: " + e.getMessage());
+                }
+            }
         }
 
         return listaPristupMaterijalima;
     }
+
 
 
 }
