@@ -88,6 +88,19 @@ public class S3Service {
         }
         return null; 
     }
+    
+    public void uploadFileFromPath(String path, Path filePath) throws IOException {
+        String key = path;
+
+        s3Client.putObject(
+                PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .build(),
+                filePath
+        );
+    }
+
 
 
 

@@ -4,9 +4,14 @@ package fer.progi.backend.rest;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fer.progi.backend.domain.Ravnatelj;
 import fer.progi.backend.domain.Ucionica;
 import fer.progi.backend.service.RavnateljService;
+import fer.progi.backend.service.impl.S3Service;
 import fer.progi.backend.service.UcionicaService;
 
 
@@ -34,51 +40,25 @@ import fer.progi.backend.service.UcionicaService;
 @RequestMapping("/api/ravnatelj")
 @PreAuthorize("hasAuthority('Ravnatelj')")
 public class RavnateljController {
-
-    @Autowired
-    private RavnateljService RavnateljService;
+	
+	@Autowired
+	private RavnateljService RavnateljService;
 
     @Autowired
     private UcionicaService ucionicaService;
 
-    @GetMapping("")
-    public List<Ravnatelj> listRavnatelj() {
-        return RavnateljService.listAll();
-    }
-
-    @PostMapping("")
-    public Ravnatelj dodajRavnatelja(@RequestBody Ravnatelj ravnatelj) {
-        return RavnateljService.dodajRavnatelj(ravnatelj);
-    }
-
-    @GetMapping("/ucionice")
-    public List<Ucionica> listAllUcionice() {
-        return ucionicaService.findAllUcionice();
-
-    }
-
-    @PostMapping("/ucionice/add")
-    public Ucionica addUcionica(@RequestBody Ucionica ucionica) {
-        return ucionicaService.dodajUcionica(ucionica);
-    }
-
-    @DeleteMapping("/ucionice/delete/{oznakaUc}")
-    public ResponseEntity<String> deleteUcenik(@PathVariable String oznakaUc) {
-        ucionicaService.deleteUcionica(oznakaUc);
-        return ResponseEntity.ok("Uspjesno obrisana ucionica");
-    }
-
-    @PutMapping("/ucionica/promijeniKapacitet")
-    public ResponseEntity<String> promijeniKapacitet(@PathVariable String oznakaUc, @RequestParam Integer noviKapacitet) {
-        if (ucionicaService.findById(oznakaUc).isPresent()) {
-            ucionicaService.findById(oznakaUc).get().setKapacitet(noviKapacitet);
-            return ResponseEntity.ok("Učionici uspješno promijenjen kapacitet");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Došlo je do problema prilikom mijenjanja kapaciteta učionice");
-
-        }
-    }
+    @Autowired
+    private S3Service s3Service;
+	
+	@GetMapping("")
+	public List<Ravnatelj> listRavnatelj() {
+		return RavnateljService.listAll();
+	}
+	
+	@PostMapping("")
+	public Ravnatelj dodajRavnatelja(@RequestBody Ravnatelj ravnatelj) {
+		return RavnateljService.dodajRavnatelj(ravnatelj);
+	}
 
     @GetMapping("/pogledajIzdanePotvrde")
     public List<ZahtjeviDTO> pregledIzdanihPotvrda() throws ParseException {
@@ -112,6 +92,7 @@ public class RavnateljController {
         return listaZahtjeva;
     }
 
+
     @GetMapping("/pogledajIzdanePotvrdeImePrezime")
     public List<ZahtjeviDTO> pregledIzdanihPotvrdaImePrezime(@RequestParam String imeUcenik, @RequestParam String prezimeUcenik) throws ParseException {
 
@@ -138,9 +119,117 @@ public class RavnateljController {
         } catch (IOException e) {
             System.err.println("Error reading CSV file: " + e.getMessage());
         }
-
         return listaZahtjeva;
     }
 
+    @GetMapping("/dodajGlavnuObavijest")
+    public ResponseEntity<String> dodajGlavnuObavijest(
+            @RequestParam String naslov,
+            @RequestParam String sadrzaj,
+            @RequestParam(required = false) String odredisteAdresa,
+            @RequestParam(required = false) String grad,
+            @RequestParam(required = false) String drzava) {
+
+        String csvFileKey = "obavijesti/glavneObavijestiNovo.csv";
+        Path tempFilePath = null;
+
+        try {
+
+            tempFilePath = Files.createTempFile("glavne-obavijesti", ".csv");
+            System.out.println(tempFilePath);
+
+
+            try {
+                byte[] fileContent = s3Service.getFile(csvFileKey);
+                Files.write(tempFilePath, fileContent);
+            } catch (Exception e) {
+
+                String zaglavlje = "Naslov,Sadrzaj,OdredisteAdresa,Grad,Drzava,DatumVrijeme\n";
+                Files.write(tempFilePath, zaglavlje.getBytes());
+            }
+
+
+            String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+
+            String newLine = naslov + "," + sadrzaj + "," +
+                    (odredisteAdresa != null ? odredisteAdresa : "null") + "," +
+                    (grad != null ? grad : "null") + "," +
+                    (drzava != null ? drzava : "null") + "," +
+                    currentDateTime + "\n";
+            Files.write(tempFilePath, newLine.getBytes(), StandardOpenOption.APPEND);
+
+
+            s3Service.uploadFileFromPath(csvFileKey, tempFilePath);
+
+            return ResponseEntity.ok("Obavijest uspješno dodana.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Dogodila se greška.");
+        } finally {
+
+            if (tempFilePath != null) {
+                try {
+                    Files.delete(tempFilePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    @GetMapping("/dodajObavijestTerenskaNastava")
+    public ResponseEntity<String> dodajTerenskuObavijest(
+            @RequestParam String naslov,
+            @RequestParam String sadrzaj,
+            @RequestParam String odredisteAdresa,
+            @RequestParam String gradOdrediste,
+            @RequestParam String drzavaOdrediste) {
+
+        String csvFileKey = "obavijesti/terenskaNastava.csv";
+        Path tempFilePath = null;
+
+        try {
+
+            tempFilePath = Files.createTempFile("terenska-nastava", ".csv");
+
+
+            try {
+                byte[] fileContent = s3Service.getFile(csvFileKey);
+                Files.write(tempFilePath, fileContent);
+            } catch (Exception e) {
+
+                String zaglavlje = "Naslov,Sadrzaj,OdredisteAdresa,Grad,Drzava,DatumVrijeme\n";
+                Files.write(tempFilePath, zaglavlje.getBytes());
+                System.out.println("Stvorena nova CSV datoteka.");
+            }
+
+
+            String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+
+            String newLine = naslov + "," + sadrzaj + "," + odredisteAdresa + "," + gradOdrediste + "," + drzavaOdrediste + "," + currentDateTime + "\n";
+            Files.write(tempFilePath, newLine.getBytes(), java.nio.file.StandardOpenOption.APPEND);
+
+
+            s3Service.uploadFileFromPath(csvFileKey, tempFilePath);
+
+            return ResponseEntity.ok("Obavijest o terenskoj nastavi uspješno dodana.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Dogodila se greška.");
+        } finally {
+
+            if (tempFilePath != null) {
+                try {
+                    Files.delete(tempFilePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+	
 }
 

@@ -3,9 +3,14 @@ package fer.progi.backend.rest;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +20,7 @@ import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.service.impl.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -57,23 +63,6 @@ public class NastavnikController {
     	return mailoviNastavnika;
     }
 
-/*
-	@GetMapping("/predmeti")
-	public List<Predmet> predmeti(@AuthenticationPrincipal OidcUser oidcUser) {
-		if (oidcUser == null) {
-			throw new IllegalStateException("Korisnik nije autentificiran");
-		}
-
-		String email = oidcUser.getPreferredUsername();
-		if (email == null || email.isEmpty()) {
-			throw new IllegalArgumentException("Email nije pronađen");
-		}
-
-		return nastavnikService.findNastavnikPredmeti(email);
-	}
-
-*/
-
     @GetMapping("/predmeti")
     public ResponseEntity<?> getPredmeti(@AuthenticationPrincipal OidcUser oidcUser) {
         try {
@@ -107,6 +96,66 @@ public class NastavnikController {
             return ResponseEntity.status(500).body("OOPS! Something went wrong");
         }
     }
+
+    @GetMapping("{predmet}/dodajObavijest")
+    public ResponseEntity<String> dodajObavijestZaPredmet(
+            @PathVariable String predmet,
+            @RequestParam String naslov,
+            @RequestParam String sadrzaj,
+            Authentication authentication) {
+
+
+        String csvFileKey = "obavijesti/" + predmet + ".csv";
+        Path tempFilePath = null;
+
+        try {
+
+            tempFilePath = Files.createTempFile(predmet + "-obavijesti", ".csv");
+            System.out.println("Privremena datoteka: " + tempFilePath);
+
+
+            try {
+                byte[] fileContent = s3Service.getFile(csvFileKey);
+                Files.write(tempFilePath, fileContent);
+            } catch (Exception e) {
+
+                String zaglavlje = "Naslov,Sadrzaj,ImeNastavnika,PrezimeNastavnikaDatumVrijeme\n";
+                Files.write(tempFilePath, zaglavlje.getBytes());
+            }
+
+
+            OidcUser ulogiranKorisnik = (OidcUser) authentication.getPrincipal();
+            String email = ulogiranKorisnik.getPreferredUsername();
+            Optional<Nastavnik> optionalnastavnik = nastavnikService.findByEmail(email);
+
+
+            Nastavnik nastavnik = optionalnastavnik.get();
+
+
+            String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+
+            String newLine = naslov + "," + sadrzaj + "," + nastavnik.getImeNastavnik() + "," +  nastavnik.getPrezimeNastavnik() + "," + currentDateTime + "\n";
+            Files.write(tempFilePath, newLine.getBytes(), StandardOpenOption.APPEND);
+
+
+            s3Service.uploadFileFromPath(csvFileKey, tempFilePath);
+
+            return ResponseEntity.ok("Obavijest za predmet " + predmet + " uspješno dodana.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Dogodila se greška.");
+        } finally {
+            if (tempFilePath != null) {
+                try {
+                    Files.delete(tempFilePath);
+                } catch (IOException e) {
+                    System.err.println("Greška pri brisanju privremene datoteke: " + e.getMessage());
+                }
+            }
+        }
+    }
+
 
     @DeleteMapping("/materijali")
     public ResponseEntity<?> deleteMaterial(@RequestParam String key) {

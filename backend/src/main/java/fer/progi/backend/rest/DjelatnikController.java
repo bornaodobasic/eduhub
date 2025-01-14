@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fer.progi.backend.domain.Djelatnik;
 import fer.progi.backend.service.DjelatnikService;
+import fer.progi.backend.service.impl.S3Service;
 
 
 
@@ -33,6 +36,10 @@ public class DjelatnikController {
 	@Autowired
 	private DjelatnikService DjelatnikService;
 	private String csvFilePath;
+
+
+	@Autowired
+	private S3Service s3Service;
 
 	@GetMapping("")
 	public List<Djelatnik> listDjelatnik() {
