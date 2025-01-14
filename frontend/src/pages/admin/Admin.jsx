@@ -155,87 +155,121 @@ const Admin = () => {
         }
     };
 
+
     const ActivityDropdownForm = ({ email, fetchDetails, unusedItems }) => {
         const [selected, setSelected] = useState([]);
-
+    
+        const handleCheckboxChange = (item) => {
+            setSelected((prev) =>
+                prev.includes(item.oznAktivnost)
+                    ? prev.filter((i) => i !== item.oznAktivnost) // Makni ako je već odabrano
+                    : [...prev, item.oznAktivnost] // Dodaj ako nije odabrano
+            );
+        };
+    
         const handleAdd = async () => {
+            if (selected.length === 0) {
+                alert("Odaberite barem jednu aktivnost prije dodavanja.");
+                return;
+            }
+    
             try {
                 const response = await fetch(`/api/admin/ucenik/aktivnosti/add/${email}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(selected),
                 });
-
+    
                 if (!response.ok) throw new Error("Greška prilikom dodavanja aktivnosti.");
-
+    
                 alert("Aktivnosti dodane.");
                 fetchDetails();
-                setSelected([]);
+                setSelected([]); // Resetiraj odabir
             } catch (error) {
                 alert(`Greška: ${error.message}`);
             }
         };
-
+    
         return (
-            <div className="dropdown-form">
-                <select
-                    multiple
-                    value={selected}
-                    onChange={(e) =>
-                        setSelected(Array.from(e.target.selectedOptions, (option) => option.value))
-                    }
-                >
+            <div className="checkbox-form">
+                <ul className="checkbox-list">
                     {unusedItems.map((item) => (
-                        <option key={item.sifAktivnost} value={item.oznAktivnost}>
-                            {item.oznAktivnost}
-                        </option>
+                        <li key={item.sifAktivnost} className="checkbox-item">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    value={item.oznAktivnost}
+                                    checked={selected.includes(item.oznAktivnost)}
+                                    onChange={() => handleCheckboxChange(item)}
+                                />
+                                {item.oznAktivnost}
+                            </label>
+                        </li>
                     ))}
-                </select>
+                </ul>
                 <button onClick={handleAdd}>Dodaj</button>
             </div>
         );
     };
-
+    
+    
+  
     const SubjectDropdownForm = ({ email, fetchDetails, unusedItems }) => {
         const [selected, setSelected] = useState([]);
-
+    
+        const handleCheckboxChange = (item) => {
+            setSelected((prev) =>
+                prev.includes(item.nazPredmet)
+                    ? prev.filter((i) => i !== item.nazPredmet) // Makni ako je već odabrano
+                    : [...prev, item.nazPredmet] // Dodaj ako nije odabrano
+            );
+        };
+    
         const handleAdd = async () => {
+            if (selected.length === 0) {
+                alert("Odaberite barem jedan predmet prije dodavanja.");
+                return;
+            }
+    
             try {
                 const response = await fetch(`/api/admin/nastavnik/predmeti/add/${email}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(selected),
                 });
-
+    
                 if (!response.ok) throw new Error("Greška prilikom dodavanja predmeta.");
-
+    
                 alert("Predmeti dodani.");
                 fetchDetails();
-                setSelected([]);
+                setSelected([]); // Resetiraj odabir
             } catch (error) {
                 alert(`Greška: ${error.message}`);
             }
         };
-
+    
         return (
-            <div className="dropdown-form">
-                <select
-                    multiple
-                    value={selected}
-                    onChange={(e) =>
-                        setSelected(Array.from(e.target.selectedOptions, (option) => option.value))
-                    }
-                >
+            <div className="checkbox-form">
+                <ul className="checkbox-list">
                     {unusedItems.map((item) => (
-                        <option key={item.sifPredmet} value={item.nazPredmet}>
-                            {item.nazPredmet}
-                        </option>
+                        <li key={item.sifPredmet} className="checkbox-item">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    value={item.nazPredmet}
+                                    checked={selected.includes(item.nazPredmet)}
+                                    onChange={() => handleCheckboxChange(item)}
+                                />
+                                {item.nazPredmet}
+                            </label>
+                        </li>
                     ))}
-                </select>
+                </ul>
                 <button onClick={handleAdd}>Dodaj</button>
             </div>
         );
     };
+        
 
     const UcenikForm = () => {
         const handleSubmit = async (e) => {

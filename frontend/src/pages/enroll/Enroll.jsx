@@ -12,6 +12,7 @@ const Enroll = () => {
     datumRodenja: '',
     spol: '',
     smjer: '',
+    vjerounauk: '',
   });
 
   const handleChange = (e) => {
@@ -51,6 +52,7 @@ const Enroll = () => {
           datumRodenja: '',
           spol: '',
           smjer: '',
+          vjerounauk: '',
         });
         alert('Upis uspješan!');
         window.location.href = '/ucenik'; // Redirect to /ucenik page
@@ -113,6 +115,20 @@ const Enroll = () => {
                     <option value="zenski">Ž</option>
                   </select>
                 </div>
+
+                <div className="form-group">
+            <label htmlFor="vjeronauk">Odabir:</label>
+            <select
+              id="vjeronauk"
+              value={formData.vjeronauk}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Odaberite Vjeronauk ili Etika</option>
+              <option value="true">Vjeronauk</option>
+              <option value="false">Etika</option>
+            </select>
+          </div>
               </div>
 
               <div className="form-column">

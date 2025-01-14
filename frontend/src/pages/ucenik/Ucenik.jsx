@@ -229,6 +229,11 @@ const Ucenik = () => {
                 <aside className="sidebar-right">
                     <button onClick={handleDownloadPotvrda}>Preuzmi potvrdu</button>
                     <button onClick={handleEmailPotvrda}>Pošalji potvrdu na mail</button>
+
+
+                    <button onClick={() => navigate('/chat')} className="chat-button">
+                        CHAT
+                    </button>
                     <WeatherWidget />
                 </aside>
             </div>
