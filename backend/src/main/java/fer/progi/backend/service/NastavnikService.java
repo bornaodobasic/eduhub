@@ -1,7 +1,7 @@
 package fer.progi.backend.service;
 
 import java.util.List;
-
+import java.util.Optional;
 import java.util.Set;
 import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Predmet;
@@ -21,4 +21,6 @@ public interface NastavnikService {
 	boolean deleteNastavnik(String email);
 
 	List<Predmet> findNastavnikPredmeti(String email);
+
+	Optional<Nastavnik> findByEmail(String email);
 }

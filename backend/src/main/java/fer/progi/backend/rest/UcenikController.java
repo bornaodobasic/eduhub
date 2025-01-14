@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -267,6 +268,80 @@ public class UcenikController {
 	         return ResponseEntity.status(500).body(null);
 	     }
 	 }
+	 
+	
+		 @GetMapping("{predmet}/obavijesti")
+		 public ResponseEntity<?> pogledajObavijesti(@PathVariable String predmet) throws ParseException {
+		     String csvFileKey = "obavijesti/" + predmet + ".csv"; // Ključ datoteke na S3
+		     List<ObavijestPredmetDTO> listaObavijesti = new ArrayList<>();
+		     Path tempFilePath = null;
+		     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		     try {
+		         // Stvori privremenu datoteku
+		         tempFilePath = Files.createTempFile(predmet + "-obavijesti", ".csv");
+		         System.out.println("Privremena datoteka: " + tempFilePath);
+
+		         // Pokušaj preuzeti sadržaj datoteke sa S3
+		         try {
+		             byte[] fileContent = s3Service.getFile(csvFileKey);
+		             Files.write(tempFilePath, fileContent);
+		         } catch (Exception e) {
+		             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+		                     .body("CSV datoteka za predmet '" + predmet + "' nije pronađena.");
+		         }
+
+		         // Čitaj CSV datoteku red po red
+		         try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
+		             String line;
+		             boolean isFirstLine = true;
+
+		             while ((line = reader.readLine()) != null) {
+		                 // Preskoči zaglavlje
+		                 if (isFirstLine) {
+		                     isFirstLine = false;
+		                     continue;
+		                 }
+
+		                 // Preskoči prazne redove
+		                 if (line.trim().isEmpty()) {
+		                     continue;
+		                 }
+
+		                 // Parsiraj red
+		                 String[] row = line.split(",");
+		                 if (row.length == 5) {
+		                     listaObavijesti.add(new ObavijestPredmetDTO(
+		                             row[0].trim(), // Naslov
+		                             row[1].trim(), // Sadržaj
+		                             row[2].trim(),
+		                             row[3].trim(),// Ime nastavnika
+		                             dateFormat.parse(row[4].trim()) // Datum
+		                     ));
+		                 } else {
+		                     System.err.println("Neispravan redak: " + line);
+		                 }
+		             }
+		         }
+
+		         return ResponseEntity.ok(listaObavijesti);
+		     } catch (IOException e) {
+		         e.printStackTrace();
+		         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		                 .body("Dogodila se greška pri obradi datoteke za predmet '" + predmet + "'.");
+		     } finally {
+		         // Obriši privremenu datoteku
+		         if (tempFilePath != null) {
+		             try {
+		                 Files.delete(tempFilePath);
+		             } catch (IOException e) {
+		                 System.err.println("Greška pri brisanju privremene datoteke: " + e.getMessage());
+		             }
+		         }
+		     }
+		 }
+
+	 
 	 
 	 @GetMapping("{predmet}/materijali/download")
 	 public ResponseEntity<byte[]> downloadMaterialBySuffix(@RequestParam String suffix, Authentication authentication) {
