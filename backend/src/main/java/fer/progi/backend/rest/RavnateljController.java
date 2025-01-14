@@ -6,12 +6,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -146,6 +151,117 @@ public class RavnateljController {
 
 	    return listaZahtjeva;
 	}
+	
+	@GetMapping("/dodajGlavnuObavijest")
+	public ResponseEntity<String> dodajGlavnuObavijest(
+	        @RequestParam String naslov,
+	        @RequestParam String sadrzaj,
+	        @RequestParam(required = false) String odredisteAdresa,
+	        @RequestParam(required = false) String grad,
+	        @RequestParam(required = false) String drzava) {
+	    
+	    String csvFileKey = "obavijesti/glavneObavijestiNovo.csv";
+	    Path tempFilePath = null;
+
+	    try {
+	      
+	        tempFilePath = Files.createTempFile("glavne-obavijesti", ".csv");
+System.out.println(tempFilePath);
+
+	   
+	        try {
+	            byte[] fileContent = s3Service.getFile(csvFileKey);
+	            Files.write(tempFilePath, fileContent);
+	        } catch (Exception e) {
+	         
+	            String zaglavlje = "Naslov,Sadrzaj,OdredisteAdresa,Grad,Drzava,DatumVrijeme\n";
+	            Files.write(tempFilePath, zaglavlje.getBytes());
+	        }
+
+	      
+	        String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+	       
+	        String newLine = naslov + "," + sadrzaj + "," +
+	                (odredisteAdresa != null ? odredisteAdresa : "null") + "," +
+	                (grad != null ? grad : "null") + "," +
+	                (drzava != null ? drzava : "null") + "," +
+	                currentDateTime + "\n";
+	        Files.write(tempFilePath, newLine.getBytes(), StandardOpenOption.APPEND);
+
+	      
+	        s3Service.uploadFileFromPath(csvFileKey, tempFilePath);
+
+	        return ResponseEntity.ok("Obavijest uspješno dodana.");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Dogodila se greška.");
+	    } finally {
+	    
+	        if (tempFilePath != null) {
+	            try {
+	                Files.delete(tempFilePath);
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	}
+
+	
+	@GetMapping("/dodajObavijestTerenskaNastava")
+	public ResponseEntity<String> dodajTerenskuObavijest(
+	        @RequestParam String naslov,
+	        @RequestParam String sadrzaj,
+	        @RequestParam String odredisteAdresa,
+	        @RequestParam String gradOdrediste,
+	        @RequestParam String drzavaOdrediste) {
+
+	    String csvFileKey = "obavijesti/terenskaNastava.csv";
+	    Path tempFilePath = null;
+
+	    try {
+	       
+	        tempFilePath = Files.createTempFile("terenska-nastava", ".csv");
+
+	   
+	        try {
+	            byte[] fileContent = s3Service.getFile(csvFileKey);
+	            Files.write(tempFilePath, fileContent);
+	        } catch (Exception e) {
+	          
+	            String zaglavlje = "Naslov,Sadrzaj,OdredisteAdresa,Grad,Drzava,DatumVrijeme\n";
+	            Files.write(tempFilePath, zaglavlje.getBytes());
+	            System.out.println("Stvorena nova CSV datoteka.");
+	        }
+
+	       
+	        String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+	       
+	        String newLine = naslov + "," + sadrzaj + "," + odredisteAdresa + "," + gradOdrediste + "," + drzavaOdrediste + "," + currentDateTime + "\n";
+	        Files.write(tempFilePath, newLine.getBytes(), java.nio.file.StandardOpenOption.APPEND);
+
+	       
+	        s3Service.uploadFileFromPath(csvFileKey, tempFilePath);
+
+	        return ResponseEntity.ok("Obavijest o terenskoj nastavi uspješno dodana.");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Dogodila se greška.");
+	    } finally {
+	      
+	        if (tempFilePath != null) {
+	            try {
+	                Files.delete(tempFilePath);
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	}
+
+
 	   
 	
 }

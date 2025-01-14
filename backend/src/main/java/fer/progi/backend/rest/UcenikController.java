@@ -7,6 +7,7 @@ import fer.progi.backend.service.impl.S3Service;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Ucenik;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +17,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/ucenik")
@@ -60,6 +66,71 @@ public class UcenikController {
 		
 		return ResponseEntity.ok(predmeti);
 	}
+	
+	@GetMapping("/pogledajObavijesti")
+	public List<ObavijestDTO> pogledajObavijesti() {
+	    List<ObavijestDTO> listaObavijesti = new ArrayList<>();
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+	    // Ključevi datoteka na S3
+	    String glavneObavijestiKey = "obavijesti/glavneObavijestiNovo.csv";
+	    String terenskaNastavaKey = "obavijesti/terenskaNastava.csv";
+
+	    List<String> csvKeys = List.of(glavneObavijestiKey, terenskaNastavaKey);
+
+	    for (String csvKey : csvKeys) {
+	        Path tempFilePath = null;
+
+	        try {
+	         
+	            tempFilePath = Files.createTempFile("obavijesti", ".csv");
+
+	          
+	            byte[] csvContent = s3Service.getFile(csvKey);
+	            Files.write(tempFilePath, csvContent);
+
+	          
+	            try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
+	                String line = reader.readLine(); 
+	                if (line == null) continue;
+
+	                while ((line = reader.readLine()) != null) {
+	                    String[] row = line.split(",");
+	                    if (row.length == 6) {
+	                        listaObavijesti.add(new ObavijestDTO(
+	                                row[0].trim(), 
+	                                row[1].trim(), 
+	                                row[2].trim().equals("null") ? null : row[2].trim(), 
+	                                row[3].trim().equals("null") ? null : row[3].trim(), 
+	                                row[4].trim().equals("null") ? null : row[4].trim(), 
+	                                dateFormat.parse(row[5].trim())
+	                        ));
+	                    } else {
+	                        System.err.println("Neispravan format retka: " + line);
+	                    }
+	                }
+	            }
+	        } catch (IOException | java.text.ParseException e) {
+	            System.err.println("Greška pri obradi CSV datoteke: " + csvKey + " - " + e.getMessage());
+	        } finally {
+	            
+	            if (tempFilePath != null) {
+	                try {
+	                    Files.delete(tempFilePath);
+	                } catch (IOException e) {
+	                    System.err.println("Greška pri brisanju privremene datoteke: " + e.getMessage());
+	                }
+	            }
+	        }
+	    }
+
+	    
+	    listaObavijesti.sort((o1, o2) -> o2.getDatum().compareTo(o1.getDatum()));
+
+	    return listaObavijesti;
+	}
+
+
 	
 	
 	 @PostMapping("/{email}/generirajPotvrdu")
