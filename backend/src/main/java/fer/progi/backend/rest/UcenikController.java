@@ -1,9 +1,7 @@
 package fer.progi.backend.rest;
 
-import fer.progi.backend.service.MailService;
-import fer.progi.backend.service.PDFService;
-import fer.progi.backend.service.UcenikAktivnostService;
-import fer.progi.backend.service.UcenikService;
+import fer.progi.backend.domain.Nastavnik;
+import fer.progi.backend.service.*;
 import fer.progi.backend.service.impl.S3Service;
 import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.domain.Predmet;
@@ -30,10 +28,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/ucenik")
 @PreAuthorize("hasAuthority('Ucenik')")
+
 public class UcenikController {
 
     @Autowired
@@ -50,6 +50,9 @@ public class UcenikController {
 
     @Autowired
     private S3Service s3Service;
+
+    @Autowired
+    private NastavnikService nastavnikService;
     
     @GetMapping("")
     public List<String> getUceniciMailovi(Authentication authentication) {
@@ -65,16 +68,33 @@ public class UcenikController {
     	
     	return mailoviUcenika;
     }
-    
+
     @GetMapping("/aktivnosti/je/{email}")
-	public List<Aktivnost> getUceniciAktivnosti(@PathVariable String email) {
-	    return ucenikService.findUcenikAktivnosti(email);
-	}
-    
-	@GetMapping("/aktivnosti/nije/{email}")
-	public Set<Aktivnost> getNotUcenikAktivnosti(@PathVariable String email) {
-	    return ucenikServiceAktivnosti.findNotUcenikAktivnosti(email);
-	}
+    public List<Aktivnost> getUceniciAktivnosti(@PathVariable String email) {
+        Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
+        if (ucenikOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        return ucenikService.findUcenikAktivnosti(email);
+    }
+
+    @GetMapping("/aktivnosti/nije/{email}")
+    public Set<Aktivnost> getNotUcenikAktivnosti(@PathVariable String email) {
+        Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
+        if(ucenikOptional.isEmpty()) {
+            return null;
+        }
+        return ucenikServiceAktivnosti.findNotUcenikAktivnosti(email);
+    }
+    @GetMapping("/nastavnici")
+    public List<String> getNastavniciMailovi() {
+        List<String> mailoviNastavnika = new ArrayList<>();
+        for(Nastavnik n :nastavnikService.findAllNastavniks()) {
+            mailoviNastavnika.add(n.getEmail());
+        }
+
+        return mailoviNastavnika;
+    }
 
     @PostMapping("/dodajAktivnosti")
     public ResponseEntity<String> dodajAktivnosti(Authentication authentication, @RequestBody List<String> oznAktivnosti) {

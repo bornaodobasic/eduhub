@@ -8,39 +8,94 @@ const Ucenik = () => {
     const navigate = useNavigate();
 
     const [activeSidebarOption, setActiveSidebarOption] = useState("");
-    const [leftSidebarOptions, setLeftSidebarOptions] = useState(["Predmeti", "Aktivnosti", "Nekaj"]);
+    const [leftSidebarOptions, setLeftSidebarOptions] = useState(["Predmeti", "Aktivnosti", "Dodatno"]);
     const [mainContent, setMainContent] = useState("");
     const [subjects, setSubjects] = useState([]);
     const [materials, setMaterials] = useState({});
+    const [aktivnosti, setAktivnosti] = useState([]);
     const [expandedSubject, setExpandedSubject] = useState(null);
+    const [dostupneAktivnosti, setDostupneAktivnosti] = useState([]);
+    const [selectedAktivnosti, setSelectedAktivnosti] = useState([]);
 
     const [userEmail, setUserEmail] = useState('');
 
     useEffect(() => {
-        const fetchUserEmail = async () => {
-            try {
-                const response = await fetch('/api/user/email');
-                if (response.ok) {
-                    const data = await response.json();
-                    setUserEmail(data.email);
-                } else {
-                    console.error('Greška pri dohvaćanju emaila:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Došlo je do greške:', error);
-            }
-        };
-
-        fetchUserEmail();
-    }, []);
-
-    useEffect(() => {
         if (activeSidebarOption === "Predmeti") {
             fetchSubjectsAndMaterials();
+        } else if (activeSidebarOption === "Aktivnosti") {
+            fetchAktivnosti();
+            fetchDostupneAktivnosti();
         } else {
             setMainContent("Odaberite opciju iz lijevog izbornika.");
         }
     }, [activeSidebarOption]);
+
+    const fetchAktivnosti = async () => {
+        try {
+            const response = await fetch(`/api/ucenik/aktivnosti/je/${userEmail}`);
+            if (!response.ok) throw new Error("Greška prilikom dohvaćanja aktivnosti.");
+
+            const data = await response.json();
+
+            if (data.length === 0) {
+                console.log("Nema aktivnosti za ovog učenika.");
+            } else {
+                setAktivnosti(data);
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+
+    const fetchDostupneAktivnosti = async () => {
+        try {
+            const response = await fetch(`/api/ucenik/aktivnosti/nije/${userEmail}`);
+            if (!response.ok) throw new Error("Greška prilikom dohvaćanja dostupnih aktivnosti.");
+
+            const data = await response.json();
+
+            if (data.length === 0) {
+                console.log("Nema dostupnih aktivnosti za ovog učenika.");
+            } else {
+                setDostupneAktivnosti(data);
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+
+    const handleAddAktivnosti = async () => {
+        if (selectedAktivnosti.length === 0) {
+            alert("Odaberite barem jednu aktivnost.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/ucenik/dodajAktivnosti`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(selectedAktivnosti),
+            });
+
+            if (!response.ok) throw new Error("Greška prilikom dodavanja aktivnosti.");
+
+            alert("Aktivnosti su dodane.");
+            fetchAktivnosti();
+            setSelectedAktivnosti([]);
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+    const handleToggleCheckbox = (aktivnost) => {
+        setSelectedAktivnosti((prev) =>
+            prev.includes(aktivnost)
+                ? prev.filter((a) => a !== aktivnost)
+                : [...prev, aktivnost]
+        );
+    };
 
     const fetchSubjectsAndMaterials = async () => {
         try {
@@ -167,14 +222,42 @@ const Ucenik = () => {
         }
     };
 
+    const renderAktivnosti = () => (
+        <div className="activities-container">
+            <h4>Vaše aktivnosti</h4>
+            <ul>
+                {aktivnosti.map((aktivnost) => (
+                    <li key={aktivnost.sifAktivnost}>{aktivnost.oznAktivnost}</li>
+                ))}
+            </ul>
+            <h4>Dostupne aktivnosti</h4>
+            <div className="checkbox-form">
+                <ul className="checkbox-list">
+                    {dostupneAktivnosti.map((aktivnost) => (
+                        <li key={aktivnost.sifAktivnost} className="checkbox-item">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    value={aktivnost.oznAktivnost}
+                                    checked={selectedAktivnosti.includes(aktivnost.oznAktivnost)}
+                                    onChange={() => handleToggleCheckbox(aktivnost.oznAktivnost)}
+                                />
+                                {aktivnost.oznAktivnost}
+                            </label>
+                        </li>
+                    ))}
+                </ul>
+                <button onClick={handleAddAktivnosti}>Dodaj</button>
+            </div>
+        </div>
+    );
+
     const renderSubjects = () => (
         <div className="subjects-container">
             {subjects.map((subject) => (
                 <div key={subject.id} className="subject-section">
                     <h3
-                        className={`subject-title ${
-                            expandedSubject === subject.nazPredmet ? "active" : ""
-                        }`}
+                        className={`subject-title ${expandedSubject === subject.nazPredmet ? "active" : ""}`}
                         onClick={() => toggleSubject(subject.nazPredmet)}
                     >
                         {subject.nazPredmet}
@@ -223,19 +306,20 @@ const Ucenik = () => {
                 </aside>
 
                 <div className="main-content">
-                    {activeSidebarOption === "Predmeti" ? renderSubjects() : <div className="content">{mainContent}</div>}
+                    {activeSidebarOption === "Predmeti"
+                        ? renderSubjects()
+                        : activeSidebarOption === "Aktivnosti"
+                            ? renderAktivnosti()
+                            : <div className="content">{mainContent}</div>}
                 </div>
 
                 <aside className="sidebar-right">
                     <button onClick={handleDownloadPotvrda}>Preuzmi potvrdu</button>
                     <button onClick={handleEmailPotvrda}>Pošalji potvrdu na mail</button>
-
-
-                    <button onClick={() => navigate('/chat')} className="chat-button">
-                        CHAT
-                    </button>
+                    <button onClick={() => navigate('/chat')} className="chat-button">CHAT</button>
                     <WeatherWidget />
                 </aside>
+
             </div>
         </div>
     );

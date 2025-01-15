@@ -4,5 +4,22 @@
 }
 
 .sidebar-left {
-    overflow-y: auto; 
+    overflow-y: auto;
+}
+
+.activities-container {
+    margin: 20px;
+}
+
+.checkbox-form {
+    margin-top: 10px;
+}
+
+.checkbox-list {
+    list-style: none;
+    padding: 0;
+}
+
+.checkbox-item {
+    margin: 5px 0;
 }
