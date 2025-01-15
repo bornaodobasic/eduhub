@@ -107,7 +107,6 @@ public class UcenikServiceJpa implements UcenikService {
 		ucenik.setAktivnosti(listaAktivnosti);
 
 		return true;
-
 	}
 
     @Override

@@ -55,7 +55,7 @@ public class UcenikController {
 
 	@Autowired
 	private UcenikAktivnostService ucenikServiceAktivnosti;
-    
+
     @GetMapping("/")
     public List<String> getUceniciMailovi() {
     	List<String> mailoviUcenika = new ArrayList<>();
@@ -256,11 +256,11 @@ public class UcenikController {
         }
 
 		    Ucenik ucenik = ucenikOptional.get();
-		    
+
 		    byte[] pdfBytes = pdfService.generatePDF(ucenik.getImeUcenik(), ucenik.getPrezimeUcenik());
-		    
+
 		    mailService.sendMail(email, pdfBytes, "potvrda_" + ucenik.getImeUcenik() + "_" + ucenik.getPrezimeUcenik() + ".pdf" );
-		    
+
 
 	        String csvFileKey = "zahtjevi/zahtjevi.csv";
 
@@ -302,23 +302,23 @@ public class UcenikController {
 	                }
 	            }
 	        }
-		    
-		    return ResponseEntity.ok("Mail uspješno poslan");  
 
-		 
+		    return ResponseEntity.ok("Mail uspješno poslan");
+
+
 	 }
-	 
+
 	 @GetMapping("{predmet}/materijali") //ovdje treba povuc ime predmeta npr. Biologija_1_opca1
 	 public ResponseEntity<List<String>> MaterijaliPredmet(@PathVariable String predmet) {
 	     try {
-	         String prefix = predmet + "/"; 
+	         String prefix = predmet + "/";
 	         List<String> materijali = s3Service.listFiles(prefix);
 	         return ResponseEntity.ok(materijali);
 	     } catch (Exception e) {
 	         return ResponseEntity.status(500).body(null);
 	     }
 	 }
-	 
+
 
 		 @GetMapping("{predmet}/obavijesti")
 		 public ResponseEntity<?> pogledajObavijesti(@PathVariable String predmet) throws ParseException {
