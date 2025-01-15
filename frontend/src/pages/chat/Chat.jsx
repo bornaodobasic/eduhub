@@ -12,6 +12,8 @@ const Chat = () => {
     const [showCreateGroup, setShowCreateGroup] = useState(false);
     const [groupName, setGroupName] = useState('');
     const [groupMembers, setGroupMembers] = useState([]);
+    const [recipientType, setRecipientType] = useState(''); // New state for recipient type
+    const [showGroups, setShowGroups] = useState(false);
 
     useEffect(() => {
         fetch('/api/user/emailOnly')
@@ -29,15 +31,31 @@ const Chat = () => {
                 ws.onclose = () => console.log('WebSocket closed.');
             });
 
-        fetch('/api/ucenik')
-            .then(response => response.json())
-            .then(data => setRecipients(data));
-
         return () => {
             if (socket) socket.close();
         };
     }, []);
 
+    useEffect(() => {
+        if (recipientType === 'nastavnik') {
+            fetch('/api/ucenik/nastavnici')
+                .then(response => response.json())
+                .then(data => setRecipients(data))
+                .catch(error => console.error('Error fetching nastavnici:', error));
+        } else if (recipientType === 'ucenik') {
+            fetch('/api/ucenik')
+                .then(response => response.json())
+                .then(data => setRecipients(data))
+                .catch(error => console.error('Error fetching ucenici:', error));
+        } else if (recipientType === 'grupe') {
+            fetch('/api/chat/grupe')
+                .then(response => response.json())
+                .then(data => setRecipients(data))
+                .catch(error => console.error('Error fetching grupe:', error));
+        } else {
+            setRecipients([]); // Reset recipients if no type is selected
+        }
+    }, [recipientType]);
     const fetchMessages = (korisnik1, korisnik2) => {
         fetch(`/api/chat/messages?korisnik1=${korisnik1}&korisnik2=${korisnik2}`)
             .then(response => response.json())
@@ -106,26 +124,42 @@ const Chat = () => {
     return (
         <div className="chat-container">
             <h2>Chat</h2>
+
+            {/* Recipient Type Selection */}
+
+            <div className="form-group">
+                <label htmlFor="recipient-type">Poruka za:</label>
+                <select
+                    id="recipient-type"
+                    value={recipientType}
+                    onChange={e => {
+                        setRecipientType(e.target.value); // Set recipient type
+                        setSelectedRecipient(''); // Reset selected recipient
+                    }}
+                >
+                    <option value="">--Odaberi vrstu primatelja--</option>
+                    <option value="nastavnik">Nastavnik</option>
+                    <option value="ucenik">Učenik</option>
+                    <option value="grupe">Grupa</option>
+                </select>
+            </div>
+
+            {/* Recipient Selection */}
             <div className="form-group">
                 <label htmlFor="recipient">Odaberi primatelja ili grupu:</label>
                 <select
                     id="recipient"
                     value={selectedRecipient}
-                    onChange={e => {
-                        setSelectedRecipient(e.target.value);
-                        if (e.target.value.includes('grupa')) {
-                            fetchGroupMessages(e.target.value);
-                        } else {
-                            fetchMessages(currentUserEmail, e.target.value);
-                        }
-                    }}
+                    onChange={e => setSelectedRecipient(e.target.value)} // No message fetching here
                 >
                     <option value="">--Odaberi primatelja ili grupu--</option>
                     {recipients.map(recipient => (
                         <option key={recipient} value={recipient}>{recipient}</option>
                     ))}
                 </select>
+
             </div>
+
             <textarea
                 value={messageInput}
                 onChange={e => setMessageInput(e.target.value)}
@@ -146,7 +180,8 @@ const Chat = () => {
 
             <div className="group-controls">
                 <button onClick={() => setShowCreateGroup(true)}>Kreiraj grupu</button>
-                <button onClick={loadGroups}>Moje grupe</button>
+                <button onClick={() => setShowGroups(!showGroups)}>Moje grupe</button>
+
             </div>
 
             {showCreateGroup && (
@@ -181,14 +216,17 @@ const Chat = () => {
                 </div>
             )}
 
-            <div className="group-list-container">
-                <h3>Moje grupe</h3>
-                <ul>
-                    {groups.map(group => (
-                        <li key={group}>{group}</li>
-                    ))}
-                </ul>
-            </div>
+
+                {showGroups && (
+                    <div className="group-list-container">
+                        <ul>
+                            {groups.map(group => (
+                                <li key={group}>{group}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
         </div>
     );
 };
