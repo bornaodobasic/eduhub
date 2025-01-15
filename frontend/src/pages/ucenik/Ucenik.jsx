@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import WeatherWidget from "../../components/WeatherWidget";
 import "./Ucenik.css";
+import Timetable from "../../components/Timetable";
 
 const Ucenik = () => {
     const navigate = useNavigate();
@@ -223,6 +224,8 @@ const Ucenik = () => {
                 </aside>
 
                 <div className="main-content">
+                    <Timetable email={userEmail} />
+
                     {activeSidebarOption === "Predmeti" ? renderSubjects() : <div className="content">{mainContent}</div>}
                 </div>
 
