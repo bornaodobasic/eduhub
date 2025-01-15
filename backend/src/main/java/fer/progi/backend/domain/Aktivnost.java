@@ -15,7 +15,7 @@ public class Aktivnost {
 	
 	private String oznAktivnost;
 	
-   @ManyToMany(mappedBy = "aktivnosti")
+   @ManyToMany(mappedBy = "aktivnosti", fetch = FetchType.EAGER)
    @JsonBackReference
    private List<Ucenik> ucenici;
     

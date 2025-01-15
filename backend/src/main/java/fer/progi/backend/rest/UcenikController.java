@@ -1,20 +1,18 @@
 package fer.progi.backend.rest;
 
+import fer.progi.backend.domain.Aktivnost;
 import fer.progi.backend.service.MailService;
 import fer.progi.backend.service.PDFService;
+import fer.progi.backend.service.UcenikAktivnostService;
 import fer.progi.backend.service.UcenikService;
 import fer.progi.backend.service.impl.S3Service;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.domain.Ucenik;
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +22,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +33,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
@@ -51,6 +52,9 @@ public class UcenikController {
 
     @Autowired
     private S3Service s3Service;
+
+	@Autowired
+	private UcenikAktivnostService ucenikServiceAktivnosti;
     
     @GetMapping("/")
     public List<String> getUceniciMailovi() {
@@ -62,6 +66,87 @@ public class UcenikController {
 
     	return mailoviUcenika;
     }
+
+	@GetMapping("/aktivnosti/je/{email}")
+	public List<Aktivnost> getUceniciAktivnosti(@PathVariable String email) {
+		Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
+		if (ucenikOptional.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+		}
+		return ucenikService.findUcenikAktivnosti(email);
+	}
+
+	@GetMapping("/aktivnosti/nije/{email}")
+	public Set<Aktivnost> getNotUcenikAktivnosti(@PathVariable String email) {
+		Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
+		if(ucenikOptional.isEmpty()) {
+			return null;
+		}
+		return ucenikServiceAktivnosti.findNotUcenikAktivnosti(email);
+	}
+
+	@GetMapping("/pogledajObavijesti")
+	public List<ObavijestDTO> pogledajObavijesti() {
+		List<ObavijestDTO> listaObavijesti = new ArrayList<>();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		// Ključevi datoteka na S3
+		String glavneObavijestiKey = "obavijesti/glavneObavijestiNovo.csv";
+		String terenskaNastavaKey = "obavijesti/terenskaNastava.csv";
+
+		List<String> csvKeys = List.of(glavneObavijestiKey, terenskaNastavaKey);
+
+		for (String csvKey : csvKeys) {
+			Path tempFilePath = null;
+
+			try {
+
+				tempFilePath = Files.createTempFile("obavijesti", ".csv");
+
+
+				byte[] csvContent = s3Service.getFile(csvKey);
+				Files.write(tempFilePath, csvContent);
+
+
+				try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
+					String line = reader.readLine();
+					if (line == null) continue;
+
+					while ((line = reader.readLine()) != null) {
+						String[] row = line.split(",");
+						if (row.length == 6) {
+							listaObavijesti.add(new ObavijestDTO(
+									row[0].trim(),
+									row[1].trim(),
+									row[2].trim().equals("null") ? null : row[2].trim(),
+									row[3].trim().equals("null") ? null : row[3].trim(),
+									row[4].trim().equals("null") ? null : row[4].trim(),
+									dateFormat.parse(row[5].trim())
+							));
+						} else {
+							System.err.println("Neispravan format retka: " + line);
+						}
+					}
+				}
+			} catch (IOException | java.text.ParseException e) {
+				System.err.println("Greška pri obradi CSV datoteke: " + csvKey + " - " + e.getMessage());
+			} finally {
+
+				if (tempFilePath != null) {
+					try {
+						Files.delete(tempFilePath);
+					} catch (IOException e) {
+						System.err.println("Greška pri brisanju privremene datoteke: " + e.getMessage());
+					}
+				}
+			}
+		}
+
+
+		listaObavijesti.sort((o1, o2) -> o2.getDatum().compareTo(o1.getDatum()));
+
+		return listaObavijesti;
+	}
 
     @PostMapping("/dodajAktivnosti")
     public ResponseEntity<String> dodajAktivnosti(Authentication authentication, @RequestBody List<String> oznAktivnosti) {
@@ -237,17 +322,15 @@ public class UcenikController {
 
 		 @GetMapping("{predmet}/obavijesti")
 		 public ResponseEntity<?> pogledajObavijesti(@PathVariable String predmet) throws ParseException {
-		     String csvFileKey = "obavijesti/" + predmet + ".csv"; // Ključ datoteke na S3
+		     String csvFileKey = "obavijesti/" + predmet + ".csv";
 		     List<ObavijestPredmetDTO> listaObavijesti = new ArrayList<>();
 		     Path tempFilePath = null;
 		     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		     try {
-		         // Stvori privremenu datoteku
 		         tempFilePath = Files.createTempFile(predmet + "-obavijesti", ".csv");
 		         System.out.println("Privremena datoteka: " + tempFilePath);
 
-		         // Pokušaj preuzeti sadržaj datoteke sa S3
 		         try {
 		             byte[] fileContent = s3Service.getFile(csvFileKey);
 		             Files.write(tempFilePath, fileContent);
@@ -256,32 +339,28 @@ public class UcenikController {
 		                     .body("CSV datoteka za predmet '" + predmet + "' nije pronađena.");
 		         }
 
-		         // Čitaj CSV datoteku red po red
 		         try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
 		             String line;
 		             boolean isFirstLine = true;
 
 		             while ((line = reader.readLine()) != null) {
-		                 // Preskoči zaglavlje
 		                 if (isFirstLine) {
 		                     isFirstLine = false;
 		                     continue;
 		                 }
 
-		                 // Preskoči prazne redove
 		                 if (line.trim().isEmpty()) {
 		                     continue;
 		                 }
 
-		                 // Parsiraj red
 		                 String[] row = line.split(",");
 		                 if (row.length == 5) {
 		                     listaObavijesti.add(new ObavijestPredmetDTO(
-		                             row[0].trim(), // Naslov
-		                             row[1].trim(), // Sadržaj
+		                             row[0].trim(),
+		                             row[1].trim(),
 		                             row[2].trim(),
-		                             row[3].trim(),// Ime nastavnika
-		                             dateFormat.parse(row[4].trim()) // Datum
+		                             row[3].trim(),
+		                             dateFormat.parse(row[4].trim())
 		                     ));
 		                 } else {
 		                     System.err.println("Neispravan redak: " + line);
@@ -295,7 +374,6 @@ public class UcenikController {
 		         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 		                 .body("Dogodila se greška pri obradi datoteke za predmet '" + predmet + "'.");
 		     } finally {
-		         // Obriši privremenu datoteku
 		         if (tempFilePath != null) {
 		             try {
 		                 Files.delete(tempFilePath);
@@ -388,8 +466,6 @@ public class UcenikController {
     public List<RasporedDTO> getRaspored(@PathVariable String email) {
         return ucenikService.getRaspored(email);
     }
-
-
 
 
 }

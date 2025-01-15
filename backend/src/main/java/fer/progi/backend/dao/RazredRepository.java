@@ -18,4 +18,6 @@ public interface RazredRepository extends JpaRepository<Razred, String>{
     List<Razred> findAllBySmjer_NazivSmjer(@Param("smjer") String smjer);
 
     boolean existsByNazRazredAndSmjer(String nazRazred, Smjer smjer);
+
+    Razred getByNazRazred(String nazRazred);
 }

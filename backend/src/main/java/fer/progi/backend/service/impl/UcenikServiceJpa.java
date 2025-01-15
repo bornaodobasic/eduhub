@@ -131,9 +131,10 @@ public class UcenikServiceJpa implements UcenikService {
             rasporedDTO.setNastavnik(sat.getRpn().getNastavnik().getImeNastavnik() + " " + sat.getRpn().getNastavnik().getPrezimeNastavnik());
             rasporedDTO.setKrajSata(sat.getVrijemeSata().getKrajSata());
             rasporedDTO.setPocetakSata(sat.getVrijemeSata().getPocetakSata());
+            rasporedDTO.setVrijemeSataId(sat.getVrijemeSata().getId());
             raspored.add(rasporedDTO);
         }
-        return raspored.stream().sorted(Comparator.comparing(RasporedDTO::getDan)).toList();
+        return raspored.stream().sorted(Comparator.comparing(RasporedDTO::getVrijemeSataId)).toList();
     }
 
 }

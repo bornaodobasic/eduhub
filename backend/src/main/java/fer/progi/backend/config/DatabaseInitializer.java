@@ -1,21 +1,10 @@
 package fer.progi.backend.config;
 
-import fer.progi.backend.dao.NastavnikRepository;
-import fer.progi.backend.dao.PredmetRepository;
-import fer.progi.backend.dao.UcionicaRepository;
-import fer.progi.backend.dao.VrijemeSataRepository;
-import fer.progi.backend.dao.RazredRepository;
-import fer.progi.backend.dao.SmjerRepository;
-import fer.progi.backend.domain.Nastavnik;
-import fer.progi.backend.domain.Predmet;
-import fer.progi.backend.domain.Razred;
-import fer.progi.backend.domain.Smjer;
-import fer.progi.backend.domain.Ucionica;
-import fer.progi.backend.domain.VrijemeSata;
+import fer.progi.backend.dao.*;
+import fer.progi.backend.domain.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -47,9 +36,42 @@ public class DatabaseInitializer {
     @Autowired
     private VrijemeSataRepository vrijemeSataRepository;
 
+    @Autowired
+    private AktivnostRepository aktivnostRepository;
+
+    @Autowired
+    private UcenikRepository ucenikRepository;
+
 
     @PostConstruct
     public void init() {
+
+        try {
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(getClass().getResourceAsStream("/db/aktivnosti.csv"))
+            );
+
+            List<Aktivnost> aktivnosti = reader.lines()
+                    .skip(1)
+                    .map(line -> {
+                        String oznAktivnosti = line.trim();
+                        if (aktivnostRepository.existsByOznAktivnost(oznAktivnosti)) {
+                            return null;
+                        }
+
+                        Aktivnost aktivnost = new Aktivnost();
+                        aktivnost.setOznAktivnost(oznAktivnosti);
+                        return aktivnost;
+                    })
+                    .filter(aktivnost -> aktivnost != null)
+                    .collect(Collectors.toList());
+
+            if (!aktivnosti.isEmpty()) {
+                aktivnostRepository.saveAll(aktivnosti);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             BufferedReader reader = new BufferedReader(
@@ -237,6 +259,62 @@ public class DatabaseInitializer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(getClass().getResourceAsStream("/db/ucenik.csv"))
+            );
+            List<Ucenik> ucenici = reader.lines()
+                    .skip(1)
+                    .map(line -> {
+                        String[] fields = line.split(",");
+                        String email = fields[6].trim();
+
+                        if (ucenikRepository.existsByEmail(email)) {
+                            return null;
+                        }
+
+                        String ime = fields[0].trim();
+                        String prezime = fields[1].trim();
+                        String oib = fields[2].trim();
+                        String datumRodenja = fields[3].trim();
+                        Razred razred = razredRepository.getByNazRazred(fields[4].trim());
+                        String spol = fields[5].trim();
+                        boolean vjeronauk = Boolean.parseBoolean(fields[7].trim());
+
+                        boolean hasAktivnost = false;
+                        Ucenik ucenik = new Ucenik();
+
+                        if (fields.length > 8) {
+                            String[] listaAktivnosti = fields[8].trim().split(";");
+                            List<Aktivnost> aktivnosti = Arrays.stream(listaAktivnosti)
+                                    .map(id -> aktivnostRepository.findByOznAktivnost(id.trim()))
+                                    .filter(akt -> akt != null)
+                                    .collect(Collectors.toList());
+                            ucenik.setAktivnosti(aktivnosti);
+                            aktivnosti.forEach(akt -> akt.getUcenici().add(ucenik));
+                        }
+
+                        ucenik.setImeUcenik(ime);
+                        ucenik.setPrezimeUcenik(prezime);
+                        ucenik.setOib(oib);
+                        ucenik.setDatumRodenja(datumRodenja);
+                        ucenik.setRazred(razred);
+                        ucenik.setSpol(spol);
+                        ucenik.setVjeronauk(vjeronauk);
+                        ucenik.setEmail(email);
+
+                        return ucenik;
+                    })
+                    .filter(ucenik -> ucenik != null)
+                    .collect(Collectors.toList());
+
+            ucenikRepository.saveAll(ucenici);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 
 
     }

@@ -10,4 +10,6 @@ public interface UcenikRepository extends JpaRepository<Ucenik, Integer> {
     
     Optional<Ucenik> findByEmail(String email);
     void deleteByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

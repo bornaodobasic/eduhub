@@ -13,4 +13,5 @@ public class RasporedDTO {
     private String predmet;
     private String nastavnik;
     private String ucionica;
+    private int vrijemeSataId;
 }
