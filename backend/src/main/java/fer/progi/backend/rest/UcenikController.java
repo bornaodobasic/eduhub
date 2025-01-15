@@ -1,18 +1,18 @@
 package fer.progi.backend.rest;
 
-import fer.progi.backend.domain.Aktivnost;
-import fer.progi.backend.service.MailService;
-import fer.progi.backend.service.PDFService;
-import fer.progi.backend.service.UcenikAktivnostService;
-import fer.progi.backend.service.UcenikService;
+import fer.progi.backend.domain.*;
+import fer.progi.backend.service.*;
 import fer.progi.backend.service.impl.S3Service;
-import fer.progi.backend.domain.Predmet;
-import fer.progi.backend.domain.Ucenik;
+import fer.progi.backend.domain.Aktivnost;
+
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,14 +35,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/ucenik")
 @PreAuthorize("hasAuthority('Ucenik')")
+
 public class UcenikController {
 
     @Autowired
     private UcenikService ucenikService;
+
+    @Autowired
+    private UcenikAktivnostService ucenikServiceAktivnosti;
 
     @Autowired
     private PDFService pdfService;
@@ -53,100 +58,50 @@ public class UcenikController {
     @Autowired
     private S3Service s3Service;
 
-	@Autowired
-	private UcenikAktivnostService ucenikServiceAktivnosti;
+    @Autowired
+    private NastavnikService nastavnikService;
 
-    @GetMapping("/")
-    public List<String> getUceniciMailovi() {
+    @GetMapping("")
+    public List<String> getUceniciMailovi(Authentication authentication) {
     	List<String> mailoviUcenika = new ArrayList<>();
 
+    	OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+ 	    String email = oidcUser.getAttribute("preferred_username");
+
     	for(Ucenik u :ucenikService.findAllUceniks()) {
+    		if(!u.getEmail().equals(email))
     		mailoviUcenika.add(u.getEmail());
     	}
-
+    	
     	return mailoviUcenika;
     }
 
-	@GetMapping("/aktivnosti/je/{email}")
-	public List<Aktivnost> getUceniciAktivnosti(@PathVariable String email) {
-		Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
-		if (ucenikOptional.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-		}
-		return ucenikService.findUcenikAktivnosti(email);
-	}
+    @GetMapping("/aktivnosti/je/{email}")
+    public List<Aktivnost> getUceniciAktivnosti(@PathVariable String email) {
+        Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
+        if (ucenikOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        return ucenikService.findUcenikAktivnosti(email);
+    }
 
-	@GetMapping("/aktivnosti/nije/{email}")
-	public Set<Aktivnost> getNotUcenikAktivnosti(@PathVariable String email) {
-		Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
-		if(ucenikOptional.isEmpty()) {
-			return null;
-		}
-		return ucenikServiceAktivnosti.findNotUcenikAktivnosti(email);
-	}
+    @GetMapping("/aktivnosti/nije/{email}")
+    public Set<Aktivnost> getNotUcenikAktivnosti(@PathVariable String email) {
+        Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
+        if(ucenikOptional.isEmpty()) {
+            return null;
+        }
+        return ucenikServiceAktivnosti.findNotUcenikAktivnosti(email);
+    }
+    @GetMapping("/nastavnici")
+    public List<String> getNastavniciMailovi() {
+        List<String> mailoviNastavnika = new ArrayList<>();
+        for(Nastavnik n :nastavnikService.findAllNastavniks()) {
+            mailoviNastavnika.add(n.getEmail());
+        }
 
-	@GetMapping("/pogledajObavijesti")
-	public List<ObavijestDTO> pogledajObavijesti() {
-		List<ObavijestDTO> listaObavijesti = new ArrayList<>();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		// Ključevi datoteka na S3
-		String glavneObavijestiKey = "obavijesti/glavneObavijestiNovo.csv";
-		String terenskaNastavaKey = "obavijesti/terenskaNastava.csv";
-
-		List<String> csvKeys = List.of(glavneObavijestiKey, terenskaNastavaKey);
-
-		for (String csvKey : csvKeys) {
-			Path tempFilePath = null;
-
-			try {
-
-				tempFilePath = Files.createTempFile("obavijesti", ".csv");
-
-
-				byte[] csvContent = s3Service.getFile(csvKey);
-				Files.write(tempFilePath, csvContent);
-
-
-				try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
-					String line = reader.readLine();
-					if (line == null) continue;
-
-					while ((line = reader.readLine()) != null) {
-						String[] row = line.split(",");
-						if (row.length == 6) {
-							listaObavijesti.add(new ObavijestDTO(
-									row[0].trim(),
-									row[1].trim(),
-									row[2].trim().equals("null") ? null : row[2].trim(),
-									row[3].trim().equals("null") ? null : row[3].trim(),
-									row[4].trim().equals("null") ? null : row[4].trim(),
-									dateFormat.parse(row[5].trim())
-							));
-						} else {
-							System.err.println("Neispravan format retka: " + line);
-						}
-					}
-				}
-			} catch (IOException | java.text.ParseException e) {
-				System.err.println("Greška pri obradi CSV datoteke: " + csvKey + " - " + e.getMessage());
-			} finally {
-
-				if (tempFilePath != null) {
-					try {
-						Files.delete(tempFilePath);
-					} catch (IOException e) {
-						System.err.println("Greška pri brisanju privremene datoteke: " + e.getMessage());
-					}
-				}
-			}
-		}
-
-
-		listaObavijesti.sort((o1, o2) -> o2.getDatum().compareTo(o1.getDatum()));
-
-		return listaObavijesti;
-	}
+        return mailoviNastavnika;
+    }
 
     @PostMapping("/dodajAktivnosti")
     public ResponseEntity<String> dodajAktivnosti(Authentication authentication, @RequestBody List<String> oznAktivnosti) {
@@ -255,212 +210,212 @@ public class UcenikController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-		    Ucenik ucenik = ucenikOptional.get();
+        Ucenik ucenik = ucenikOptional.get();
 
-		    byte[] pdfBytes = pdfService.generatePDF(ucenik.getImeUcenik(), ucenik.getPrezimeUcenik());
+        byte[] pdfBytes = pdfService.generatePDF(ucenik.getImeUcenik(), ucenik.getPrezimeUcenik());
 
-		    mailService.sendMail(email, pdfBytes, "potvrda_" + ucenik.getImeUcenik() + "_" + ucenik.getPrezimeUcenik() + ".pdf" );
-
-
-	        String csvFileKey = "zahtjevi/zahtjevi.csv";
+        mailService.sendMail(email, pdfBytes, "potvrda_" + ucenik.getImeUcenik() + "_" + ucenik.getPrezimeUcenik() + ".pdf" );
 
 
-	        Path tempFilePath = null;
-	        try {
-
-	            tempFilePath = Files.createTempFile("temp-zahtjevi", ".csv");
+        String csvFileKey = "zahtjevi/zahtjevi.csv";
 
 
-	            try {
-	                byte[] fileContent = s3Service.getFile(csvFileKey);
-	                Files.write(tempFilePath, fileContent, StandardOpenOption.TRUNCATE_EXISTING);
-	            } catch (Exception e) {
+        Path tempFilePath = null;
+        try {
 
-	                System.out.println("Datoteka ne postoji na S3, stvara se nova.");
-	            }
+            tempFilePath = Files.createTempFile("temp-zahtjevi", ".csv");
 
 
-	            String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-	            String newLine = ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + currentDateTime;
-	            Files.write(tempFilePath, (newLine + "\n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+            try {
+                byte[] fileContent = s3Service.getFile(csvFileKey);
+                Files.write(tempFilePath, fileContent, StandardOpenOption.TRUNCATE_EXISTING);
+            } catch (Exception e) {
+
+                System.out.println("Datoteka ne postoji na S3, stvara se nova.");
+            }
 
 
-	            s3Service.uploadFileFromPath(csvFileKey, tempFilePath);
-	            System.out.println("Upload");
-
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-	        } finally {
-
-	            if (tempFilePath != null) {
-	                try {
-	                    Files.delete(tempFilePath);
-	                } catch (IOException e) {
-	                    e.printStackTrace();
-	                    System.out.println("Nije moguće obrisati privremenu datoteku: " + tempFilePath);
-	                }
-	            }
-	        }
-
-		    return ResponseEntity.ok("Mail uspješno poslan");
+            String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            String newLine = ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + currentDateTime;
+            Files.write(tempFilePath, (newLine + "\n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
 
-	 }
+            s3Service.uploadFileFromPath(csvFileKey, tempFilePath);
+            System.out.println("Upload");
 
-	 @GetMapping("{predmet}/materijali") //ovdje treba povuc ime predmeta npr. Biologija_1_opca1
-	 public ResponseEntity<List<String>> MaterijaliPredmet(@PathVariable String predmet) {
-	     try {
-	         String prefix = predmet + "/";
-	         List<String> materijali = s3Service.listFiles(prefix);
-	         return ResponseEntity.ok(materijali);
-	     } catch (Exception e) {
-	         return ResponseEntity.status(500).body(null);
-	     }
-	 }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } finally {
 
+            if (tempFilePath != null) {
+                try {
+                    Files.delete(tempFilePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("Nije moguće obrisati privremenu datoteku: " + tempFilePath);
+                }
+            }
+        }
 
-		 @GetMapping("{predmet}/obavijesti")
-		 public ResponseEntity<?> pogledajObavijesti(@PathVariable String predmet) throws ParseException {
-		     String csvFileKey = "obavijesti/" + predmet + ".csv";
-		     List<ObavijestPredmetDTO> listaObavijesti = new ArrayList<>();
-		     Path tempFilePath = null;
-		     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		     try {
-		         tempFilePath = Files.createTempFile(predmet + "-obavijesti", ".csv");
-		         System.out.println("Privremena datoteka: " + tempFilePath);
-
-		         try {
-		             byte[] fileContent = s3Service.getFile(csvFileKey);
-		             Files.write(tempFilePath, fileContent);
-		         } catch (Exception e) {
-		             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-		                     .body("CSV datoteka za predmet '" + predmet + "' nije pronađena.");
-		         }
-
-		         try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
-		             String line;
-		             boolean isFirstLine = true;
-
-		             while ((line = reader.readLine()) != null) {
-		                 if (isFirstLine) {
-		                     isFirstLine = false;
-		                     continue;
-		                 }
-
-		                 if (line.trim().isEmpty()) {
-		                     continue;
-		                 }
-
-		                 String[] row = line.split(",");
-		                 if (row.length == 5) {
-		                     listaObavijesti.add(new ObavijestPredmetDTO(
-		                             row[0].trim(),
-		                             row[1].trim(),
-		                             row[2].trim(),
-		                             row[3].trim(),
-		                             dateFormat.parse(row[4].trim())
-		                     ));
-		                 } else {
-		                     System.err.println("Neispravan redak: " + line);
-		                 }
-		             }
-		         }
-
-		         return ResponseEntity.ok(listaObavijesti);
-		     } catch (IOException e) {
-		         e.printStackTrace();
-		         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-		                 .body("Dogodila se greška pri obradi datoteke za predmet '" + predmet + "'.");
-		     } finally {
-		         if (tempFilePath != null) {
-		             try {
-		                 Files.delete(tempFilePath);
-		             } catch (IOException e) {
-		                 System.err.println("Greška pri brisanju privremene datoteke: " + e.getMessage());
-		             }
-		         }
-		     }
-		 }
+        return ResponseEntity.ok("Mail uspješno poslan");
 
 
+    }
 
-	 @GetMapping("{predmet}/materijali/download")
-	 public ResponseEntity<byte[]> downloadMaterialBySuffix(@RequestParam String suffix, Authentication authentication) {
-	     try {
-
-	         String key = s3Service.findFileBySuffix(suffix);
-	         if (key == null) {
-	             return ResponseEntity.status(404).body(null);
-	         }
-
-
-	         byte[] content = s3Service.getFile(key);
-	         String fileName = key.substring(key.lastIndexOf("/") + 1);
-	         String prefix = s3Service.extractPrefix(key);
+    @GetMapping("{predmet}/materijali") //ovdje treba povuc ime predmeta npr. Biologija_1_opca1
+    public ResponseEntity<List<String>> MaterijaliPredmet(@PathVariable String predmet) {
+        try {
+            String prefix = predmet + "/";
+            List<String> materijali = s3Service.listFiles(prefix);
+            return ResponseEntity.ok(materijali);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
 
 
-	         String csvFileKey = "materijali/materijali.csv";
-	         Path tempFilePath = null;
+    @GetMapping("{predmet}/obavijesti")
+    public ResponseEntity<?> pogledajObavijesti(@PathVariable String predmet) throws ParseException {
+        String csvFileKey = "obavijesti/" + predmet + ".csv";
+        List<ObavijestPredmetDTO> listaObavijesti = new ArrayList<>();
+        Path tempFilePath = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	         try {
+        try {
+            tempFilePath = Files.createTempFile(predmet + "-obavijesti", ".csv");
+            System.out.println("Privremena datoteka: " + tempFilePath);
 
-	             tempFilePath = Files.createTempFile("temp-materijali", ".csv");
-	             System.out.println(tempFilePath);
+            try {
+                byte[] fileContent = s3Service.getFile(csvFileKey);
+                Files.write(tempFilePath, fileContent);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("CSV datoteka za predmet '" + predmet + "' nije pronađena.");
+            }
+
+            try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
+                String line;
+                boolean isFirstLine = true;
+
+                while ((line = reader.readLine()) != null) {
+                    if (isFirstLine) {
+                        isFirstLine = false;
+                        continue;
+                    }
+
+                    if (line.trim().isEmpty()) {
+                        continue;
+                    }
+
+                    String[] row = line.split(",");
+                    if (row.length == 5) {
+                        listaObavijesti.add(new ObavijestPredmetDTO(
+                                row[0].trim(),
+                                row[1].trim(),
+                                row[2].trim(),
+                                row[3].trim(),
+                                dateFormat.parse(row[4].trim())
+                        ));
+                    } else {
+                        System.err.println("Neispravan redak: " + line);
+                    }
+                }
+            }
+
+            return ResponseEntity.ok(listaObavijesti);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Dogodila se greška pri obradi datoteke za predmet '" + predmet + "'.");
+        } finally {
+            if (tempFilePath != null) {
+                try {
+                    Files.delete(tempFilePath);
+                } catch (IOException e) {
+                    System.err.println("Greška pri brisanju privremene datoteke: " + e.getMessage());
+                }
+            }
+        }
+    }
 
 
-	             try {
-	                 byte[] csvContent = s3Service.getFile(csvFileKey);
-	                 Files.write(tempFilePath, csvContent, StandardOpenOption.TRUNCATE_EXISTING);
-	             } catch (Exception e) {
 
-	                 System.out.println("Datoteka ne postoji na S3, stvara se nova.");
-	             }
+    @GetMapping("{predmet}/materijali/download")
+    public ResponseEntity<byte[]> downloadMaterialBySuffix(@RequestParam String suffix, Authentication authentication) {
+        try {
 
-
-	             OidcUser ulogiranKorisnik = (OidcUser) authentication.getPrincipal();
-	             String email = ulogiranKorisnik.getPreferredUsername();
-	             Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
-
-	             if (ucenikOptional.isEmpty()) {
-	                 return ResponseEntity.status(404).body(null);
-	             }
-
-	             Ucenik ucenik = ucenikOptional.get();
+            String key = s3Service.findFileBySuffix(suffix);
+            if (key == null) {
+                return ResponseEntity.status(404).body(null);
+            }
 
 
-	             String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-	             String newLine = ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + currentDateTime + "," + suffix + "," + prefix;
-	             Files.write(tempFilePath, (newLine + "\n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-
-	             s3Service.uploadFileFromPath(csvFileKey, tempFilePath);
-
-	         } catch (Exception e) {
-	             e.printStackTrace();
-	             return ResponseEntity.status(500).body(null);
-	         } finally {
-
-	             if (tempFilePath != null) {
-	                 try {
-	                     Files.delete(tempFilePath);
-	                 } catch (IOException e) {
-	                     System.err.println("Nije moguće obrisati privremenu datoteku: " + tempFilePath);
-	                 }
-	             }
-	         }
+            byte[] content = s3Service.getFile(key);
+            String fileName = key.substring(key.lastIndexOf("/") + 1);
+            String prefix = s3Service.extractPrefix(key);
 
 
-	         return ResponseEntity.ok()
-	                 .header("Content-Disposition", "attachment; filename=" + fileName)
-	                 .contentLength(content.length)
-	                 .body(content);
+            String csvFileKey = "materijali/materijali.csv";
+            Path tempFilePath = null;
 
-	     } catch (Exception e) {
-	         e.printStackTrace();
-	         return ResponseEntity.status(500).body(null);
-	     }
-	 }
+            try {
+
+                tempFilePath = Files.createTempFile("temp-materijali", ".csv");
+                System.out.println(tempFilePath);
+
+
+                try {
+                    byte[] csvContent = s3Service.getFile(csvFileKey);
+                    Files.write(tempFilePath, csvContent, StandardOpenOption.TRUNCATE_EXISTING);
+                } catch (Exception e) {
+
+                    System.out.println("Datoteka ne postoji na S3, stvara se nova.");
+                }
+
+
+                OidcUser ulogiranKorisnik = (OidcUser) authentication.getPrincipal();
+                String email = ulogiranKorisnik.getPreferredUsername();
+                Optional<Ucenik> ucenikOptional = ucenikService.findByEmailUcenik(email);
+
+                if (ucenikOptional.isEmpty()) {
+                    return ResponseEntity.status(404).body(null);
+                }
+
+                Ucenik ucenik = ucenikOptional.get();
+
+
+                String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                String newLine = ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + currentDateTime + "," + suffix + "," + prefix;
+                Files.write(tempFilePath, (newLine + "\n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+
+                s3Service.uploadFileFromPath(csvFileKey, tempFilePath);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(500).body(null);
+            } finally {
+
+                if (tempFilePath != null) {
+                    try {
+                        Files.delete(tempFilePath);
+                    } catch (IOException e) {
+                        System.err.println("Nije moguće obrisati privremenu datoteku: " + tempFilePath);
+                    }
+                }
+            }
+
+
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=" + fileName)
+                    .contentLength(content.length)
+                    .body(content);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
 
     @GetMapping("/{email}/raspored")
     public List<RasporedDTO> getRaspored(@PathVariable String email) {
@@ -469,4 +424,5 @@ public class UcenikController {
 
 
 }
+
 

@@ -116,18 +116,18 @@ const Enroll = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="vjeronauk">Odabir:</label>
-                  <select
-                      id="vjeronauk"
-                      value={formData.vjeronauk}
-                      onChange={handleChange}
-                      required
-                  >
-                    <option value="">Odaberite Vjeronauk ili Etika</option>
-                    <option value="true">Vjeronauk</option>
-                    <option value="false">Etika</option>
-                  </select>
-                </div>
+            <label htmlFor="vjeronauk">Odabir:</label>
+            <select
+              id="vjeronauk"
+              value={formData.vjeronauk}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Odaberite Vjeronauk ili Etika</option>
+              <option value="true">Vjeronauk</option>
+              <option value="false">Etika</option>
+            </select>
+          </div>
               </div>
 
               <div className="form-column">

@@ -12,6 +12,7 @@ import Djelatnik from './pages/djelatnik/Djelatnik';
 import Satnicar from './pages/satnicar/Satnicar';
 import Ravnatelj from './pages/ravnatelj/Ravnatelj';
 import FileUpload from './components/FileUpload';
+import Chat from './pages/chat/Chat';
 
 function App() {
   const handleLogin = () => {
@@ -60,6 +61,7 @@ function App() {
         <Route path="/ravnatelj" element={<Ravnatelj />} />
         <Route path="/admin/*" element={<Admin />} />
         <Route path="/upload" element={<FileUpload />} />
+        <Route path="/chat" element={<Chat />} />
       </Routes>
     </Router>
   );
