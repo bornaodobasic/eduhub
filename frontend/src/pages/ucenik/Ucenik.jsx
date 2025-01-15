@@ -9,7 +9,7 @@ const Ucenik = () => {
     const navigate = useNavigate();
 
     const [activeSidebarOption, setActiveSidebarOption] = useState("");
-    const [leftSidebarOptions, setLeftSidebarOptions] = useState(["Predmeti", "Aktivnosti", "Nekaj"]);
+    const [leftSidebarOptions, setLeftSidebarOptions] = useState(["Predmeti", "Aktivnosti", "Dodatno"]);
     const [mainContent, setMainContent] = useState("");
     const [subjects, setSubjects] = useState([]);
     const [materials, setMaterials] = useState({});
@@ -19,6 +19,24 @@ const Ucenik = () => {
     const [selectedAktivnosti, setSelectedAktivnosti] = useState([]);
 
     const [userEmail, setUserEmail] = useState('');
+
+    useEffect(() => {
+        const fetchUserEmail = async () => {
+            try {
+                const response = await fetch('/api/user/email');
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserEmail(data.email);
+                } else {
+                    console.error('Greška pri dohvaćanju emaila:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Došlo je do greške:', error);
+            }
+        };
+
+        fetchUserEmail();
+    }, []);
 
     useEffect(() => {
         if (activeSidebarOption === "Predmeti") {

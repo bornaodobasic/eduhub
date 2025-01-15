@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -47,17 +46,17 @@ public class NastavnikController {
 
     @GetMapping("/")
     public List<String> getNastavniciMailovi(Authentication authentication) {
-    	List<String> mailoviNastavnika = new ArrayList<>();
+        List<String> mailoviNastavnika = new ArrayList<>();
 
-    	OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
- 	    String email = oidcUser.getAttribute("preferred_username");
+        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+        String email = oidcUser.getAttribute("preferred_username");
 
-    	for(Nastavnik n :nastavnikService.findAllNastavniks()) {
-    		if(!n.getEmail().equals(email))
-    		mailoviNastavnika.add(n.getEmail());
-    	}
+        for (Nastavnik n : nastavnikService.findAllNastavniks()) {
+            if (!n.getEmail().equals(email))
+                mailoviNastavnika.add(n.getEmail());
+        }
 
-    	return mailoviNastavnika;
+        return mailoviNastavnika;
     }
 
     @GetMapping("/predmeti")
@@ -85,7 +84,7 @@ public class NastavnikController {
             @RequestParam String predmet,
             @RequestParam MultipartFile file
     ) {
-		try {
+        try {
             String path = predmet;
             String message = s3Service.uploadFile(path, file);
             return ResponseEntity.ok(message);
@@ -132,7 +131,7 @@ public class NastavnikController {
             String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
 
-            String newLine = naslov + "," + sadrzaj + "," + nastavnik.getImeNastavnik() + "," +  nastavnik.getPrezimeNastavnik() + "," + currentDateTime + "\n";
+            String newLine = naslov + "," + sadrzaj + "," + nastavnik.getImeNastavnik() + "," + nastavnik.getPrezimeNastavnik() + "," + currentDateTime + "\n";
             Files.write(tempFilePath, newLine.getBytes(), StandardOpenOption.APPEND);
 
 
@@ -166,43 +165,69 @@ public class NastavnikController {
 
     @GetMapping("/materijali/izvjestaj")
     public List<PristupMaterijaliDTO> pregledPristupaMaterijalima(Authentication authentication) throws ParseException {
-        String csvFilePath = "/db/materijali.csv";
         List<PristupMaterijaliDTO> listaPristupMaterijalima = new ArrayList<>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String csvFileKey = "materijali/materijali.csv"; // Ključ CSV datoteke na S3
+        Path tempFilePath = null;
 
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream("/db/materijali.csv")))) {
+        try {
 
-            String line = reader.readLine();
+            tempFilePath = Files.createTempFile("temp-materijali", ".csv");
+            System.out.println(tempFilePath);
+
+
+            byte[] csvContent = s3Service.getFile(csvFileKey);
+            Files.write(tempFilePath, csvContent);
+
 
             OidcUser ulogiranKorisnik = (OidcUser) authentication.getPrincipal();
             String email = ulogiranKorisnik.getPreferredUsername();
-
-
             List<Predmet> predmetiNastavnika = nastavnikService.findNastavnikPredmeti(email);
 
-            while ((line = reader.readLine()) != null) {
 
-                String[] row = line.split(",");
+            try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
+                String line;
+                boolean isFirstLine = true;
 
-                for(Predmet p : predmetiNastavnika) {
-                	if(p.getNazPredmet().equals(row[4])) {
-                		System.out.println(p.getNazPredmet());
-                		System.out.println(row[4]);
-                		System.out.println("----------------------------------------------------------");
-                		   listaPristupMaterijalima.add(new PristupMaterijaliDTO(
-                                   row[0],
-                                   row[1],
-                                   simpleDateFormat.parse(row[2].trim()),
-                                   row[3],
-                                   row[4]
-                           ));
-                	}
+                while ((line = reader.readLine()) != null) {
+
+                    if (isFirstLine) {
+                        isFirstLine = false;
+                        continue;
+                    }
+
+
+                    if (line.trim().isEmpty()) {
+                        continue;
+                    }
+
+                    String[] row = line.split(",");
+
+
+                    for (Predmet p : predmetiNastavnika) {
+                        if (p.getNazPredmet().equals(row[4])) {
+                            listaPristupMaterijalima.add(new PristupMaterijaliDTO(
+                                    row[0],
+                                    row[1],
+                                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(row[2]),
+                                    row[3],
+                                    row[4]
+                            ));
+                        }
+                    }
                 }
             }
-            System.out.println(listaPristupMaterijalima);
         } catch (IOException e) {
             e.printStackTrace();
+            System.err.println("Error handling CSV file: " + e.getMessage());
+        } finally {
+
+            if (tempFilePath != null) {
+                try {
+                    Files.delete(tempFilePath);
+                } catch (IOException e) {
+                    System.err.println("Error deleting temporary file: " + e.getMessage());
+                }
+            }
         }
 
         return listaPristupMaterijalima;

@@ -4,6 +4,8 @@ package fer.progi.backend.rest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,61 +51,100 @@ public class DjelatnikController {
 
 	@GetMapping("/pogledajIzdanePotvrde")
 	public List<ZahtjeviDTO> pregledIzdanihPotvrda() throws ParseException {
-
 		List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String csvFileKey = "zahtjevi/zahtjevi.csv"; // Ključ datoteke na S3
 
-		try (BufferedReader reader = new BufferedReader(
-				new InputStreamReader(getClass().getResourceAsStream("/db/zahtjevi.csv")))) {
+		Path tempFilePath = null;
+
+		try {
+
+			tempFilePath = Files.createTempFile("zahtjevi", ".csv");
 
 
-			String line = reader.readLine();
-			if (line == null) return listaZahtjeva;
+			byte[] csvContent = s3Service.getFile(csvFileKey);
+			Files.write(tempFilePath, csvContent);
 
-			while ((line = reader.readLine()) != null) {
-				String[] row = line.split(",");
-				if (row.length == 3) {
-					listaZahtjeva.add(new ZahtjeviDTO(
-							row[0],
-							row[1],
-							dateFormat.parse(row[2].trim())
-					));
-				} else {
-					System.err.println("Invalid row: " + line);
+
+			try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
+				String line = reader.readLine();
+				if (line == null) return listaZahtjeva;
+
+				while ((line = reader.readLine()) != null) {
+					String[] row = line.split(",");
+					if (row.length == 3) {
+						listaZahtjeva.add(new ZahtjeviDTO(
+								row[0],
+								row[1],
+								dateFormat.parse(row[2].trim())
+						));
+					} else {
+						System.err.println("Invalid row format: " + line);
+					}
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("Error reading CSV file: " + e.getMessage());
+			System.err.println("Error handling CSV file: " + e.getMessage());
+		} finally {
+
+			if (tempFilePath != null) {
+				try {
+					Files.delete(tempFilePath);
+				} catch (IOException e) {
+					System.err.println("Error deleting temporary file: " + e.getMessage());
+				}
+			}
 		}
 
 		return listaZahtjeva;
 	}
 
+
 	@GetMapping("/pogledajIzdanePotvrdeImePrezime")
 	public List<ZahtjeviDTO> pregledIzdanihPotvrdaImePrezime(@RequestParam String imeUcenik, @RequestParam String prezimeUcenik) throws ParseException {
-
 		List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String csvFileKey = "zahtjevi/zahtjevi.csv";
 
-		try (BufferedReader reader = new BufferedReader(
-				new InputStreamReader(getClass().getResourceAsStream("/db/zahtjevi.csv")))) {
+		Path tempFilePath = null;
+
+		try {
+
+			tempFilePath = Files.createTempFile("temp-zahtjevi", ".csv");
 
 
-			String line = reader.readLine();
-			if (line == null) return listaZahtjeva;
+			byte[] csvContent = s3Service.getFile(csvFileKey);
+			Files.write(tempFilePath, csvContent);
 
-			while ((line = reader.readLine()) != null) {
-				String[] row = line.split(",");
-				if (row.length == 3 && row[0].equals(imeUcenik) && row[1].equals(prezimeUcenik)) {
-					listaZahtjeva.add(new ZahtjeviDTO(
-							row[0],
-							row[1],
-							dateFormat.parse(row[2].trim())
-					));
+
+			try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
+				String line = reader.readLine();
+				if (line == null) return listaZahtjeva;
+
+				while ((line = reader.readLine()) != null) {
+					String[] row = line.split(",");
+					if (row.length == 3 && row[0].equals(imeUcenik) && row[1].equals(prezimeUcenik)) {
+						listaZahtjeva.add(new ZahtjeviDTO(
+								row[0],
+								row[1],
+								dateFormat.parse(row[2].trim())
+						));
+					} else if (row.length != 3) {
+						System.err.println("Invalid row format: " + line);
+					}
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("Error reading CSV file: " + e.getMessage());
+			System.err.println("Error handling CSV file: " + e.getMessage());
+		} finally {
+
+			if (tempFilePath != null) {
+				try {
+					Files.delete(tempFilePath);
+				} catch (IOException e) {
+					System.err.println("Error deleting temporary file: " + e.getMessage());
+				}
+			}
 		}
 
 		return listaZahtjeva;

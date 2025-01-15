@@ -56,6 +56,25 @@ const Chat = () => {
             setRecipients([]); // Reset recipients if no type is selected
         }
     }, [recipientType]);
+
+    useEffect(() => {
+        if (showGroups) {
+            loadGroups();
+        }
+    }, [showGroups]);
+
+    useEffect(() => {
+        if (recipientType !== 'grupe' && selectedRecipient) {
+            fetchMessages(currentUserEmail, selectedRecipient);
+        }
+    }, [selectedRecipient, recipientType]);
+    
+    useEffect(() => {
+        if (recipientType === 'grupe' && selectedRecipient) {
+            fetchGroupMessages(selectedRecipient);
+        }
+    }, [selectedRecipient, recipientType]);
+    
     const fetchMessages = (korisnik1, korisnik2) => {
         fetch(`/api/chat/messages?korisnik1=${korisnik1}&korisnik2=${korisnik2}`)
             .then(response => response.json())
@@ -179,10 +198,24 @@ const Chat = () => {
             </div>
 
             <div className="group-controls">
-                <button onClick={() => setShowCreateGroup(true)}>Kreiraj grupu</button>
-                <button onClick={() => setShowGroups(!showGroups)}>Moje grupe</button>
+    <button
+        onClick={() => {
+            setRecipientType('ucenik'); // Postavlja recipientType na učenik
+            setShowCreateGroup(true);  // Otvara modal za kreiranje grupe
+        }}
+    >
+        Kreiraj grupu
+    </button>
+    <button
+        onClick={() => {
+            loadGroups();          // Dohvaća dostupne grupe
+            setShowGroups(!showGroups); // Prikazuje/sakriva liste grupa
+        }}
+    >
+        Moje grupe
+    </button>
+</div>
 
-            </div>
 
             {showCreateGroup && (
                 <div className="create-group-container">

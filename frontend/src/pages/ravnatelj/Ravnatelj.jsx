@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
-import { useNavigate } from "react-router-dom";
 import WeatherWidget from "../../components/WeatherWidget";
-import "../../components/MainContent.css"; 
+import "../../components/MainContent.css";
 
 const Ravnatelj = () => {
-    const navigate = useNavigate();
-
-    const [activeSidebarOption, setActiveSidebarOption] = useState("");
-    const [leftSidebarOptions, setLeftSidebarOptions] = useState(["Učionice", "Statistika", "Nekaj"]);
-    const [ucionice, setUcionice] = useState([]);
-    const [newUcionica, setNewUcionica] = useState({ oznakaUc: "", kapacitet: "" });
     const [potvrde, setPotvrde] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [ucionice, setUcionice] = useState([]);
+    const [newUcionica, setNewUcionica] = useState({ oznakaUc: "", kapacitet: "" });
+    const [activeSidebarOption, setActiveSidebarOption] = useState("");
+
+    const roles = ["Raspored", "Statistika", "Učionice"];
 
     const fetchUcionice = async () => {
         try {
@@ -24,8 +22,6 @@ const Ravnatelj = () => {
             console.error("Greška pri dohvaćanju učionica:", error);
         }
     };
-
-    const roles = ["Raspored", "Statistika", "Učionice"];
 
     useEffect(() => {
         if (activeSidebarOption === "Statistika") {
@@ -57,7 +53,6 @@ const Ravnatelj = () => {
         }
     };
 
-
     const handleDeleteUcionica = async (oznakaUc) => {
         try {
             const response = await fetch(`/api/ravnatelj/ucionice/delete/${oznakaUc}`, {
@@ -74,8 +69,6 @@ const Ravnatelj = () => {
             alert(`Greška: ${error.message}`);
         }
     };
-
-
 
     useEffect(() => {
         if (activeSidebarOption === "Učionice") {
@@ -115,8 +108,7 @@ const Ravnatelj = () => {
                 <ul>
                     {potvrde.map((potvrda, index) => (
                         <li key={index}>
-                            Ime: {potvrda.imeUcenik}, Prezime: {potvrda.prezimeUcenik}, Datum:{" "}
-                            {potvrda.date}
+                            Ime: {potvrda.imeUcenik}, Prezime: {potvrda.prezimeUcenik}
                         </li>
                     ))}
                 </ul>
@@ -135,48 +127,54 @@ const Ravnatelj = () => {
             <Header/>
             <div className="homepage-container">
                 <aside className="sidebar-left">
-                    {leftSidebarOptions.map((option, index) => (
+                    {roles.map((role, index) => (
                         <button
                             key={index}
-                            className={`sidebar-button ${activeSidebarOption === option ? "active" : ""}`}
-                            onClick={() => setActiveSidebarOption(option)}
+                            className={`sidebar-button ${activeSidebarOption === role ? "active" : ""}`}
+                            onClick={() => setActiveSidebarOption(role)}
                         >
-                            {option}
+                            {role}
                         </button>
                     ))}
                 </aside>
 
                 <div className="main-content">
-                    {activeSidebarOption === "Učionice" ? (
-                        <div className="main-content-center">
-                            <h4>Popis učionica</h4>
-                            <div className="table-container">
-                                <table className="styled-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Oznaka učionice</th>
-                                            <th>Kapacitet</th>
-                                            <th>Akcija</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {ucionice.map((ucionica) => (
-                                            <tr key={ucionica.oznakaUc}>
-                                                <td>{ucionica.oznakaUc}</td>
-                                                <td>{ucionica.kapacitet}</td>
-                                                <td>
-                                                    <button
-                                                        onClick={() => handleDeleteUcionica(ucionica.oznakaUc)}
-                                                    >
-                                                        Obriši
-                                                    </button>
-                                                </td>
+                    {["Učionice", "Statistika"].includes(activeSidebarOption) ? (
+                        activeSidebarOption === "Učionice" ? (
+                            <div className="main-content-center">
+                                {<div className="main-content-center">
+                                    <h4>Popis učionica</h4>
+                                    <div className="table-container">
+                                        <table className="styled-table">
+                                            <thead>
+                                            <tr>
+                                                <th>Oznaka učionice</th>
+                                                <th>Kapacitet</th>
+                                                <th>Akcija</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                            </thead>
+                                            <tbody>
+                                            {ucionice.map((ucionica) => (
+                                                <tr key={ucionica.oznakaUc}>
+                                                    <td>{ucionica.oznakaUc}</td>
+                                                    <td>{ucionica.kapacitet}</td>
+                                                    <td>
+                                                        <button
+                                                            onClick={() => handleDeleteUcionica(ucionica.oznakaUc)}
+                                                        >
+                                                            Obriši
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>}
                             </div>
-                        </div>
+                        ) : (
+                            renderContent()
+                        )
                     ) : (
                         <p>Odaberite opciju iz lijevog izbornika.</p>
                     )}
@@ -191,7 +189,7 @@ const Ravnatelj = () => {
                                 <input
                                     type="text"
                                     value={newUcionica.oznakaUc}
-                                    onChange={(e) => setNewUcionica({ ...newUcionica, oznakaUc: e.target.value })}
+                                    onChange={(e) => setNewUcionica({...newUcionica, oznakaUc: e.target.value})}
                                     required
                                 />
                             </div>
@@ -200,7 +198,10 @@ const Ravnatelj = () => {
                                 <input
                                     type="number"
                                     value={newUcionica.kapacitet}
-                                    onChange={(e) => setNewUcionica({ ...newUcionica, kapacitet: parseInt(e.target.value, 10) })}
+                                    onChange={(e) => setNewUcionica({
+                                        ...newUcionica,
+                                        kapacitet: parseInt(e.target.value, 10)
+                                    })}
                                     required
                                     min="1"
                                 />
@@ -208,10 +209,9 @@ const Ravnatelj = () => {
                             <button type="submit">Dodaj</button>
                         </form>
                     )}
-                    <WeatherWidget />
                     <div className="empty-container"></div>
                     <div className="weather-widget-container">
-                        <WeatherWidget />
+                        <WeatherWidget/>
                     </div>
                 </aside>
             </div>
