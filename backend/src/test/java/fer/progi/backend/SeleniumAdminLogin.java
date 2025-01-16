@@ -31,7 +31,7 @@ public class SeleniumAdminLogin {
         Thread.sleep(2000);
 
         WebElement username = driver.findElement(By.name("loginfmt"));
-        username.sendKeys("testadmin@eduxhub.onmicrosoft.com");
+        username.sendKeys("adminnew@eduxhub.onmicrosoft.com");
 
         driver.findElement(By.id("idSIButton9")).click();
         Thread.sleep(2000);
@@ -40,6 +40,9 @@ public class SeleniumAdminLogin {
         password.sendKeys("Lozinka2");
 
         driver.findElement(By.id("idSIButton9")).click();
+        Thread.sleep(2000);
+
+        //driver.findElement(By.id("btnAskLater")).click();
         Thread.sleep(2000);
 
         driver.findElement(By.id("idBtn_Back")).click();
