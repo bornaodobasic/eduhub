@@ -68,6 +68,9 @@ const Ucenik = () => {
                 return (
                     <div className="content-container">
                         <h1>Ovo je chat učenika</h1>
+                        <button onClick={() => (window.location.href = "/chat")}>
+            Idi na Chat
+          </button>
                     </div>
                 );
             default:

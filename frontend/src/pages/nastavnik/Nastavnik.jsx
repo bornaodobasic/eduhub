@@ -16,10 +16,9 @@ const Nastavnik = () => {
   const [reportData, setReportData] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null); // Email učenika
   const [selectedStudentSubject, setSelectedStudentSubject] = useState(null); // Naziv predmeta
-  const [userEmail, setUserEmail] = useState(null);
-
-
-    useEffect(() => {
+    const [userEmail, setUserEmail] = useState(null);
+    
+  useEffect(() => {
         const fetchUserEmail = async () => {
             try {
                 const response = await fetch('/api/user/email');

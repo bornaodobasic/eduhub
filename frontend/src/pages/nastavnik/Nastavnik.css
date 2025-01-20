@@ -203,4 +203,65 @@
   .back-btn:hover {
     background-color: #45a049;
   }
+  .notifications-container {
+    margin: 20px;
+  }
+  
+  .add-notification {
+    margin-bottom: 20px;
+  }
+  
+  .notification-input,
+  .notification-textarea {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .add-notification-btn {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-notification-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .notifications-list {
+    margin-top: 20px;
+  }
+  
+  .notification-item {
+    margin-bottom: 20px;
+  }
+  
+  .notification-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .notification-content {
+    font-size: 14px;
+    margin: 10px 0;
+  }
+  
+  .delete-notification-btn {
+    background-color: #f44336;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .delete-notification-btn:hover {
+    background-color: #d32f2f;
+  }
+  
   
