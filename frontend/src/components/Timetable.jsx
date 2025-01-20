@@ -5,10 +5,19 @@ const Timetable = ({ email }) => {
     const [timetable, setTimetable] = useState([]);
     const [error, setError] = useState(null);
 
-    // Fetch timetable data from the backend
+    const timeIntervals = [
+        "08:00 - 08:45",
+        "08:50 - 09:35",
+        "09:40 - 10:25",
+        "10:30 - 11:15",
+        "11:30 - 12:15",
+        "12:20 - 13:05",
+        "13:10 - 13:55",
+    ];
+
     useEffect(() => {
         const fetchTimetable = async () => {
-            if (!email) return; // Wait until email is available
+            if (!email) return;
             try {
                 const response = await fetch(`/api/ucenik/${email}/raspored`);
                 if (response.ok) {
@@ -26,7 +35,6 @@ const Timetable = ({ email }) => {
         fetchTimetable();
     }, [email]);
 
-    // Map day enums to Croatian names
     const dayMapping = {
         MONDAY: "Ponedjeljak",
         TUESDAY: "Utorak",
@@ -35,7 +43,6 @@ const Timetable = ({ email }) => {
         FRIDAY: "Petak",
     };
 
-    // Group timetable entries by `dan`
     const groupedTimetable = timetable.reduce((acc, entry) => {
         if (!acc[entry.dan]) {
             acc[entry.dan] = [];
@@ -44,7 +51,6 @@ const Timetable = ({ email }) => {
         return acc;
     }, {});
 
-    // Helper function to calculate grid row based on start time
     const getGridRow = (startTime) => {
         const timeSlots = {
             "08:00:00": 1,
@@ -53,60 +59,70 @@ const Timetable = ({ email }) => {
             "10:30:00": 4,
             "11:30:00": 5,
             "12:20:00": 6,
-            "13:10:00": 7
+            "13:10:00": 7,
         };
-        return timeSlots[startTime] || 0; // Default to 0 if no match is found
+        return timeSlots[startTime] || 0;
+    };
+
+    const formatSubjectName = (name) => {
+        let formattedName = name.replace(/_/g, " ");
+        formattedName = formattedName.replace(/\s[^ ]*$/, "");
+        return formattedName;
+    };
+    const formatDvorana = (name) => {
+        return name.replace(/_/g, " ");
+    };
+    const formatSat = (time) => {
+        let formattedTime = time.replace(/(:\d{2}){1}$/, "");
+        return formattedTime;
     };
 
     return (
-        <div className="timetable">
-            {/* Weekdays */}
-            <div className="week-names">
-                {Object.values(dayMapping).map((day) => (
-                    <div key={day}>{day}</div>
-                ))}
-            </div>
+        <div className="timetable-container">
+            {error && <div className="error-message">{error}</div>}
+            <div className="timetable">
+                {/* Empty Header for Time Column */}
+                <div className="empty-header"></div>
 
-            {/* Time Intervals */}
-            <div className="time-interval">
-                {["08:00", "08:50", "09:40", "10:30", "11:30", "12:20", "13:10"].map((time) => (
-                    <div key={time}>{time}</div>
+                {/* Weekday Headers */}
+                {Object.keys(dayMapping).map((dayKey) => (
+                    <div key={dayKey} className="day-header">
+                        {dayMapping[dayKey]}
+                    </div>
                 ))}
-            </div>
 
-            {/* Timetable Entries */}
-            <div className="content">
-                {error ? (
-                    <div className="error-message">{error}</div>
-                ) : (
-                    // Iterate through each day
-                    Object.keys(dayMapping).map((dan, columnIndex) => (
-                        <div key={dan} className="day-column">
-                            {/* Render all classes for the current day */}
-                            {groupedTimetable[dan]?.map((entry, rowIndex) => (
-                                <div
-                                    key={entry.predmet + rowIndex}
-                                    className={`timetable-entry accent-${rowIndex % 6}-gradient`}
-                                    style={{
-                                        gridColumn: columnIndex + 1, // Place the entry in the correct column
-                                        gridRow: getGridRow(entry.pocetakSata), // Place the entry in the correct row based on start time
-                                    }}
-                                >
-                                    <strong>{entry.predmet}</strong>
-                                    <br />
-                                    {entry.nastavnik}
-                                    <br />
-                                    {entry.ucionica}
-                                    <br />
-                                    {entry.pocetakSata}
+                {/* Time Column */}
+                <div className="interval-column">
+                    {timeIntervals.map((time, index) => (
+                        <div key={index} className="interval-entry">{time}</div>
+                    ))}
+                </div>
+
+                {/* Weekday Columns */}
+                {Object.keys(dayMapping).map((dayKey) => (
+                    <div key={dayKey} className="day-column">
+                        {groupedTimetable[dayKey]?.map((entry, rowIndex) => (
+                            <div
+                                key={entry.predmet + rowIndex}
+                                className="timetable-entry"
+                                style={{
+                                    gridRow: getGridRow(entry.pocetakSata),
+                                }}
+                            >
+                                <div className="subject-ime"><strong>{formatSubjectName(entry.predmet)}</strong></div>
+                                <div><strong>{`${formatSat(entry.pocetakSata)} - ${formatSat(entry.krajSata)}`}</strong>
                                 </div>
-                            ))}
-                        </div>
-                    ))
-                )}
+                                <div><strong>{formatDvorana(entry.ucionica)}</strong></div>
+                                <div>{entry.nastavnik}</div>
+                            </div>
+                        ))}
+                    </div>
+                ))}
             </div>
         </div>
     );
+
+
 };
 
 export default Timetable;

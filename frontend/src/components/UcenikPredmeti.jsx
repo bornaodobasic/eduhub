@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaEye, FaArrowLeft, FaDownload } from "react-icons/fa"; // Import the eye icon
 import "./TableUcenik.css";
-import "./Button.css";
 
 const UcenikPredmeti = () => {
     const [subjects, setSubjects] = useState([]);

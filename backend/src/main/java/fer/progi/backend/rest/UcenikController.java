@@ -53,23 +53,23 @@ public class UcenikController {
 
     @Autowired
     private NastavnikService nastavnikService;
-    
+
     @Autowired
     private ObavijestService obavijestService;
 
     @GetMapping("")
     public List<String> getUceniciMailovi(Authentication authentication) {
-    	List<String> mailoviUcenika = new ArrayList<>();
+        List<String> mailoviUcenika = new ArrayList<>();
 
-    	OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
- 	    String email = oidcUser.getAttribute("preferred_username");
+        OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+        String email = oidcUser.getAttribute("preferred_username");
 
-    	for(Ucenik u :ucenikService.findAllUceniks()) {
-    		if(!u.getEmail().equals(email))
-    		mailoviUcenika.add(u.getEmail());
-    	}
-    	
-    	return mailoviUcenika;
+        for(Ucenik u :ucenikService.findAllUceniks()) {
+            if(!u.getEmail().equals(email))
+                mailoviUcenika.add(u.getEmail());
+        }
+
+        return mailoviUcenika;
     }
 
     @GetMapping("/aktivnosti/je/{email}")
@@ -148,14 +148,14 @@ public class UcenikController {
         byte[] pdfBytes = pdfService.generatePDF(ucenik.getImeUcenik(), ucenik.getPrezimeUcenik());
 
 
-        String csvFileKey = "zahtjevi/zahtjevi.csv";
+        String csvFileKey = "zahtjevi/zahtjevinew.csv";
 
 
         Path tempFilePath = null;
         try {
 
             tempFilePath = Files.createTempFile("temp-zahtjevi", ".csv");
-
+            System.out.println(tempFilePath);
 
             try {
                 byte[] fileContent = s3Service.getFile(csvFileKey);
@@ -167,7 +167,7 @@ public class UcenikController {
 
 
             String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            String newLine = ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + currentDateTime;
+            String newLine = ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() +"," + email + "," + currentDateTime;
             Files.write(tempFilePath, (newLine + "\n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
 
@@ -213,7 +213,7 @@ public class UcenikController {
         mailService.sendMail(email, pdfBytes, "potvrda_" + ucenik.getImeUcenik() + "_" + ucenik.getPrezimeUcenik() + ".pdf" );
 
 
-        String csvFileKey = "zahtjevi/zahtjevi.csv";
+        String csvFileKey = "zahtjevi/zahtjevinew.csv";
 
 
         Path tempFilePath = null;
@@ -232,7 +232,7 @@ public class UcenikController {
 
 
             String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            String newLine = ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + currentDateTime;
+            String newLine = ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + email + "," + currentDateTime;
             Files.write(tempFilePath, (newLine + "\n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
 
@@ -271,19 +271,19 @@ public class UcenikController {
     }
 
 
-  
-    
+
+
     @GetMapping("/obavijesti") //
     public ResponseEntity<List<Obavijest>> dohvatiSveObavijesti(){
-    	List<Obavijest> opceObavijesti = obavijestService.prikaziOpceObavijesti();
-    	 return ResponseEntity.ok(opceObavijesti);
-    	
+        List<Obavijest> opceObavijesti = obavijestService.prikaziOpceObavijesti();
+        return ResponseEntity.ok(opceObavijesti);
+
     }
-    
+
     @GetMapping("{nazPredmet}/obavijesti")
     public ResponseEntity<List<Obavijest>> dohvatiObavijestiZaPredmet(@PathVariable String nazPredmet){
-    	List<Obavijest> predmetObavijest = obavijestService.prikaziObavijestiZaPredmet(nazPredmet);
-    	 return ResponseEntity.ok(predmetObavijest);
+        List<Obavijest> predmetObavijest = obavijestService.prikaziObavijestiZaPredmet(nazPredmet);
+        return ResponseEntity.ok(predmetObavijest);
     }
 
 
@@ -303,12 +303,13 @@ public class UcenikController {
             String prefix = s3Service.extractPrefix(key);
 
 
-            String csvFileKey = "materijali/materijali.csv";
+            String csvFileKey = "materijali/materijalinew.csv";
             Path tempFilePath = null;
 
             try {
 
                 tempFilePath = Files.createTempFile("temp-materijali", ".csv");
+                System.out.println(tempFilePath);
                 System.out.println(tempFilePath);
 
 
@@ -333,7 +334,7 @@ public class UcenikController {
 
 
                 String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                String newLine = ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + currentDateTime + "," + suffix + "," + prefix;
+                String newLine = ucenik.getImeUcenik() + "," + ucenik.getPrezimeUcenik() + "," + email + "," + currentDateTime + "," + suffix + "," + prefix;
                 Files.write(tempFilePath, (newLine + "\n").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
                 s3Service.uploadFileFromPath(csvFileKey, tempFilePath);
@@ -341,7 +342,7 @@ public class UcenikController {
             } catch (Exception e) {
                 e.printStackTrace();
                 return ResponseEntity.status(500).body(null);
-            } finally {
+            } /*finally {
 
                 if (tempFilePath != null) {
                     try {
@@ -350,7 +351,7 @@ public class UcenikController {
                         System.err.println("Nije moguće obrisati privremenu datoteku: " + tempFilePath);
                     }
                 }
-            }
+            }*/
 
 
             return ResponseEntity.ok()
@@ -371,5 +372,4 @@ public class UcenikController {
 
 
 }
-
 

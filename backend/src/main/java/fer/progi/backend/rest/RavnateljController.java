@@ -33,28 +33,28 @@ import fer.progi.backend.service.UcionicaService;
 @RequestMapping("/api/ravnatelj")
 @PreAuthorize("hasAuthority('Ravnatelj')")
 public class RavnateljController {
-	
-	@Autowired
-	private RavnateljService RavnateljService;
+
+    @Autowired
+    private RavnateljService RavnateljService;
 
     @Autowired
     private UcionicaService ucionicaService;
-    
+
     @Autowired
     private ObavijestService obavijestService;
 
     @Autowired
     private S3Service s3Service;
-	
-	@GetMapping("")
-	public List<Ravnatelj> listRavnatelj() {
-		return RavnateljService.listAll();
-	}
-	
-	@PostMapping("")
-	public Ravnatelj dodajRavnatelja(@RequestBody Ravnatelj ravnatelj) {
-		return RavnateljService.dodajRavnatelj(ravnatelj);
-	}
+
+    @GetMapping("")
+    public List<Ravnatelj> listRavnatelj() {
+        return RavnateljService.listAll();
+    }
+
+    @PostMapping("")
+    public Ravnatelj dodajRavnatelja(@RequestBody Ravnatelj ravnatelj) {
+        return RavnateljService.dodajRavnatelj(ravnatelj);
+    }
 
     @GetMapping("/ucionice")
     public List<Ucionica> listAllUcionice() {
@@ -89,7 +89,7 @@ public class RavnateljController {
     public List<ZahtjeviDTO> pregledIzdanihPotvrda() throws ParseException {
         List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String csvFileKey = "zahtjevi/zahtjevi.csv"; // Ključ datoteke na S3
+        String csvFileKey = "zahtjevi/zahtjevinew.csv"; // Ključ datoteke na S3
 
         Path tempFilePath = null;
 
@@ -108,11 +108,12 @@ public class RavnateljController {
 
                 while ((line = reader.readLine()) != null) {
                     String[] row = line.split(",");
-                    if (row.length == 3) {
+                    if (row.length == 4) {
                         listaZahtjeva.add(new ZahtjeviDTO(
                                 row[0],
                                 row[1],
-                                dateFormat.parse(row[2].trim())
+                                row[2],
+                                dateFormat.parse(row[3].trim())
                         ));
                     } else {
                         System.err.println("Invalid row format: " + line);
@@ -137,10 +138,10 @@ public class RavnateljController {
 
 
     @GetMapping("/pogledajIzdanePotvrdeImePrezime")
-    public List<ZahtjeviDTO> pregledIzdanihPotvrdaImePrezime(@RequestParam String imeUcenik, @RequestParam String prezimeUcenik) throws ParseException {
+    public List<ZahtjeviDTO> pregledIzdanihPotvrdaImePrezime(@RequestParam String email) throws ParseException {
         List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String csvFileKey = "zahtjevi/zahtjevi.csv";
+        String csvFileKey = "zahtjevi/zahtjevinew.csv";
 
         Path tempFilePath = null;
 
@@ -159,11 +160,12 @@ public class RavnateljController {
 
                 while ((line = reader.readLine()) != null) {
                     String[] row = line.split(",");
-                    if (row.length == 3 && row[0].equals(imeUcenik) && row[1].equals(prezimeUcenik)) {
+                    if (row[2].equals(email)) {
                         listaZahtjeva.add(new ZahtjeviDTO(
                                 row[0],
                                 row[1],
-                                dateFormat.parse(row[2].trim())
+                                row[2],
+                                dateFormat.parse(row[3].trim())
                         ));
                     } else if (row.length != 3) {
                         System.err.println("Invalid row format: " + line);
@@ -186,45 +188,44 @@ public class RavnateljController {
         return listaZahtjeva;
     }
 
- 
-    @PostMapping("/obavijesti")
-    	public ResponseEntity<String> dodajObavijest(
-    	            @RequestParam String naslovObavijest,
-    	            @RequestParam String sadrzajObavijest,
-    	            @RequestParam(required = false) String adresaLokacija,
-    	            @RequestParam(required = false) String gradLokacija,
-    	            @RequestParam(required = false) String drzavaLokacija) {
-    		
-    	 Date datumObavijest = new Date();
-    	 
-    	 obavijestService.dodajObavijest(
-                    naslovObavijest,
-                    sadrzajObavijest,
-                    datumObavijest,
-                    null,
-                    null,
-                    null,
-                    adresaLokacija,
-                    gradLokacija,
-                    drzavaLokacija);
 
-            return ResponseEntity.ok("Obavijest uspješno dodana");
-    	}
-    
+    @PostMapping("/obavijesti")
+    public ResponseEntity<String> dodajObavijest(
+            @RequestParam String naslovObavijest,
+            @RequestParam String sadrzajObavijest,
+            @RequestParam(required = false) String adresaLokacija,
+            @RequestParam(required = false) String gradLokacija,
+            @RequestParam(required = false) String drzavaLokacija) {
+
+        Date datumObavijest = new Date();
+
+        obavijestService.dodajObavijest(
+                naslovObavijest,
+                sadrzajObavijest,
+                datumObavijest,
+                null,
+                null,
+                null,
+                adresaLokacija,
+                gradLokacija,
+                drzavaLokacija);
+
+        return ResponseEntity.ok("Obavijest uspješno dodana");
+    }
+
     @GetMapping("/obavijesti")
     public ResponseEntity<?> pogledajObavijesti(){
-    	List<Obavijest> opceObavijesti = obavijestService.prikaziOpceObavijesti();
-    	return ResponseEntity.ok(opceObavijesti);
+        List<Obavijest> opceObavijesti = obavijestService.prikaziOpceObavijesti();
+        return ResponseEntity.ok(opceObavijesti);
     }
-    
+
     @DeleteMapping("/obavijesti")
     public ResponseEntity<?> izbrisiObavijest(@RequestParam int sifObavijest){
-    	obavijestService.obrisiObavijest(sifObavijest);
-    	return ResponseEntity.ok("Obavijest uspjesno obrisana");
+        obavijestService.obrisiObavijest(sifObavijest);
+        return ResponseEntity.ok("Obavijest uspjesno obrisana");
     }
-    
 
 
-	
+
+
 }
-

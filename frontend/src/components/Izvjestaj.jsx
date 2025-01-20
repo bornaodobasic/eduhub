@@ -49,8 +49,7 @@ const Izvjestaj = () => {
         {potvrde.map((potvrda, index) => (
           <div key={index} className="report-card">
             <p>
-              Učenik/ca <strong>{potvrda.imeUcenik} {potvrda.prezimeUcenik}</strong> 
-               preuzeo/la je potvrdu o upisu u srednju školu dana <strong>{formatDatum(potvrda.datumGeneriranja)}</strong>.
+              Učenik/ca <strong>{potvrda.imeUcenik} {potvrda.prezimeUcenik} </strong> preuzeo/la je potvrdu o upisu u srednju školu dana <strong>{formatDatum(potvrda.datumGeneriranja)}</strong>.
             </p>
           </div>
         ))}

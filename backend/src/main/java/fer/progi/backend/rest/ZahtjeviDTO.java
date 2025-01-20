@@ -8,22 +8,25 @@ import lombok.Data;
 
 @Data
 public class ZahtjeviDTO {
-	
+
 	private String imeUcenik;
 	private String prezimeUcenik;
-	
+	private String email;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Zagreb")
 	private  Date datumGeneriranja;
-	
-	
-	public ZahtjeviDTO(String imeUcenik, String prezimeUcenik, Date date) {
+
+	public ZahtjeviDTO(String imeUcenik, String prezimeUcenik, String email, Date datumGeneriranja) {
 		super();
 		this.imeUcenik = imeUcenik;
 		this.prezimeUcenik = prezimeUcenik;
-		this.datumGeneriranja = date;
+		this.email = email;
+		this.datumGeneriranja = datumGeneriranja;
 	}
-	
-	
-	
+
+
+
+
+
+
 
 }

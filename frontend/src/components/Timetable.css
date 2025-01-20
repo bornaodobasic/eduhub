@@ -1,68 +1,113 @@
 .timetable {
     display: grid;
-    grid-template-columns: 100px repeat(5, 1fr); /* 1 column for time, 5 for the weekdays */
-    grid-template-rows: 50px repeat(8, 1fr); /* 1 row for header, 8 for the time slots */
+    grid-template-columns: 1fr repeat(5, 1fr);
+    grid-template-rows: auto repeat(7, 1fr);
     width: 100%;
     height: 100%;
     overflow: auto;
 }
 
-.timetable .week-names {
-    grid-column: 2 / -1; /* Span across columns 2 to 6 */
+.empty-header {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.interval-column {
+    grid-column: span 1;
+    grid-row: 2 / span 7;
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 columns for 5 days */
-    text-transform: uppercase;
-    font-size: 12px;
+    grid-template-rows: repeat(7, 1fr);
+    background-color: #fff;
+    border-right: 1px solid #eee;
+}
+
+
+.interval-entry {
+    background-color: #ffa0c8;
+    border: 1px solid #ffe6f1;
+    border-radius: 4px;
+    margin: 5px 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-}
-
-.timetable .week-names > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    box-shadow: inset 1px 0 0 var(--porcelain);
-}
-
-.timetable .time-interval {
-    grid-column: 1; /* Time column */
-    display: grid;
-    grid-template-rows: repeat(7, 1fr); /* 8 rows for 8 time slots */
     font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.day-header {
+    grid-column: span 1;
+    grid-row: 1;
+    text-align: center;
+    background-color: #ff7eb3;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-transform: uppercase;
 }
 
-.timetable .time-interval > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    box-shadow: inset 0 1px 0 var(--porcelain);
-}
-
-.timetable .content {
-    grid-column: 2 / -1; /* Fill the 5 columns for 5 days */
+.day-column {
+    grid-column: span 1;
+    grid-row: 2 / span 7;
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 columns for 5 days */
-    grid-template-rows: repeat(8, 1fr); /* 8 rows for 8 time slots */
-    position: relative;
+    grid-template-rows: repeat(7, 1fr);
+    background-color: #fff;
+    border-right: 1px solid #eee;
 }
 
-.timetable .content > div {
-    box-shadow: inset 1px 0 0 var(--porcelain), inset 0 1px 0 var(--porcelain);
+.day-column:last-child {
+    border-right: none;
+}
+
+.timetable-entry {
+    background-color: #ffe6f1;
+
+    border: 1px solid #ffe6f1;
+    border-radius: 4px;
+    margin: 5px 0;
+    padding: 10px;
     display: flex;
-    flex-direction: column; /* Stack items vertically */
-    justify-content: flex-start;
-    padding: 5px;
-    position: relative;
-    overflow: hidden; /* Ensure content doesn't overflow */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.subject-ime {
+    color: #ff7eb3;
 }
 
-.timetable .timetable-entry {
-    padding: 5px;
-    border-radius: 5px;
-    margin-bottom: 5px; /* Space between consecutive entries */
-    background-color: #f0f0f0;
-    /* Ensure entries are not stacked on top of each other */
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+}
+@media (max-width: 480px) {
+    .timetable {
+        grid-template-columns: 1fr;
+    }
+
+    .interval-column {
+        grid-column: span 1;
+        grid-template-rows: repeat(7, 1fr);
+    }
+
+    .day-column {
+        grid-column: span 1;
+        grid-template-rows: repeat(7, 1fr);
+    }
+
+    .interval-entry, .timetable-entry {
+        font-size: 10px;
+        padding: 6px;
+    }
+
+    .day-header {
+        font-size: 12px;
+        padding: 6px;
+    }
 }
