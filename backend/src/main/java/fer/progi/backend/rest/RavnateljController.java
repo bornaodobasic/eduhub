@@ -187,7 +187,7 @@ public class RavnateljController {
     }
 
  
-    @GetMapping("/dodajObavijest")
+    @PostMapping("/obavijesti")
     	public ResponseEntity<String> dodajObavijest(
     	            @RequestParam String naslovObavijest,
     	            @RequestParam String sadrzajObavijest,
@@ -210,6 +210,18 @@ public class RavnateljController {
 
             return ResponseEntity.ok("Obavijest uspješno dodana");
     	}
+    
+    @GetMapping("/obavijesti")
+    public ResponseEntity<?> pogledajObavijesti(){
+    	List<Obavijest> opceObavijesti = obavijestService.prikaziOpceObavijesti();
+    	return ResponseEntity.ok(opceObavijesti);
+    }
+    
+    @DeleteMapping("/obavijesti")
+    public ResponseEntity<?> izbrisiObavijest(@RequestParam int sifObavijest){
+    	obavijestService.obrisiObavijest(sifObavijest);
+    	return ResponseEntity.ok("Obavijest uspjesno obrisana");
+    }
     
 
 

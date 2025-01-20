@@ -273,7 +273,7 @@ public class UcenikController {
 
   
     
-    @GetMapping("/obavijesti")
+    @GetMapping("/obavijesti") //
     public ResponseEntity<List<Obavijest>> dohvatiSveObavijesti(){
     	List<Obavijest> opceObavijesti = obavijestService.prikaziOpceObavijesti();
     	 return ResponseEntity.ok(opceObavijesti);

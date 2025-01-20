@@ -11,10 +11,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import fer.progi.backend.domain.Predmet;
+import fer.progi.backend.domain.Smjer;
 import fer.progi.backend.service.impl.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,9 +27,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
-import fer.progi.backend.domain.Nastavnik;
+import fer.progi.backend.domain.*;
+import fer.progi.backend.domain.Obavijest;
 import fer.progi.backend.service.NastavnikService;
 import fer.progi.backend.service.ObavijestService;
+import fer.progi.backend.service.PredmetService;
+import fer.progi.backend.service.UcenikService;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,7 +50,14 @@ public class NastavnikController {
     @Autowired
     private ObavijestService obavijestService;
 
-
+    @Autowired
+    private PredmetService predmetServise;
+    
+    @Autowired
+    private UcenikService ucenikService;
+    
+    
+    
     @PostMapping("")
     public Nastavnik dodajNastavnika(@RequestBody Nastavnik nastavnik) {
         return nastavnikService.dodajNastavnik(nastavnik);
@@ -98,67 +111,7 @@ public class NastavnikController {
             return ResponseEntity.status(500).body("OOPS! Something went wrong");
         }
     }
-
-    @GetMapping("{predmet}/dodajObavijest")
-    public ResponseEntity<String> dodajObavijestZaPredmet(
-            @PathVariable String predmet,
-            @RequestParam String naslov,
-            @RequestParam String sadrzaj,
-            Authentication authentication) {
-
-
-        String csvFileKey = "obavijesti/" + predmet + ".csv";
-        Path tempFilePath = null;
-
-        try {
-
-            tempFilePath = Files.createTempFile(predmet + "-obavijesti", ".csv");
-            System.out.println("Privremena datoteka: " + tempFilePath);
-
-
-            try {
-                byte[] fileContent = s3Service.getFile(csvFileKey);
-                Files.write(tempFilePath, fileContent);
-            } catch (Exception e) {
-
-                String zaglavlje = "Naslov,Sadrzaj,ImeNastavnika,PrezimeNastavnikaDatumVrijeme\n";
-                Files.write(tempFilePath, zaglavlje.getBytes());
-            }
-
-
-            OidcUser ulogiranKorisnik = (OidcUser) authentication.getPrincipal();
-            String email = ulogiranKorisnik.getPreferredUsername();
-            Optional<Nastavnik> optionalnastavnik = nastavnikService.findByEmail(email);
-
-
-            Nastavnik nastavnik = optionalnastavnik.get();
-
-
-            String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-
-            String newLine = naslov + "," + sadrzaj + "," + nastavnik.getImeNastavnik() + "," + nastavnik.getPrezimeNastavnik() + "," + currentDateTime + "\n";
-            Files.write(tempFilePath, newLine.getBytes(), StandardOpenOption.APPEND);
-
-
-            s3Service.uploadFileFromPath(csvFileKey, tempFilePath);
-
-            return ResponseEntity.ok("Obavijest za predmet " + predmet + " uspješno dodana.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Dogodila se greška.");
-        } finally {
-            if (tempFilePath != null) {
-                try {
-                    Files.delete(tempFilePath);
-                } catch (IOException e) {
-                    System.err.println("Greška pri brisanju privremene datoteke: " + e.getMessage());
-                }
-            }
-        }
-    }
-
-
+    
     @DeleteMapping("/materijali")
     public ResponseEntity<?> deleteMaterial(@RequestParam String key) {
         try {
@@ -168,6 +121,20 @@ public class NastavnikController {
             return ResponseEntity.status(500).body("OOPS! Something went wrong");
         }
     }
+    
+    @GetMapping("materijali") //ovdje treba povuc ime predmeta npr. Biologija_1_opca1
+	 public ResponseEntity<List<String>> MaterijaliPredmet(@RequestParam String predmet) {
+	     try {
+	         String prefix = predmet + "/"; 
+	         List<String> materijali = s3Service.listFiles(prefix);
+	         return ResponseEntity.ok(materijali);
+	     } catch (Exception e) {
+	         return ResponseEntity.status(500).body(null);
+	     }
+	 }
+    
+
+
 
     @GetMapping("/materijali/izvjestaj")
     public List<PristupMaterijaliDTO> pregledPristupaMaterijalima(Authentication authentication) throws ParseException {
@@ -239,7 +206,7 @@ public class NastavnikController {
         return listaPristupMaterijalima;
     }
     
-    @GetMapping("/dodajObavijest")
+    @PostMapping("/obavijesti")
 	public ResponseEntity<String> dodajObavijest(
 	            @RequestParam String naslovObavijest,
 	            @RequestParam String sadrzajObavijest,
@@ -272,6 +239,50 @@ public class NastavnikController {
 
         return ResponseEntity.ok("Obavijest uspješno dodana");
 	}
+    
+    @GetMapping("/obavijesti")
+    public ResponseEntity<?> pogledajObavijesti(@RequestParam String nazivPredmet){
+    	List<Obavijest> obavijesti = obavijestService.prikaziObavijestiZaPredmet(nazivPredmet);
+    	return ResponseEntity.ok(obavijesti);
+    }
+    
+    @DeleteMapping("/obavijesti")
+    public ResponseEntity<?> izbrisiObavijest(@RequestParam int sifObavijest){
+    	obavijestService.obrisiObavijest(sifObavijest);
+    	return ResponseEntity.ok("Obavijest uspjesno obrisana");
+    }
+    
+    @GetMapping("/uceniciNaPredmetu")
+    public ResponseEntity<?> pogledajUcenikeNaPredmetu(@RequestParam String nazPredmet){
+    	Predmet predmet = predmetServise.findPredmetByNaz(nazPredmet);
+    
+    	Smjer smjer = predmet.getSmjer();
+    
+    	List<Razred> razredi = smjer.getRazredi();
+    	
+    	
+    	List<String> nazivirazreda = new ArrayList();    	
+    	
+    	for(Razred r: razredi) {
+    		nazivirazreda.add(r.getNazRazred());
+    	}
+    	
+    	List<Ucenik> ucenici = ucenikService.findAllUceniks();
+    	
+    	// Prvi kriterij: Filtriraj učenike iz valjanih razreda
+    	ucenici = ucenici.stream()
+    	        .filter(c -> nazivirazreda.contains(c.getRazred().getNazRazred()))
+    	        .collect(Collectors.toList());
+
+    
+    	ucenici = ucenici.stream()
+    	        .filter(c -> !(c.getVjeronauk() && nazPredmet.startsWith("Etika")) &&
+    	                     !(nazPredmet.startsWith("Vjeronauk") && !c.getVjeronauk()))
+    	        .collect(Collectors.toList());
+
+    	
+    	return ResponseEntity.ok(ucenici);
+    			}
 
 
 }

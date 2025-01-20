@@ -3367,3 +3367,6 @@ DESCRIBE AKTIVNOST [42001-224]
 2025-01-14 20:29:59.182114+01:00 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]DESCRIBE aktivnost"; expected "DELETE, DROP"; SQL statement:
 DESCRIBE aktivnost [42001-224]
+2025-01-20 15:07:53.965891+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM UCENIK RAZRED [*]UCENIK"; SQL statement:
+SELECT * FROM UCENIK RAZRED UCENIK [42000-224]
