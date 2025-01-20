@@ -2,6 +2,8 @@ package fer.progi.backend.domain;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -41,6 +43,10 @@ public class Predmet {
 				", nazivPredmet='" + nazPredmet + '\'' +
 				'}';
 	}
+	
+    @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Obavijest> obavijesti;
 
 
 }

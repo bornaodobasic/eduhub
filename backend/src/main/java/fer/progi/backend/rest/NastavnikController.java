@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +26,8 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.service.NastavnikService;
+import fer.progi.backend.service.ObavijestService;
+
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -37,6 +40,9 @@ public class NastavnikController {
 
     @Autowired
     private S3Service s3Service;
+    
+    @Autowired
+    private ObavijestService obavijestService;
 
 
     @PostMapping("")
@@ -232,6 +238,40 @@ public class NastavnikController {
 
         return listaPristupMaterijalima;
     }
+    
+    @GetMapping("/dodajObavijest")
+	public ResponseEntity<String> dodajObavijest(
+	            @RequestParam String naslovObavijest,
+	            @RequestParam String sadrzajObavijest,
+	            @RequestParam Integer sifPredmet,
+	            @RequestParam(required = false) String adresaLokacija,
+	            @RequestParam(required = false) String gradLokacija,
+	            @RequestParam(required = false) String drzavaLokacija,
+	            Authentication authentication) {
+    	
+    	 OidcUser ulogiranKorisnik = (OidcUser) authentication.getPrincipal();
+         String email = ulogiranKorisnik.getPreferredUsername();
+         Optional<Nastavnik> optionalnastavnik = nastavnikService.findByEmail(email);
+         Nastavnik nastavnik = optionalnastavnik.get();
+         String imeNastavnik = nastavnik.getImeNastavnik();
+         String prezimeNastavnik = nastavnik.getPrezimeNastavnik();
+
+     	 Date datumObavijest = new Date();
+    	 
+		
+	 obavijestService.dodajObavijest(
+                naslovObavijest,
+                sadrzajObavijest,
+                datumObavijest,
+                sifPredmet,
+                imeNastavnik,
+                prezimeNastavnik,
+                adresaLokacija,
+                gradLokacija,
+                drzavaLokacija);
+
+        return ResponseEntity.ok("Obavijest uspješno dodana");
+	}
 
 
 }

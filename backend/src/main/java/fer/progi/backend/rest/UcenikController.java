@@ -53,6 +53,9 @@ public class UcenikController {
 
     @Autowired
     private NastavnikService nastavnikService;
+    
+    @Autowired
+    private ObavijestService obavijestService;
 
     @GetMapping("")
     public List<String> getUceniciMailovi(Authentication authentication) {
@@ -268,68 +271,19 @@ public class UcenikController {
     }
 
 
-    @GetMapping("{predmet}/obavijesti")
-    public ResponseEntity<?> pogledajObavijesti(@PathVariable String predmet) throws ParseException {
-        String csvFileKey = "obavijesti/" + predmet + ".csv";
-        List<ObavijestPredmetDTO> listaObavijesti = new ArrayList<>();
-        Path tempFilePath = null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        try {
-            tempFilePath = Files.createTempFile(predmet + "-obavijesti", ".csv");
-            System.out.println("Privremena datoteka: " + tempFilePath);
-
-            try {
-                byte[] fileContent = s3Service.getFile(csvFileKey);
-                Files.write(tempFilePath, fileContent);
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("CSV datoteka za predmet '" + predmet + "' nije pronađena.");
-            }
-
-            try (BufferedReader reader = Files.newBufferedReader(tempFilePath)) {
-                String line;
-                boolean isFirstLine = true;
-
-                while ((line = reader.readLine()) != null) {
-                    if (isFirstLine) {
-                        isFirstLine = false;
-                        continue;
-                    }
-
-                    if (line.trim().isEmpty()) {
-                        continue;
-                    }
-
-                    String[] row = line.split(",");
-                    if (row.length == 5) {
-                        listaObavijesti.add(new ObavijestPredmetDTO(
-                                row[0].trim(),
-                                row[1].trim(),
-                                row[2].trim(),
-                                row[3].trim(),
-                                dateFormat.parse(row[4].trim())
-                        ));
-                    } else {
-                        System.err.println("Neispravan redak: " + line);
-                    }
-                }
-            }
-
-            return ResponseEntity.ok(listaObavijesti);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Dogodila se greška pri obradi datoteke za predmet '" + predmet + "'.");
-        } finally {
-            if (tempFilePath != null) {
-                try {
-                    Files.delete(tempFilePath);
-                } catch (IOException e) {
-                    System.err.println("Greška pri brisanju privremene datoteke: " + e.getMessage());
-                }
-            }
-        }
+  
+    
+    @GetMapping("/obavijesti")
+    public ResponseEntity<List<Obavijest>> dohvatiSveObavijesti(){
+    	List<Obavijest> opceObavijesti = obavijestService.prikaziOpceObavijesti();
+    	 return ResponseEntity.ok(opceObavijesti);
+    	
+    }
+    
+    @GetMapping("{nazPredmet}/obavijesti")
+    public ResponseEntity<List<Obavijest>> dohvatiObavijestiZaPredmet(@PathVariable String nazPredmet){
+    	List<Obavijest> predmetObavijest = obavijestService.prikaziObavijestiZaPredmet(nazPredmet);
+    	 return ResponseEntity.ok(predmetObavijest);
     }
 
 
