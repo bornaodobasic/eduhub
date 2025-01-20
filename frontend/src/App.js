@@ -2,17 +2,17 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Enroll from './pages/enroll/Enroll';
-import Admin from './pages/admin/Admin';
-import Certificate from './pages/certificate/Certificate';
 import Circles from './components/Circles';
 import CirclesMobile from './components/CirclesMobile';
-import Nastavnik from './pages/nastavnik/Nastavnik';
-import Ucenik from './pages/ucenik/Ucenik';
-import Djelatnik from './pages/djelatnik/Djelatnik';
-import Satnicar from './pages/satnicar/Satnicar';
-import Ravnatelj from './pages/ravnatelj/Ravnatelj';
 import FileUpload from './components/FileUpload';
+import Ucenik from './pages/ucenik/Ucenik';
+import Nastavnik from './pages/nastavnik/Nastavnik';
+import Ravnatelj from './pages/ravnatelj/Ravnatelj';
+import Satnicar from './pages/satnicar/Satnicar';
+import Djelatnik from './pages/djelatnik/Djelatnik';
+import Admin from './pages/admin/Admin';
 import Chat from './pages/chat/Chat';
+
 
 function App() {
   const handleLogin = () => {
@@ -53,14 +53,13 @@ function App() {
         />
 
         <Route path="/upis" element={<Enroll />} />
-        <Route path="/certificate" element={<Certificate />} />
-        <Route path="/nastavnik" element={<Nastavnik />} />
-        <Route path="/ucenik" element={<Ucenik />} />
-        <Route path="/djelatnik" element={<Djelatnik />} />
-        <Route path="/satnicar" element={<Satnicar />} />
-        <Route path="/ravnatelj" element={<Ravnatelj />} />
-        <Route path="/admin/*" element={<Admin />} />
         <Route path="/upload" element={<FileUpload />} />
+        <Route path="/ucenik" element={<Ucenik />} />
+        <Route path="/nastavnik" element={<Nastavnik />} />
+        <Route path="/ravnatelj" element={<Ravnatelj />} />
+        <Route path="/satnicar" element={<Satnicar />} />
+        <Route path="/djelatnik" element={<Djelatnik />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="/chat" element={<Chat />} />
       </Routes>
     </Router>

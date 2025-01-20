@@ -12,7 +12,7 @@ const Chat = () => {
     const [showCreateGroup, setShowCreateGroup] = useState(false);
     const [groupName, setGroupName] = useState('');
     const [groupMembers, setGroupMembers] = useState([]);
-    const [recipientType, setRecipientType] = useState(''); // New state for recipient type
+    const [recipientType, setRecipientType] = useState('');
     const [showGroups, setShowGroups] = useState(false);
 
     useEffect(() => {
@@ -53,7 +53,7 @@ const Chat = () => {
                 .then(data => setRecipients(data))
                 .catch(error => console.error('Error fetching grupe:', error));
         } else {
-            setRecipients([]); // Reset recipients if no type is selected
+            setRecipients([]);
         }
     }, [recipientType]);
 
@@ -68,13 +68,13 @@ const Chat = () => {
             fetchMessages(currentUserEmail, selectedRecipient);
         }
     }, [selectedRecipient, recipientType]);
-    
+
     useEffect(() => {
         if (recipientType === 'grupe' && selectedRecipient) {
             fetchGroupMessages(selectedRecipient);
         }
     }, [selectedRecipient, recipientType]);
-    
+
     const fetchMessages = (korisnik1, korisnik2) => {
         fetch(`/api/chat/messages?korisnik1=${korisnik1}&korisnik2=${korisnik2}`)
             .then(response => response.json())
@@ -142,113 +142,113 @@ const Chat = () => {
 
     return (
         <div className="chat-container">
-            <h2>Chat</h2>
-
-            {/* Recipient Type Selection */}
-
-            <div className="form-group">
-                <label htmlFor="recipient-type">Poruka za:</label>
-                <select
-                    id="recipient-type"
-                    value={recipientType}
-                    onChange={e => {
-                        setRecipientType(e.target.value); // Set recipient type
-                        setSelectedRecipient(''); // Reset selected recipient
-                    }}
-                >
-                    <option value="">--Odaberi vrstu primatelja--</option>
-                    <option value="nastavnik">Nastavnik</option>
-                    <option value="ucenik">Učenik</option>
-                    <option value="grupe">Grupa</option>
-                </select>
-            </div>
-
-            {/* Recipient Selection */}
-            <div className="form-group">
-                <label htmlFor="recipient">Odaberi primatelja ili grupu:</label>
-                <select
-                    id="recipient"
-                    value={selectedRecipient}
-                    onChange={e => setSelectedRecipient(e.target.value)} // No message fetching here
-                >
-                    <option value="">--Odaberi primatelja ili grupu--</option>
-                    {recipients.map(recipient => (
-                        <option key={recipient} value={recipient}>{recipient}</option>
+            <div className="chat-main">
+                <div className="chat-messages">
+                    {messages.map((msg, index) => (
+                        <div
+                            key={index}
+                            className={`message ${
+                                msg.posiljatelj === currentUserEmail ? 'sent' : 'received'
+                            }`}
+                        >
+                            <p>{msg.sadrzaj}</p>
+                        </div>
                     ))}
-                </select>
-
-            </div>
-
-            <textarea
-                value={messageInput}
-                onChange={e => setMessageInput(e.target.value)}
-                placeholder="Unesi poruku..."
-            />
-            <button onClick={sendMessage}>Pošaljite</button>
-
-            <div className="chat-box">
-                {messages.map((msg, index) => (
-                    <div
-                        key={index}
-                        className={`message ${msg.posiljatelj === currentUserEmail ? 'sent' : 'received'}`}
-                    >
-                        {msg.posiljatelj === currentUserEmail ? `Ti: ${msg.sadrzaj}` : `${msg.posiljatelj}: ${msg.sadrzaj}`}
-                    </div>
-                ))}
-            </div>
-
-            <div className="group-controls">
-    <button
-        onClick={() => {
-            setRecipientType('ucenik'); // Postavlja recipientType na učenik
-            setShowCreateGroup(true);  // Otvara modal za kreiranje grupe
-        }}
-    >
-        Kreiraj grupu
-    </button>
-    <button
-        onClick={() => {
-            loadGroups();          // Dohvaća dostupne grupe
-            setShowGroups(!showGroups); // Prikazuje/sakriva liste grupa
-        }}
-    >
-        Moje grupe
-    </button>
-</div>
-
-
-            {showCreateGroup && (
-                <div className="create-group-container">
-                    <h3>Kreiraj novu grupu</h3>
-                    <input
-                        type="text"
-                        value={groupName}
-                        onChange={e => setGroupName(e.target.value)}
-                        placeholder="Unesite ime grupe"
-                    />
-                    <h4>Odaberite članove:</h4>
-                    <ul>
-                        {recipients.map(recipient => (
-                            <li key={recipient}>
-                                <input
-                                    type="checkbox"
-                                    value={recipient}
-                                    onChange={e => {
-                                        if (e.target.checked) {
-                                            setGroupMembers(prev => [...prev, recipient]);
-                                        } else {
-                                            setGroupMembers(prev => prev.filter(member => member !== recipient));
-                                        }
-                                    }}
-                                />
-                                {recipient}
-                            </li>
-                        ))}
-                    </ul>
-                    <button onClick={createGroup}>Spremi grupu</button>
                 </div>
-            )}
+                <div className="chat-input">
+                    <textarea
+                        value={messageInput}
+                        onChange={e => setMessageInput(e.target.value)}
+                        placeholder="Unesite poruku..."
+                    />
+                    <button onClick={sendMessage}>Pošaljite</button>
+                </div>
+            </div>
 
+            <div className="chat-sidebar">
+                <div className="form-group">
+                    <h3>Poruka za:</h3>
+                    <select
+                        value={recipientType}
+                        onChange={e => {
+                            setRecipientType(e.target.value);
+                            setSelectedRecipient('');
+                        }}
+                    >
+                        <option value="">--Odaberite--</option>
+                        <option value="nastavnik">Nastavnici</option>
+                        <option value="ucenik">Učenici</option>
+                        <option value="grupe">Grupe</option>
+                    </select>
+                </div>
+
+                <div className="form-group">
+                    <h4>Odaberi primatelja:</h4>
+                    <select
+                        value={selectedRecipient}
+                        onChange={e => setSelectedRecipient(e.target.value)}
+                    >
+                        <option value="">--Odaberite--</option>
+                        {recipients.map(recipient => (
+                            <option key={recipient} value={recipient}>
+                                {recipient}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="group-controls">
+                    <button
+                        onClick={() => {
+                            setRecipientType('ucenik');
+                            setShowCreateGroup(true);
+                        }}
+                    >
+                        Kreiraj grupu
+                    </button>
+                    <button
+                        onClick={() => {
+                            loadGroups();
+                            setShowGroups(!showGroups);
+                        }}
+                    >
+                        Moje grupe
+                    </button>
+                </div>
+
+                {showCreateGroup && (
+                    <div className="create-group-container">
+                        <h3>Kreiraj novu grupu</h3>
+                        <input
+                            type="text"
+                            value={groupName}
+                            onChange={e => setGroupName(e.target.value)}
+                            placeholder="Unesite ime grupe"
+                        />
+                        <h4>Odaberite članove:</h4>
+                        <ul>
+                            {recipients.map(recipient => (
+                                <li key={recipient}>
+                                    <input
+                                        type="checkbox"
+                                        value={recipient}
+                                        onChange={e => {
+                                            if (e.target.checked) {
+                                                setGroupMembers(prev => [...prev, recipient]);
+                                            } else {
+                                                setGroupMembers(prev =>
+                                                    prev.filter(member => member !== recipient)
+                                                );
+                                            }
+                                        }}
+                                    />
+                                    {recipient}
+                                </li>
+                            ))}
+                        </ul>
+                        <button onClick={createGroup}>Spremi grupu</button>
+                    </div>
+                )}
 
                 {showGroups && (
                     <div className="group-list-container">
@@ -259,7 +259,7 @@ const Chat = () => {
                         </ul>
                     </div>
                 )}
-
+            </div>
         </div>
     );
 };

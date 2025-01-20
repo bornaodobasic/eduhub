@@ -1,44 +1,41 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Header from "../../components/Header"; 
-import WeatherWidget from "../../components/WeatherWidget";
-import "../../components/MainContent.css"; 
+import React, { useState } from "react";
+import { FaSchool, FaChartBar, FaChalkboard } from "react-icons/fa";
+import Sidebar from "../../components/Sidebar";
+
+
 
 const Djelatnik = () => {
-    const roles = [
-        { name: "Funkcija1"},
-        { name: "Funckija2"},
-    ];
+  const [activeSection, setActiveSection] = useState("Nekaj");
 
-    return (
-        <div className="homepage">
-            <Header />
-            <div className="homepage-container">
-                <aside className="sidebar-left">
-                    
-                    {roles.map((role) => (
-                        <Link key={role.name} to={role.path}>
-                            <button className="sidebar-button">{role.name}</button>
-                        </Link>
-                    ))}
-                </aside>
+  const menuItems = [
+    { name: "Nekaj", icon: <FaSchool /> },
+    { name: "Nesto", icon: <FaChartBar /> },
+    { name: "Raspored", icon: <FaChalkboard /> },
+  ];
 
-                
-                <div className="main-content">
-                   
-                </div>
+  const renderContent = () => {
+    switch (activeSection) {
+      case "Nekaj":
+        return <h4>Nekaj dolaze uskoro!</h4>;
+        
+      case "Nesto":
+        return <h4>Nesto dolaze uskoro!</h4>;
+      
+      case "Raspored":
+        return <h4>Raspored dolazi uskoro!</h4>;
+      default:
+        return <h4>Odaberite sekciju iz izbornika.</h4>;
+    }
+  };
 
-             
-                <aside className="sidebar-right">
-                    <div className="empty-container"></div>
-                    
-                    <div className="weather-widget-container">
-                         <WeatherWidget></WeatherWidget>
-                    </div>
-                </aside>
-            </div>
-        </div>
-    );
+  return (
+    <div className="admin-container">
+      <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} menuItems={menuItems} />
+      <div className="admin-content">
+        {renderContent()}
+      </div>
+    </div>
+  );
 };
 
 export default Djelatnik;

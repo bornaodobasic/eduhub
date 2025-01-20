@@ -1,69 +1,59 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Header from "../../components/Header";
-import WeatherWidget from "../../components/WeatherWidget";
-import "../../components/MainContent.css";
+import React, { useState } from "react";
+import { FaSchool, FaBell, FaCalendarAlt } from "react-icons/fa";
+import Sidebar from "../../components/Sidebar";
+
+
 
 const Satnicar = () => {
-    const roles = [
-        { name: "Rasporedi" },
-        { name: "Učionice" },
-        { name: "Oprema" },
-    ];
+  const [activeSection, setActiveSection] = useState("Raspored");
 
-    // Function to handle schedule generation
-    const handleGenerateSchedule = async () => {
-        try {
-            const response = await fetch("/api/satnicar/raspored", {
-                method: "GET",
-            });
+  const menuItems = [
+    { name: "Raspored", icon: <FaCalendarAlt /> },
+    { name: "Obavijesti", icon: <FaBell /> },
+  ];
 
-            if (response.ok) {
-                alert("Raspored je uspješno generiran!");
-            } else {
-                alert("Dogodila se pogreška pri generiranju rasporeda.");
-            }
-        } catch (error) {
-            console.error("Error generating schedule:", error);
+
+  const handleGenerateSchedule = async () => {
+    try {
+        const response = await fetch("/api/satnicar/raspored", {
+            method: "GET",
+        });
+
+        if (response.ok) {
+            alert("Raspored je uspješno generiran!");
+        } else {
             alert("Dogodila se pogreška pri generiranju rasporeda.");
         }
-    };
-
-    return (
-        <div className="homepage">
-            <Header />
-            <div className="homepage-container">
-                <aside className="sidebar-left">
-                    {roles.map((role) => (
-                        <Link key={role.name} to={role.path}>
-                            <button className="sidebar-button">{role.name}</button>
-                        </Link>
-                    ))}
-                </aside>
-
-                <div className="main-content">
+    } catch (error) {
+        console.error("Error generating schedule:", error);
+        alert("Dogodila se pogreška pri generiranju rasporeda.");
+    }
+  };
 
 
-                    {["Obavijest1", "Obavijest2", "Obavijest3"].map((obavijest, index) => (
-                        <div key={index} className="notification-box">
-                            {obavijest}
-                        </div>
-                    ))}
-                </div>
+  const renderContent = () => {
+    switch (activeSection) {
+      case "Raspored":
+        return  <button className="generate-schedule-button" onClick={handleGenerateSchedule}>
+                 Generiraj Raspored
+                </button>
+      
+      case "Obavijesti":
+          return <h4>Obavijesti dolaze uskoro!</h4>;
+        
+      default:
+        return <h4>Odaberite sekciju iz izbornika.</h4>;
+    }
+  };
 
-                <aside className="sidebar-right">
-                    <div className="empty-container">
-                        <button className="generate-schedule-button" onClick={handleGenerateSchedule}>
-                            Generiraj Raspored
-                        </button>
-                    </div>
-                    <div className="weather-widget-container">
-                        <WeatherWidget></WeatherWidget>
-                    </div>
-                </aside>
-            </div>
-        </div>
-    );
+  return (
+    <div className="admin-container">
+      <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} menuItems={menuItems} />
+      <div className="admin-content">
+        {renderContent()}
+      </div>
+    </div>
+  );
 };
 
 export default Satnicar;
