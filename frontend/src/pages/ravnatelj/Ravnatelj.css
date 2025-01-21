@@ -14,28 +14,33 @@
     flex: 1;
   }
 
-  .obavijesti-list {
-    margin-top: 20px;
-  }
   
-  .obavijest-item {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-    position: relative;
-  }
-  
-  .delete-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
+  .add-button {
+    background-color: #f0ad4e;
+    color: white;
+    padding: 10px 15px;
     border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .add-button:hover {
+    background-color: #ec971f;
+  }
+  
+  .delete-mode-button {
+    margin-top: 10px;
+    background-color: #d9534f;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
   }
   
-  .delete-button:hover {
-    color: red;
+  .delete-mode-button:hover {
+    background-color: #c9302c;
   }
   
   

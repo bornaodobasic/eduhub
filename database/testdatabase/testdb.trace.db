@@ -8718,3 +8718,18 @@ org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+2025-01-21 09:09:26.311838+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "U&'Dragi studenti,\\000a\\000aRaspored usmenog ispitivanja projekta tijekom poslje... (637)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 09:09:29.503260+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "U&'Dragi studenti,\\000a\\000aRaspored usmenog ispitivanja projekta tijekom poslje... (637)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 09:09:52.715534+01:00 jdbc[5]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "U&'Dragi studenti,\\000a\\000aRaspored usmenog ispitivanja projekta tijekom poslje... (637)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 09:10:26.159535+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'danedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedan... (1120)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 09:10:57.141769+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'danedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedan... (1120)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]

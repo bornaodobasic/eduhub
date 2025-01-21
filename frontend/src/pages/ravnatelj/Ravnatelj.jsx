@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FaSchool, FaChartBar, FaChalkboard, FaBell, FaTrashAlt } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import TableUcionice from "../../components/TableUcionice";
@@ -10,11 +9,10 @@ import "./Ravnatelj.css";
 
 const Ravnatelj = () => {
   const [activeSection, setActiveSection] = useState("Učionice");
-  const [obavijestType, setObavijestType] = useState(null); // "opca" ili "terenska"
+  const [obavijestType, setObavijestType] = useState(null);
   const [obavijesti, setObavijesti] = useState([]);
   const [deleteMode, setDeleteMode] = useState(false);
 
-  
   const [formData, setFormData] = useState({
     naslovObavijest: "",
     sadrzajObavijest: "",
@@ -30,13 +28,11 @@ const Ravnatelj = () => {
     { name: "Obavijesti", icon: <FaBell /> },
   ];
 
-
   const fetchObavijesti = async () => {
     try {
       const response = await fetch("/api/ravnatelj/obavijesti");
       if (response.ok) {
         const data = await response.json();
-        // Sort by date (newest first)
         const sortedData = data.sort(
           (a, b) => new Date(b.datumObavijest) - new Date(a.datumObavijest)
         );
@@ -49,15 +45,13 @@ const Ravnatelj = () => {
       alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
     }
   };
-  
 
-  
   const deleteObavijest = async (sifObavijest) => {
     try {
       const response = await fetch(`/api/ravnatelj/obavijesti?sifObavijest=${sifObavijest}`, {
         method: "DELETE",
       });
-  
+
       if (response.ok) {
         alert("Obavijest uspješno izbrisana!");
         setObavijesti((prev) => prev.filter((o) => o.sifObavijest !== sifObavijest));
@@ -69,20 +63,16 @@ const Ravnatelj = () => {
       alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
     }
   };
-  
-  
+
   useEffect(() => {
     fetchObavijesti();
   }, []);
-  
 
-  // Funkcija za unos u formu
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Dodavanje učionica
   const handleAddUcionica = async (newUcionica) => {
     try {
       const response = await fetch("/api/ravnatelj/ucionice/add", {
@@ -102,7 +92,6 @@ const Ravnatelj = () => {
     }
   };
 
-  // Dodavanje obavijesti
   const handleAddObavijest = async () => {
     const payload =
       obavijestType === "opca"
@@ -145,49 +134,52 @@ const Ravnatelj = () => {
     }
   };
 
+  const renderNotification = (obavijest) => {
+    const isTerenska = obavijest.adresaLokacija;
 
+    return (
+      <div key={obavijest.sifObavijest} className="notification-item">
+        <h3 className="notification-title">{obavijest.naslovObavijest}</h3>
+        <p className="notification-content">{obavijest.sadrzajObavijest}</p>
+        {isTerenska && <button className="karte-button">Karte</button>}
+        <p className="notification-date">
+          {new Date(obavijest.datumObavijest).toLocaleDateString("hr-HR")}
+        </p>
+        {deleteMode && (
+          <button
+            className="delete-button"
+            onClick={() => deleteObavijest(obavijest.sifObavijest)}
+          >
+            <FaTrashAlt />
+          </button>
+        )}
+        <hr className="notification-divider" />
+      </div>
+    );
+  };
 
   const renderObavijestiContent = () => {
     if (!obavijestType) {
       return (
         <div className="obavijesti-section">
-          <button onClick={() => setObavijestType("opca")}>Dodaj Opću Obavijest</button>
-          <button onClick={() => setObavijestType("terenska")}>Dodaj Obavijest o Terenskoj Nastavi</button>
-          <button onClick={() => setDeleteMode((prev) => !prev)}>
-            {deleteMode ? "Gotovo" : "Obriši obavijesti"}
+          <div className="action-buttons">
+            <button className="add-button" onClick={() => setObavijestType("opca")}>
+              Dodaj Opću Obavijest
+            </button>
+            <button className="add-button" onClick={() => setObavijestType("terenska")}>
+              Dodaj Obavijest o Terenskoj Nastavi
+            </button>
+          </div>
+          <button className="delete-mode-button" onClick={() => setDeleteMode((prev) => !prev)}>
+            {deleteMode ? "Gotovo" : "Obriši Obavijesti"}
           </button>
-  
-          {/* List all notifications */}
           <div className="obavijesti-list">
-            {obavijesti.map((obavijest) => (
-              <div key={obavijest.sifObavijest} className="obavijest-item">
-                <h4>{obavijest.naslovObavijest}</h4>
-                <p>{obavijest.sadrzajObavijest}</p>
-                <p>
-                  Datum: {new Date(obavijest.datumObavijest).toLocaleDateString("hr-HR")}
-                </p>
-                {obavijest.adresaLokacija && (
-                  <p>
-                    Lokacija: {obavijest.adresaLokacija}, {obavijest.gradLokacija},{" "}
-                    {obavijest.drzavaLoakcija}
-                  </p>
-                )}
-                {deleteMode && (
-                  <button
-                    className="delete-button"
-                    onClick={() => deleteObavijest(obavijest.sifObavijest)}
-                  >
-                    <FaTrashAlt />
-                  </button>
-                )}
-              </div>
-            ))}
+            {obavijesti.map(renderNotification)}
           </div>
         </div>
       );
     }
-  
-    // Render the form if obavijestType is set
+
     return (
       <div className="form-container">
         <h4>
@@ -260,9 +252,7 @@ const Ravnatelj = () => {
       </div>
     );
   };
-  
 
-  // Glavni render sekcija
   const renderContent = () => {
     switch (activeSection) {
       case "Učionice":

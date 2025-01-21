@@ -5,11 +5,12 @@ import UcenikPredmeti from "../../components/UcenikPredmeti";
 import UcenikAktivnosti from "../../components/UcenikAktivnosti";
 import Timetable from "../../components/Timetable";
 import UcenikPotvrde from "../../components/UcenikPotvrde";
+import "./Ucenik.css";
 
 const Ucenik = () => {
     const [activeSection, setActiveSection] = useState("Predmeti");
     const [userEmail, setUserEmail] = useState(null);
-    const [notifications, setNotifications] = useState([]); // State for notifications
+    const [notifications, setNotifications] = useState([]);
 
     const menuItems = [
         { name: "Naslovnica", icon: <FaBook /> },
@@ -22,7 +23,6 @@ const Ucenik = () => {
     ];
 
     useEffect(() => {
-        // Fetch user email
         const fetchUserEmail = async () => {
             try {
                 const response = await fetch("/api/user/email");
@@ -37,13 +37,11 @@ const Ucenik = () => {
             }
         };
 
-        // Fetch notifications
         const fetchNotifications = async () => {
             try {
                 const response = await fetch("/api/ucenik/obavijesti");
                 if (response.ok) {
                     const data = await response.json();
-                    // Sort notifications by date (newest first)
                     const sortedData = data.sort(
                         (a, b) => new Date(b.datumObavijest) - new Date(a.datumObavijest)
                     );
@@ -60,23 +58,38 @@ const Ucenik = () => {
         fetchNotifications();
     }, []);
 
+    const renderNotification = (notif) => {
+        const isTerenska = notif.adresaLokacija;
+
+        return (
+            <div key={notif.sifObavijest} className="notification-item">
+                <h3 className="notification-title">{notif.naslovObavijest}</h3>
+                <p className="notification-content">{notif.sadrzajObavijest}</p>
+                {isTerenska && (
+                    <button className="karte-button">Karte</button>
+                )}
+                <p className="notification-date">
+                    {new Date(notif.datumObavijest).toLocaleDateString("hr-HR")}
+                </p>
+                <hr className="notification-divider" />
+            </div>
+        );
+    };
+
     const renderContent = () => {
         switch (activeSection) {
             case "Naslovnica":
-                // Display three newest notifications
-                const topThree = notifications.slice(0, 3);
                 return (
                     <div className="content-container">
                         <h4>Najnovije Obavijesti</h4>
-                        {topThree.map((notif) => (
-                            <div key={notif.sifObavijest} className="notification-item">
-                                <h5>{notif.naslovObavijest}</h5>
-                                <p>{notif.sadrzajObavijest}</p>
-                                <p>
-                                    Datum: {new Date(notif.datumObavijest).toLocaleDateString("hr-HR")}
-                                </p>
-                            </div>
-                        ))}
+                        {notifications.slice(0, 3).map(renderNotification)}
+                    </div>
+                );
+            case "Obavijesti":
+                return (
+                    <div className="content-container">
+                        <h4>Sve Obavijesti</h4>
+                        {notifications.map(renderNotification)}
                     </div>
                 );
             case "Predmeti":
@@ -95,22 +108,6 @@ const Ucenik = () => {
                 return (
                     <div className="content-container">
                         {userEmail ? <Timetable email={userEmail} /> : <p>Loading timetable...</p>}
-                    </div>
-                );
-            case "Obavijesti":
-                // Display all notifications
-                return (
-                    <div className="content-container">
-                        <h4>Sve Obavijesti</h4>
-                        {notifications.map((notif) => (
-                            <div key={notif.sifObavijest} className="notification-item">
-                                <h5>{notif.naslovObavijest}</h5>
-                                <p>{notif.sadrzajObavijest}</p>
-                                <p>
-                                    Datum: {new Date(notif.datumObavijest).toLocaleDateString("hr-HR")}
-                                </p>
-                            </div>
-                        ))}
                     </div>
                 );
             case "Potvrde":
