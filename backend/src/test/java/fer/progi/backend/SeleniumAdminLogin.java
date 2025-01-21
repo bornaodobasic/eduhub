@@ -17,7 +17,7 @@ public class SeleniumAdminLogin {
     public void setup() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.get("http://localhost:8080");
+        driver.get("https://eduhub-rfsg.onrender.com");
     }
 
     @AfterClass
