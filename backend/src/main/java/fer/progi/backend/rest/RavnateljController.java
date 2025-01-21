@@ -191,24 +191,20 @@ public class RavnateljController {
 
     @PostMapping("/obavijesti")
     public ResponseEntity<String> dodajObavijest(
-            @RequestParam String naslovObavijest,
-            @RequestParam String sadrzajObavijest,
-            @RequestParam(required = false) String adresaLokacija,
-            @RequestParam(required = false) String gradLokacija,
-            @RequestParam(required = false) String drzavaLokacija) {
+            @RequestBody ObavijestDTO obavijestDTO) {
 
         Date datumObavijest = new Date();
 
         obavijestService.dodajObavijest(
-                naslovObavijest,
-                sadrzajObavijest,
+                obavijestDTO.getNaslov(),
+                obavijestDTO.getSadrzaj(),
                 datumObavijest,
                 null,
                 null,
                 null,
-                adresaLokacija,
-                gradLokacija,
-                drzavaLokacija);
+                obavijestDTO.getOdredisteAdresa(),
+                obavijestDTO.getGradOdrediste(),
+                obavijestDTO.getDrzavaOdrediste());
 
         return ResponseEntity.ok("Obavijest uspješno dodana");
     }

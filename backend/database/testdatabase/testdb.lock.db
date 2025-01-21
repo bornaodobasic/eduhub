@@ -1,6 +1,6 @@
 #FileLock
-#Mon Jan 20 15:22:41 CET 2025
-hostName=DESKTOP-NI32RIV
-id=1948418192d5cf7a3aec27c72be2cd33531753ea8d4
+#Tue Jan 21 02:05:19 CET 2025
+hostName=Maja
+id=194866470b2931cb4e3b3f076e299fc8920c75183e7
 method=file
-server=172.20.10.4\:56789
+server=192.168.0.3\:65510
