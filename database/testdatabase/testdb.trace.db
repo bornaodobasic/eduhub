@@ -8733,3 +8733,33 @@ insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_loka
 2025-01-21 09:10:57.141769+01:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'danedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedanedan... (1120)"; SQL statement:
 insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 22:57:31.773422+01:00 jdbc[134]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'obaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobao... (2592)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 22:58:04.628455+01:00 jdbc[134]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'obaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobao... (1917)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 22:58:26.329027+01:00 jdbc[134]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'obaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobao... (1040)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 22:58:37.760005+01:00 jdbc[134]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'obaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobao... (605)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 22:59:01.187459+01:00 jdbc[134]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'obaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobao... (605)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 22:59:22.607566+01:00 jdbc[134]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'obaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobao... (605)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 23:00:25.498514+01:00 jdbc[134]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'obaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobao... (404)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 23:00:44.672061+01:00 jdbc[134]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'baobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobobaobaobaobaobaobaoba... (286)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 23:01:18.904048+01:00 jdbc[134]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "'baobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobobaobaobaobaobaobaoba... (364)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]
+2025-01-21 23:01:58.409623+01:00 jdbc[134]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "SADRZAJ_OBAVIJEST CHARACTER VARYING(255)": "U&'u 23:01\\000abaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobaobobaobao... (284)"; SQL statement:
+insert into obavijest (adresa_lokacija,datum_obavijest,drzava_loakcija,grad_lokacija,ime_nastavnik,naslov_obavijest,sif_predmet,prezime_nastavnik,sadrzaj_obavijest,sif_obavijest) values (?,?,?,?,?,?,?,?,?,default) [22001-224]

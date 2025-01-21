@@ -16,8 +16,170 @@ const Nastavnik = () => {
   const [reportData, setReportData] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null); // Email učenika
   const [selectedStudentSubject, setSelectedStudentSubject] = useState(null); // Naziv predmeta
-    const [userEmail, setUserEmail] = useState(null);
-    
+  const [userEmail, setUserEmail] = useState(null);
+  const [obavijestNaslov, setObavijestNaslov] = useState("");
+  const [obavijestSadrzaj, setObavijestSadrzaj] = useState("");
+  const [obavijesti, setObavijesti] = useState([]); // Lista obavijesti
+const [isDeletingObavijesti, setIsDeletingObavijesti] = useState(false); // Režim brisanja
+
+useEffect(() => {
+  if (activeTab === "Obavijesti" && selectedSubject) {
+    fetchObavijesti();
+  }
+}, [activeTab, selectedSubject]);
+
+
+
+  const fetchObavijesti = async () => {
+    if (!selectedSubject) {
+      console.error("Predmet nije odabran.");
+      return;
+    }
+  
+    try {
+      const response = await fetch(`/api/nastavnik/obavijesti?nazPredmet=${selectedSubject}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error("Greška prilikom dohvaćanja obavijesti.");
+      const data = await response.json();
+      setObavijesti(data);
+    } catch (error) {
+      console.error("Greška pri dohvaćanju obavijesti:", error);
+    }
+  };
+  
+  
+  const handleDeleteObavijest = async (sifObavijest) => {
+    try {
+      const response = await fetch(`/api/nastavnik/obavijesti?sifObavijest=${sifObavijest}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        alert("Obavijest uspješno obrisana!");
+        fetchObavijesti(); // Osvježi listu nakon brisanja
+      } else {
+        alert("Greška prilikom brisanja obavijesti.");
+      }
+    } catch (error) {
+      console.error("Greška pri brisanju obavijesti:", error);
+    }
+  };
+  
+  
+
+  const handleSendObavijest = async () => {
+    if (!obavijestNaslov || !obavijestSadrzaj || !selectedSubject) {
+      alert("Molimo unesite sve podatke!");
+      return;
+    }
+  
+    // Kreiranje podataka u formatu `application/x-www-form-urlencoded`
+    const formData = new URLSearchParams();
+    formData.append("naslovObavijest", obavijestNaslov);
+    formData.append("sadrzajObavijest", obavijestSadrzaj);
+    formData.append("nazPredmet", selectedSubject);
+  
+    try {
+      const response = await fetch("/api/nastavnik/obavijesti", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded", // Ključno za @RequestParam
+        },
+        body: formData.toString(),
+      });
+  
+      if (response.ok) {
+        alert("Obavijest uspješno poslana!");
+        setObavijestNaslov("");
+        setObavijestSadrzaj("");
+      } else {
+        alert("Greška prilikom slanja obavijesti.");
+      }
+    } catch (error) {
+      console.error("Greška pri slanju obavijesti:", error);
+      alert("Došlo je do greške!");
+    }
+  };
+
+
+  const renderObavijestiList = () => (
+    <div className="obavijesti-list">
+      <h3>Popis obavijesti</h3>
+      {obavijesti.length > 0 ? (
+        <ul>
+          {obavijesti.map((obavijest) => (
+            <li key={obavijest.sifObavijest} className="obavijest-item">
+              <div>
+                <strong>{obavijest.naslovObavijest}</strong> - {obavijest.sadrzajObavijest}
+              </div>
+              {isDeletingObavijesti && (
+                <button
+                  className="delete-obavijest-btn"
+                  onClick={() => handleDeleteObavijest(obavijest.sifObavijest)}
+                >
+                  🗑️
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Nema obavijesti za prikaz.</p>
+      )}
+      <div className="delete-toggle-container">
+        {!isDeletingObavijesti ? (
+          <button
+            onClick={() => setIsDeletingObavijesti(true)}
+            className="delete-toggle-btn"
+          >
+            Obriši obavijesti
+          </button>
+        ) : (
+          <button
+            onClick={() => setIsDeletingObavijesti(false)}
+            className="delete-toggle-btn"
+          >
+            Gotovo
+          </button>
+        )}
+      </div>
+    </div>
+  );
+  
+
+  const renderObavijestiForm = () => (
+    <div className="obavijesti-section">
+      <div className="obavijesti-form">
+        <h2>Dodaj novu obavijest</h2>
+        <div className="form-group">
+          <label htmlFor="naslov">Naslov obavijesti:</label>
+          <input
+            type="text"
+            id="naslov"
+            value={obavijestNaslov}
+            onChange={(e) => setObavijestNaslov(e.target.value)}
+            placeholder="Unesite naslov"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="sadrzaj">Sadržaj obavijesti:</label>
+          <textarea
+            id="sadrzaj"
+            value={obavijestSadrzaj}
+            onChange={(e) => setObavijestSadrzaj(e.target.value)}
+            placeholder="Unesite sadržaj"
+          ></textarea>
+        </div>
+        <button onClick={handleSendObavijest}>Pošalji obavijest</button>
+      </div>
+      {renderObavijestiList()}
+    </div>
+  );
+  
+  
+
+  
   useEffect(() => {
         const fetchUserEmail = async () => {
             try {
@@ -270,7 +432,7 @@ const Nastavnik = () => {
           <div key={material} className="material-card">
             {isDeleting && (
               <button
-                className="delete-icon"
+                className="delete-icon-material"
                 onClick={() => handleDeleteMaterial(material)}
               >
                 🗑️
@@ -343,6 +505,10 @@ const Nastavnik = () => {
               />
             )}
             {activeTab === "Materijali" && renderMaterials()}
+            {activeTab === "Obavijesti" && renderObavijestiForm()}
+           
+
+          
           </div>
         );
       }

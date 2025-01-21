@@ -207,7 +207,7 @@ public class NastavnikController {
     public ResponseEntity<String> dodajObavijest(
             @RequestParam String naslovObavijest,
             @RequestParam String sadrzajObavijest,
-            @RequestParam Integer sifPredmet,
+            @RequestParam String nazPredmet,
             @RequestParam(required = false) String adresaLokacija,
             @RequestParam(required = false) String gradLokacija,
             @RequestParam(required = false) String drzavaLokacija,
@@ -227,7 +227,7 @@ public class NastavnikController {
                 naslovObavijest,
                 sadrzajObavijest,
                 datumObavijest,
-                sifPredmet,
+                nazPredmet,
                 imeNastavnik,
                 prezimeNastavnik,
                 adresaLokacija,
@@ -238,8 +238,8 @@ public class NastavnikController {
     }
 
     @GetMapping("/obavijesti")
-    public ResponseEntity<?> pogledajObavijesti(@RequestParam String nazivPredmet){
-        List<Obavijest> obavijesti = obavijestService.prikaziObavijestiZaPredmet(nazivPredmet);
+    public ResponseEntity<?> pogledajObavijesti(@RequestParam String nazPredmet){
+        List<Obavijest> obavijesti = obavijestService.prikaziObavijestiZaPredmet(nazPredmet);
         return ResponseEntity.ok(obavijesti);
     }
 

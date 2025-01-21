@@ -23,9 +23,9 @@ public class ObavijestServiceJpa  implements ObavijestService{
 	private PredmetRepository predmetRepo;
 
 	@Override
-	public void dodajObavijest(String naslovObavijest, String sadrzajObavijest, Date datumObavijest, Integer sifPredmet,
-            String imeNastavnik, String prezimeNastavnik, String adresaLokacija, 
-            String gradLokacija, String drzavaLokacija) {
+	public void dodajObavijest(String naslovObavijest, String sadrzajObavijest, Date datumObavijest, String nazPredmet,
+							   String imeNastavnik, String prezimeNastavnik, String adresaLokacija,
+							   String gradLokacija, String drzavaLokacija) {
 
 
 		if (naslovObavijest == null || naslovObavijest.isEmpty()) {
@@ -42,9 +42,8 @@ public class ObavijestServiceJpa  implements ObavijestService{
 		obavijest.setDatumObavijest(datumObavijest);
 
 
-		if (sifPredmet != null) {
-			Predmet predmet = predmetRepo.findById(sifPredmet)
-					.orElseThrow(() -> new RuntimeException("Predmet s ID-jem " + sifPredmet + " nije pronađen."));
+		if (nazPredmet != null) {
+			Predmet predmet = predmetRepo.findByNazPredmet(nazPredmet);
 			obavijest.setPredmet(predmet);
 		}
 
@@ -52,15 +51,14 @@ public class ObavijestServiceJpa  implements ObavijestService{
 		obavijest.setImeNastavnik(imeNastavnik);
 		obavijest.setPrezimeNastavnik(prezimeNastavnik);
 
-		
+
 		obavijest.setAdresaLokacija(adresaLokacija);
 		obavijest.setGradLokacija(gradLokacija);
 		obavijest.setDrzavaLoakcija(drzavaLokacija);
 
 
 		obavijestRepo.save(obavijest);
-}
-	
+	}
 
 
 	@Override
