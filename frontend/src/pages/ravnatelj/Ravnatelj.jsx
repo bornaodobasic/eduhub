@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FaSchool, FaChartBar, FaChalkboard, FaBell } from "react-icons/fa";
+import { useEffect } from "react";
+import { FaSchool, FaChartBar, FaChalkboard, FaBell, FaTrashAlt } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import TableUcionice from "../../components/TableUcionice";
 import GrafUcionice from "../../components/GrafUcionice";
@@ -10,6 +11,10 @@ import "./Ravnatelj.css";
 const Ravnatelj = () => {
   const [activeSection, setActiveSection] = useState("Učionice");
   const [obavijestType, setObavijestType] = useState(null); // "opca" ili "terenska"
+  const [obavijesti, setObavijesti] = useState([]);
+  const [deleteMode, setDeleteMode] = useState(false);
+
+  
   const [formData, setFormData] = useState({
     naslovObavijest: "",
     sadrzajObavijest: "",
@@ -18,40 +23,58 @@ const Ravnatelj = () => {
     drzavaLokacija: "",
   });
 
-
-  const sendFixedObavijest = async () => {
-    const payload = {
-      naslovObavijest: "Moja Diridika",
-      sadrzajObavijest: "Ore na volovolove",
-      adresaLokacija: "",
-      gradLokacija: "",
-      drzavaLokacija: ""
-    };
-  
-    try {
-      const response = await fetch("/api/ravnatelj/obavijesti", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-  
-      if (response.ok) {
-        alert("Obavijest uspješno poslana!");
-      } else {
-        alert("Došlo je do greške pri slanju obavijesti.");
-      }
-    } catch (error) {
-      console.error("Greška pri slanju obavijesti:", error);
-      alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
-    }
-  };
-  
   const menuItems = [
     { name: "Učionice", icon: <FaSchool /> },
     { name: "Učenici", icon: <FaChartBar /> },
     { name: "Izvještaj", icon: <FaChalkboard /> },
     { name: "Obavijesti", icon: <FaBell /> },
   ];
+
+
+  const fetchObavijesti = async () => {
+    try {
+      const response = await fetch("/api/ravnatelj/obavijesti");
+      if (response.ok) {
+        const data = await response.json();
+        // Sort by date (newest first)
+        const sortedData = data.sort(
+          (a, b) => new Date(b.datumObavijest) - new Date(a.datumObavijest)
+        );
+        setObavijesti(sortedData);
+      } else {
+        alert("Greška pri dohvaćanju obavijesti.");
+      }
+    } catch (error) {
+      console.error("Greška pri dohvaćanju obavijesti:", error);
+      alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
+    }
+  };
+  
+
+  
+  const deleteObavijest = async (sifObavijest) => {
+    try {
+      const response = await fetch(`/api/ravnatelj/obavijesti?sifObavijest=${sifObavijest}`, {
+        method: "DELETE",
+      });
+  
+      if (response.ok) {
+        alert("Obavijest uspješno izbrisana!");
+        setObavijesti((prev) => prev.filter((o) => o.sifObavijest !== sifObavijest));
+      } else {
+        alert("Došlo je do greške pri brisanju obavijesti.");
+      }
+    } catch (error) {
+      console.error("Greška pri brisanju obavijesti:", error);
+      alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
+    }
+  };
+  
+  
+  useEffect(() => {
+    fetchObavijesti();
+  }, []);
+  
 
   // Funkcija za unos u formu
   const handleInputChange = (e) => {
@@ -112,6 +135,7 @@ const Ravnatelj = () => {
           drzavaLokacija: "",
         });
         setObavijestType(null);
+        fetchObavijesti();
       } else {
         alert("Došlo je do greške pri dodavanju obavijesti.");
       }
@@ -121,36 +145,49 @@ const Ravnatelj = () => {
     }
   };
 
-  // Brisanje obavijesti
-  const handleDeleteObavijest = async (sifObavijest) => {
-    try {
-      const response = await fetch(`/api/ravnatelj/obavijesti?sifObavijest=${sifObavijest}`, {
-        method: "DELETE",
-      });
 
-      if (response.ok) {
-        alert("Obavijest uspješno izbrisana!");
-      } else {
-        alert("Došlo je do greške pri brisanju obavijesti.");
-      }
-    } catch (error) {
-      console.error("Greška pri brisanju obavijesti:", error);
-      alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
-    }
-  };
 
-  // Prikaz forme za obavijesti
   const renderObavijestiContent = () => {
     if (!obavijestType) {
       return (
         <div className="obavijesti-section">
           <button onClick={() => setObavijestType("opca")}>Dodaj Opću Obavijest</button>
           <button onClick={() => setObavijestType("terenska")}>Dodaj Obavijest o Terenskoj Nastavi</button>
-          <button onClick={sendFixedObavijest}>Pošalji "Moja Diridika"</button>
+          <button onClick={() => setDeleteMode((prev) => !prev)}>
+            {deleteMode ? "Gotovo" : "Obriši obavijesti"}
+          </button>
+  
+          {/* List all notifications */}
+          <div className="obavijesti-list">
+            {obavijesti.map((obavijest) => (
+              <div key={obavijest.sifObavijest} className="obavijest-item">
+                <h4>{obavijest.naslovObavijest}</h4>
+                <p>{obavijest.sadrzajObavijest}</p>
+                <p>
+                  Datum: {new Date(obavijest.datumObavijest).toLocaleDateString("hr-HR")}
+                </p>
+                {obavijest.adresaLokacija && (
+                  <p>
+                    Lokacija: {obavijest.adresaLokacija}, {obavijest.gradLokacija},{" "}
+                    {obavijest.drzavaLoakcija}
+                  </p>
+                )}
+                {deleteMode && (
+                  <button
+                    className="delete-button"
+                    onClick={() => deleteObavijest(obavijest.sifObavijest)}
+                  >
+                    <FaTrashAlt />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       );
     }
-
+  
+    // Render the form if obavijestType is set
     return (
       <div className="form-container">
         <h4>
@@ -223,6 +260,7 @@ const Ravnatelj = () => {
       </div>
     );
   };
+  
 
   // Glavni render sekcija
   const renderContent = () => {

@@ -5,40 +5,80 @@ import UcenikPredmeti from "../../components/UcenikPredmeti";
 import UcenikAktivnosti from "../../components/UcenikAktivnosti";
 import Timetable from "../../components/Timetable";
 import UcenikPotvrde from "../../components/UcenikPotvrde";
-import "../admin/Admin.css";
 
 const Ucenik = () => {
     const [activeSection, setActiveSection] = useState("Predmeti");
     const [userEmail, setUserEmail] = useState(null);
+    const [notifications, setNotifications] = useState([]); // State for notifications
 
     const menuItems = [
+        { name: "Naslovnica", icon: <FaBook /> },
         { name: "Predmeti", icon: <FaBook /> },
         { name: "Aktivnosti", icon: <FaTasks /> },
         { name: "Raspored", icon: <FaCalendarAlt /> },
+        { name: "Obavijesti", icon: <FaEnvelope /> },
         { name: "Potvrde", icon: <FaEnvelope /> },
         { name: "Chat", icon: <FaCommentDots /> },
     ];
 
-
     useEffect(() => {
+        // Fetch user email
         const fetchUserEmail = async () => {
             try {
-                const response = await fetch('/api/user/email');
+                const response = await fetch("/api/user/email");
                 if (response.ok) {
                     const data = await response.json();
                     setUserEmail(data.email);
                 } else {
-                    console.error('Greška pri dohvaćanju emaila:', response.statusText);
+                    console.error("Greška pri dohvaćanju emaila:", response.statusText);
                 }
             } catch (error) {
-                console.error('Došlo je do greške:', error);
+                console.error("Došlo je do greške:", error);
+            }
+        };
+
+        // Fetch notifications
+        const fetchNotifications = async () => {
+            try {
+                const response = await fetch("/api/ucenik/obavijesti");
+                if (response.ok) {
+                    const data = await response.json();
+                    // Sort notifications by date (newest first)
+                    const sortedData = data.sort(
+                        (a, b) => new Date(b.datumObavijest) - new Date(a.datumObavijest)
+                    );
+                    setNotifications(sortedData);
+                } else {
+                    console.error("Greška pri dohvaćanju obavijesti:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Došlo je do greške pri dohvaćanju obavijesti:", error);
             }
         };
 
         fetchUserEmail();
+        fetchNotifications();
     }, []);
+
     const renderContent = () => {
         switch (activeSection) {
+            case "Naslovnica":
+                // Display three newest notifications
+                const topThree = notifications.slice(0, 3);
+                return (
+                    <div className="content-container">
+                        <h4>Najnovije Obavijesti</h4>
+                        {topThree.map((notif) => (
+                            <div key={notif.sifObavijest} className="notification-item">
+                                <h5>{notif.naslovObavijest}</h5>
+                                <p>{notif.sadrzajObavijest}</p>
+                                <p>
+                                    Datum: {new Date(notif.datumObavijest).toLocaleDateString("hr-HR")}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                );
             case "Predmeti":
                 return (
                     <div className="content-container">
@@ -57,10 +97,25 @@ const Ucenik = () => {
                         {userEmail ? <Timetable email={userEmail} /> : <p>Loading timetable...</p>}
                     </div>
                 );
+            case "Obavijesti":
+                // Display all notifications
+                return (
+                    <div className="content-container">
+                        <h4>Sve Obavijesti</h4>
+                        {notifications.map((notif) => (
+                            <div key={notif.sifObavijest} className="notification-item">
+                                <h5>{notif.naslovObavijest}</h5>
+                                <p>{notif.sadrzajObavijest}</p>
+                                <p>
+                                    Datum: {new Date(notif.datumObavijest).toLocaleDateString("hr-HR")}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                );
             case "Potvrde":
                 return (
                     <div className="content-container">
-                        {/* Pass the email to UcenikPotvrde as a prop */}
                         {userEmail ? <UcenikPotvrde userEmail={userEmail} /> : <p>Loading...</p>}
                     </div>
                 );
@@ -69,8 +124,8 @@ const Ucenik = () => {
                     <div className="content-container">
                         <h1>Ovo je chat učenika</h1>
                         <button onClick={() => (window.location.href = "/chat")}>
-            Idi na Chat
-          </button>
+                            Idi na Chat
+                        </button>
                     </div>
                 );
             default:

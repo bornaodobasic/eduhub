@@ -13,4 +13,29 @@
   .forma-container {
     flex: 1;
   }
+
+  .obavijesti-list {
+    margin-top: 20px;
+  }
+  
+  .obavijest-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  
+  .delete-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    color: red;
+  }
+  
   
