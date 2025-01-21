@@ -21,15 +21,11 @@ public class WebSocketConfig implements WebSocketConfigurer {
         return chatWebSocketHandler; // Vaša implementacija handlera
     }
 
-    @Bean
-    public ServerEndpointExporter serverEndpointExporter() {
-        return new ServerEndpointExporter();
-    }
-
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        // Registriramo WebSocket handler za "/ws/chat" endpoint
-        registry.addHandler(chatWebSocketHandler, "/ws/chat")
-                .setAllowedOrigins("*");  // Dozvolite sve izvore, zamijeniti s vašim dopuštenim izvorima
+        // Registriramo WebSocket handler za "/chat" endpoint
+        registry.addHandler(chatWebSocketHandler, "/chat")
+                .setAllowedOrigins("https://eduhub-rfsg.onrender.com");
+        		
     }
 }

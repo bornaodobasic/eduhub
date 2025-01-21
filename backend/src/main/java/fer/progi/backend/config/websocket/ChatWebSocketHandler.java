@@ -38,10 +38,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         session.getAttributes().put("email", email); // Spremajte email u atribute sesije
         sessions.add(session); // Dodajte sesiju u aktivne veze
         System.out.println("Nova veza s korisnikom: " + email);
-//        List<ChatMessage> previousMessages = userMessages.getOrDefault(user, new ArrayList<>());
-//        for (ChatMessage message : previousMessages) {
-//            session.sendMessage(new TextMessage(message.getSadrzaj()));
-//        }
+        for(WebSocketSession s : sessions) {
+        	System.out.println(s.getAttributes());
+        }
         
     }
 
@@ -74,7 +73,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         for (WebSocketSession session : sessions) {
             try {
-                String sessionUserEmail = session.getUri().getQuery().split("=")[1];
+                String sessionUserEmail = session.getAttributes().get("email").toString();
                 if (members.contains(sessionUserEmail)) {
                     session.sendMessage(textMessage);
                     System.out.println("Poruka poslana članu grupe: " + sessionUserEmail);
@@ -97,13 +96,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         TextMessage textMessage = new TextMessage(chatMessage.getSadrzaj());
         for (WebSocketSession session : sessions) {
             try {
-                String sessionUserEmail = session.getUri().getQuery().split("=")[1];
+                String sessionUserEmail = session.getAttributes().get("email").toString();
 
                 if (sessionUserEmail.equals(chatMessage.getPrimatelj())) {
                     session.sendMessage(textMessage);
                     System.out.println("Poruka poslana primatelju: " + sessionUserEmail);
                 } else {
-                	System.out.println("Poruka je poslana, ali primatelj nije online");
+                	System.out.println("To nije primatelj");
                 }
             } catch (IOException e) {
                 System.err.println("Greška prilikom slanja poruke: " + e.getMessage());

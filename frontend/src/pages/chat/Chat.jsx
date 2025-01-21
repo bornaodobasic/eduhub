@@ -20,21 +20,36 @@ const Chat = () => {
             .then(response => response.text())
             .then(email => {
                 setCurrentUserEmail(email.trim());
-                const ws = new WebSocket(`ws://localhost:8080/ws/chat?email=${encodeURIComponent(email.trim())}`);
+                const ws = new WebSocket(`wss://eduhub-rfsg.onrender.com/chat?email=${encodeURIComponent(email.trim())}`);
                 setSocket(ws);
+
+                // Pratite stanje veze
+                ws.onopen = () => {
+                    console.log("WebSocket veza je uspostavljena:", ws.readyState); // Treba vratiti 1
+                };
+  
+                ws.onerror = (error) => {
+                    console.error("Došlo je do pogreške s WebSocket vezom:", error);
+                };
 
                 ws.onmessage = event => {
                     const message = JSON.parse(event.data);
+                    console.log("Primljena poruka preko WebSocket-a:", message);
                     setMessages(prevMessages => [...prevMessages, message]);
                 };
 
-                ws.onclose = () => console.log('WebSocket closed.');
+                ws.onclose = () => console.log('WebSocket veza je zatvorena:', ws.readyState);
+
+                // Provjera nakon kratkog kašnjenja
+                setTimeout(() => {
+                    console.log("Stanje veze nakon 3 sekunde:", ws.readyState);
+                }, 3000);
             });
 
         return () => {
             if (socket) socket.close();
         };
-    }, []);
+    }, [socket]);
 
     useEffect(() => {
         if (recipientType === 'nastavnik') {
@@ -67,7 +82,7 @@ const Chat = () => {
         if (recipientType !== 'grupe' && selectedRecipient) {
             fetchMessages(currentUserEmail, selectedRecipient);
         }
-    }, [selectedRecipient, recipientType]);
+    }, [selectedRecipient, recipientType, currentUserEmail]);
     
     useEffect(() => {
         if (recipientType === 'grupe' && selectedRecipient) {
@@ -102,6 +117,7 @@ const Chat = () => {
             oznakaVremena: new Date().toISOString()
         };
 
+        console.log("Poruka koja se šalje:", message);
         if (socket) socket.send(JSON.stringify(message));
         setMessages(prevMessages => [...prevMessages, message]);
         setMessageInput('');
