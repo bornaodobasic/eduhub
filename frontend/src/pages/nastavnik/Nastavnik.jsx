@@ -6,7 +6,7 @@ import Timetable from "../../components/Timetable";
 import "./Nastavnik.css";
 
 const Nastavnik = () => {
-  const [activeSection, setActiveSection] = useState("Predmeti");
+  const [activeSection, setActiveSection] = useState("Naslovnica");
   const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [activeTab, setActiveTab] = useState("Materijali");
@@ -302,6 +302,14 @@ const Nastavnik = () => {
       return renderReport();
     }
 
+    if (activeSection === "Naslovnica") {
+      return (
+        <div>
+          <h4>Naslovnica opa opa</h4>
+        </div>
+      );
+    }
+
     if (activeSection === "Predmeti") {
       if (selectedSubject) {
         return (
@@ -365,6 +373,7 @@ const Nastavnik = () => {
   };
 
   const menuItems = [
+    { name: "Naslovnica", icon: <FaChartBar /> },
     { name: "Predmeti", icon: <FaChartBar /> },
     { name: "Raspored", icon: <FaChalkboard /> },
     { name: "Chat", icon: <FaComments /> },

@@ -5,9 +5,10 @@ import Sidebar from "../../components/Sidebar";
 
 
 const Satnicar = () => {
-  const [activeSection, setActiveSection] = useState("Raspored");
+  const [activeSection, setActiveSection] = useState("Naslovnica");
 
   const menuItems = [
+    { name: "Naslovnica", icon: <FaCalendarAlt /> },
     { name: "Raspored", icon: <FaCalendarAlt /> },
     { name: "Obavijesti", icon: <FaBell /> },
   ];
@@ -33,6 +34,8 @@ const Satnicar = () => {
 
   const renderContent = () => {
     switch (activeSection) {
+      case "Raspored":
+        return  <h4>Naslovnica opa opa</h4>
       case "Raspored":
         return  <button className="generate-schedule-button" onClick={handleGenerateSchedule}>
                  Generiraj Raspored

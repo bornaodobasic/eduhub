@@ -5,9 +5,10 @@ import Sidebar from "../../components/Sidebar";
 
 
 const Djelatnik = () => {
-  const [activeSection, setActiveSection] = useState("Nekaj");
+  const [activeSection, setActiveSection] = useState("Naslovnica");
 
   const menuItems = [
+    { name: "Naslovnica", icon: <FaSchool /> },
     { name: "Nekaj", icon: <FaSchool /> },
     { name: "Nesto", icon: <FaChartBar /> },
     { name: "Raspored", icon: <FaChalkboard /> },
@@ -15,6 +16,8 @@ const Djelatnik = () => {
 
   const renderContent = () => {
     switch (activeSection) {
+      case "Naslovnica":
+        return <h4>Naslovnica opa dolaze uskoro!</h4>;
       case "Nekaj":
         return <h4>Nekaj dolaze uskoro!</h4>;
         

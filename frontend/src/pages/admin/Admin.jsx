@@ -13,10 +13,11 @@ import KorisnikForm from "../../components/KorisnikForm";
 import WeatherWidget from "../../components/WeatherWidget";
 
 const Admin = () => {
-  const [activeSection, setActiveSection] = useState("Učenici");
+  const [activeSection, setActiveSection] = useState("Naslovnica");
 
 
   const menuItems = [
+    { name: "Naslovnica", icon: <FaUserGraduate /> },
     { name: "Učenici", icon: <FaUserGraduate /> },
     { name: "Nastavnici", icon: <FaChalkboardTeacher /> },
     { name: "Ravnatelji", icon: <FaUserTie /> },
@@ -26,7 +27,13 @@ const Admin = () => {
   ];
 
   const renderContent = () => {
-    switch (activeSection) {
+    switch (activeSection) { 
+      case "Naslovnica":
+      return (
+          <div className="content-container">
+            Naslovnica opa opa
+          </div>
+        );
       case "Učenici":
         return (
             <div className="content-container">

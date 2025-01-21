@@ -8,7 +8,7 @@ import Izvjestaj from "../../components/Izvjestaj";
 import "./Ravnatelj.css";
 
 const Ravnatelj = () => {
-  const [activeSection, setActiveSection] = useState("Učionice");
+  const [activeSection, setActiveSection] = useState("Naslovnica");
   const [obavijestType, setObavijestType] = useState(null);
   const [obavijesti, setObavijesti] = useState([]);
   const [deleteMode, setDeleteMode] = useState(false);
@@ -22,6 +22,7 @@ const Ravnatelj = () => {
   });
 
   const menuItems = [
+    { name: "Naslovnica", icon: <FaSchool /> },
     { name: "Učionice", icon: <FaSchool /> },
     { name: "Učenici", icon: <FaChartBar /> },
     { name: "Izvještaj", icon: <FaChalkboard /> },
@@ -255,6 +256,8 @@ const Ravnatelj = () => {
 
   const renderContent = () => {
     switch (activeSection) {
+      case "Naslovnica":
+        return <h4>Naslovnica opa opa</h4>;
       case "Učionice":
         return (
           <div className="ucionice-section">

@@ -8,7 +8,7 @@ import UcenikPotvrde from "../../components/UcenikPotvrde";
 import "./Ucenik.css";
 
 const Ucenik = () => {
-    const [activeSection, setActiveSection] = useState("Predmeti");
+    const [activeSection, setActiveSection] = useState("Naslovnica");
     const [userEmail, setUserEmail] = useState(null);
     const [notifications, setNotifications] = useState([]);
 
