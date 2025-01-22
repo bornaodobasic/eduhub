@@ -7,7 +7,6 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 @Configuration
 @EnableWebSocket
@@ -25,7 +24,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         // Registriramo WebSocket handler za "/chat" endpoint
         registry.addHandler(chatWebSocketHandler, "/chat")
-                .setAllowedOrigins("https://eduhub-rfsg.onrender.com");
+        		.setAllowedOrigins("https://eduhub-rfsg.onrender.com");
         		
     }
 }

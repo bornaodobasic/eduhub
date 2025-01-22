@@ -2,6 +2,9 @@ package fer.progi.backend.config.websocket;
 
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 
@@ -30,6 +33,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Autowired
     private ChatServiceJpa chatService;
     
+    @Autowired
+    private ObjectMapper objectMapper;
     
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -93,7 +98,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     // Slanje poruke primatelju
     public void sendToPrimatelj(ChatMessage chatMessage) throws IOException {
-        TextMessage textMessage = new TextMessage(chatMessage.getSadrzaj());
+    	String jsonMessage = objectMapper.writeValueAsString(chatMessage);
+        TextMessage textMessage = new TextMessage(jsonMessage);
         for (WebSocketSession session : sessions) {
             try {
                 String sessionUserEmail = session.getAttributes().get("email").toString();
