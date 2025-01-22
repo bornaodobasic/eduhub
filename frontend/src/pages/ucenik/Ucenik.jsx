@@ -1,141 +1,386 @@
 import React, { useState, useEffect } from "react";
-import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots } from "react-icons/fa";
+
+import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots} from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
-import UcenikPredmeti from "../../components/UcenikPredmeti";
-import UcenikAktivnosti from "../../components/UcenikAktivnosti";
+import TableUceniciNastavnik from "../../components/TableUceniciNastavnik";
 import Timetable from "../../components/Timetable";
 import UcenikPotvrde from "../../components/UcenikPotvrde";
 import "./Ucenik.css";
 
 const Ucenik = () => {
-    const [activeSection, setActiveSection] = useState("Naslovnica");
-    const [userEmail, setUserEmail] = useState(null);
-    const [notifications, setNotifications] = useState([]);
+  const [activeSection, setActiveSection] = useState("Naslovnica");
+  const [subjects, setSubjects] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [activeTab, setActiveTab] = useState("Materijali");
+  const [materials, setMaterials] = useState([]);
+  const [userEmail, setUserEmail] = useState(null);
+  const [obavijesti, setObavijesti] = useState([]); // Lista obavijesti
+  const [latestObavijesti, setLatestObavijesti] = useState([]);
 
-    const menuItems = [
-        { name: "Naslovnica", icon: <FaBook /> },
-        { name: "Predmeti", icon: <FaBook /> },
-        { name: "Aktivnosti", icon: <FaTasks /> },
-        { name: "Raspored", icon: <FaCalendarAlt /> },
-        { name: "Obavijesti", icon: <FaEnvelope /> },
-        { name: "Potvrde", icon: <FaEnvelope /> },
-        { name: "Chat", icon: <FaCommentDots /> },
-    ];
 
-    useEffect(() => {
+  const fetchLatestObavijesti = async () => {
+    try {
+      const response = await fetch("/api/ucenik/obavijesti", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error("Greška prilikom dohvaćanja obavijesti.");
+      const data = await response.json();
+  
+      // Sortiraj obavijesti od najnovije prema najstarijoj
+      const sortedData = data.sort((a, b) => new Date(b.datumObavijest) - new Date(a.datumObavijest));
+  
+      // Uzmi samo prve tri obavijesti
+      setLatestObavijesti(sortedData.slice(0, 3));
+    } catch (error) {
+      console.error("Greška pri dohvaćanju obavijesti:", error);
+    }
+  };
+  
+
+  const fetchGlobalObavijesti = async () => {
+    try {
+      const response = await fetch("/api/ucenik/obavijesti", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error("Greška prilikom dohvaćanja obavijesti.");
+      const data = await response.json();
+  
+      // Sortiraj obavijesti od najnovije prema najstarijoj
+      const sortedData = data.sort((a, b) => new Date(b.datumObavijest) - new Date(a.datumObavijest));
+      setObavijesti(sortedData);
+    } catch (error) {
+      console.error("Greška pri dohvaćanju obavijesti:", error);
+    }
+  };
+  
+
+useEffect(() => {
+  if (activeTab === "Obavijesti" && selectedSubject) {
+    fetchObavijesti();
+  }
+}, [activeTab, selectedSubject]);
+
+useEffect(() => {
+    if (activeSection === "Obavijesti") {
+      fetchGlobalObavijesti();
+    }
+  }, [activeSection]);
+  
+  useEffect(() => {
+    if (activeSection === "Naslovnica") {
+      fetchLatestObavijesti();
+    }
+  }, [activeSection]);
+  
+
+
+
+  const fetchObavijesti = async () => {
+    if (!selectedSubject) {
+      console.error("Predmet nije odabran.");
+      return;
+    }
+  
+    try {
+      const response = await fetch(`/api/ucenik/${selectedSubject}/obavijesti`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error("Greška prilikom dohvaćanja obavijesti.");
+      const data = await response.json();
+  
+      // Sortiraj obavijesti od najnovije prema najstarijoj
+      const sortedData = data.sort((a, b) => new Date(b.datumObavijest) - new Date(a.datumObavijest));
+      setObavijesti(sortedData);
+    } catch (error) {
+      console.error("Greška pri dohvaćanju obavijesti:", error);
+    }
+  };
+  
+
+
+ const renderObavijestiList = () => (
+  <div className="obavijesti-list">
+    {obavijesti.length > 0 ? (
+      <div>
+        {obavijesti.map((obavijest) => (
+          <div key={obavijest.sifObavijest} className="obavijest-item">
+            <strong>{obavijest.naslovObavijest}</strong>
+            <div>{obavijest.sadrzajObavijest}</div>
+            <div className="obavijest-datum">
+              Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p>Nema obavijesti za prikaz.</p>
+    )}
+  </div>
+);
+
+  
+  useEffect(() => {
         const fetchUserEmail = async () => {
             try {
-                const response = await fetch("/api/user/email");
+                const response = await fetch('/api/user/email');
                 if (response.ok) {
                     const data = await response.json();
                     setUserEmail(data.email);
                 } else {
-                    console.error("Greška pri dohvaćanju emaila:", response.statusText);
+                    console.error('Greška pri dohvaćanju emaila:', response.statusText);
                 }
             } catch (error) {
-                console.error("Došlo je do greške:", error);
-            }
-        };
-
-        const fetchNotifications = async () => {
-            try {
-                const response = await fetch("/api/ucenik/obavijesti");
-                if (response.ok) {
-                    const data = await response.json();
-                    const sortedData = data.sort(
-                        (a, b) => new Date(b.datumObavijest) - new Date(a.datumObavijest)
-                    );
-                    setNotifications(sortedData);
-                } else {
-                    console.error("Greška pri dohvaćanju obavijesti:", response.statusText);
-                }
-            } catch (error) {
-                console.error("Došlo je do greške pri dohvaćanju obavijesti:", error);
+                console.error('Došlo je do greške:', error);
             }
         };
 
         fetchUserEmail();
-        fetchNotifications();
     }, []);
 
-    const renderNotification = (notif) => {
-        const isTerenska = notif.adresaLokacija;
+  const parseSubject = (nazPredmet) => {
+    const match = nazPredmet.match(/(\D+)(\d)(.*)/); // Regularni izraz za razdvajanje
+    if (!match) return { naziv: "", razred: "", smjer: "" };
+  
+    const naziv = match[1].replace(/_/g, " ").trim(); // Sve lijevo od broja
+    const razred = match[2]; // Broj (razred)
+    const smjer = match[3].trim(); // Sve desno od broja
+  
+    // Formatiranje smjera
+    const formattedSmjer =
+      smjer === "_opca"
+        ? "Opća gimnazija"
+        : smjer === "_jezicna"
+        ? "Jezična gimnazija"
+        : smjer === "_primat"
+        ? "Prirodoslovno-matematička gimnazija"
+        : smjer;
+  
+    return {
+      naziv: naziv.replace(/\b\w/g, (c) => c.toUpperCase()), // Velika slova za prvu riječ
+      razred: `${razred}. razred`,
+      smjer: formattedSmjer,
+    };
+  };
+  
+
+
+  // Fetch za materijale
+  const fetchMaterials = async () => {
+    try {
+      const response = await fetch(`/api/ucenik/${selectedSubject}/materijali`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error("Greška prilikom dohvaćanja materijala.");
+      const data = await response.json();
+      setMaterials(data);
+    } catch (error) {
+      console.error("Error fetching materials:", error);
+    }
+  };
+
+  // Dohvati predmete
+  const fetchSubjects = async () => {
+    try {
+      const response = await fetch("/api/ucenik/predmeti", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error("Greška prilikom dohvaćanja predmeta.");
+      const data = await response.json();
+      setSubjects(data);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (activeSection === "Predmeti") {
+      fetchSubjects();
+    }
+  }, [activeSection]);
+
+  useEffect(() => {
+    if (selectedSubject) {
+      fetchMaterials();
+    }
+  }, [selectedSubject]);
+
+  useEffect(() => {
+    setSelectedSubject(null);
+    setActiveTab("Materijali");
+  }, [activeSection]);
+
+
+ 
+  const renderSubjects = () => (
+    <div className="subjects-grid">
+      {subjects.map((subject) => {
+        const { naziv, razred, smjer } = parseSubject(subject.nazPredmet);
 
         return (
-            <div key={notif.sifObavijest} className="notification-item">
-                <h3 className="notification-title">{notif.naslovObavijest}</h3>
-                <p className="notification-content">{notif.sadrzajObavijest}</p>
-                {isTerenska && (
-                    <button className="karte-button">Karte</button>
-                )}
-                <p className="notification-date">
-                    {new Date(notif.datumObavijest).toLocaleDateString("hr-HR")}
-                </p>
-                <hr className="notification-divider" />
+          <div
+            key={subject.id}
+            className="subject-card"
+            onClick={() => setSelectedSubject(subject.nazPredmet)}
+          >
+            <div className="subject-name">{naziv}</div>
+            <div className="subject-razred">{razred}</div>
+            <div className="subject-smjer">{smjer}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+  
+  
+
+  const renderMaterials = () => (
+    <div className="materials-grid">
+      {materials.length > 0 ? (
+        materials.map((material) => (
+          <div key={material} className="material-card">
+            <div className="material-icon">
+              <img src="/path/to/pdf-icon.png" alt="PDF" />
+            </div>
+            <div className="material-details">
+              <a
+                href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="material-link"
+              >
+                {material.split("_").pop()}
+              </a>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>Nema materijala za ovaj predmet.</p>
+      )}
+    </div>
+  );
+
+  const renderContent = () => {
+    if (activeSection === "Naslovnica") {
+        return (
+          <div>
+            <div className="latest-obavijesti">
+              <h3>Najnovije Obavijesti</h3>
+              {latestObavijesti.length > 0 ? (
+                latestObavijesti.map((obavijest) => (
+                  <div key={obavijest.sifObavijest} className="obavijest-item">
+                    <strong>{obavijest.naslovObavijest}</strong>
+                    <div>{obavijest.sadrzajObavijest}</div>
+                    <div className="obavijest-datum">
+                      Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>Nema obavijesti za prikaz.</p>
+              )}
+            </div>
+          </div>
+        );
+      }
+      
+
+    if (activeSection === "Predmeti") {
+      if (selectedSubject) {
+        return (
+          <div>
+            <nav className="subject-navbar">
+              <button
+                className={`nav-btn ${activeTab === "Materijali" ? "active" : ""}`}
+                onClick={() => setActiveTab("Materijali")}
+              >
+                Materijali
+              </button>
+              <button
+                className={`nav-btn ${activeTab === "Obavijesti" ? "active" : ""}`}
+                onClick={() => setActiveTab("Obavijesti")}
+              >
+                Obavijesti
+              </button>
+            </nav>
+            {activeTab === "Materijali" && renderMaterials()}
+            {activeTab === "Obavijesti" && (
+            <div>
+              {renderObavijestiList()} {/* Prikaz liste obavijesti */}
+            </div>
+          )}
+           
+
+          
+          </div>
+        );
+      }
+      return subjects.length > 0 ? renderSubjects() : <h4>Učitavanje predmeta...</h4>;
+    }
+
+    if (activeSection === "Obavijesti") {
+        return (
+          <div>
+            <h3>Opće Obavijesti</h3>
+            {renderObavijestiList()}
+          </div>
+        );
+      }
+      
+      if (activeSection === "Raspored") {
+        return (
+            <div className="content-container">
+                {userEmail ? <Timetable email={userEmail} /> : <p>Loading timetable...</p>}
             </div>
         );
-    };
+      }
 
-    const renderContent = () => {
-        switch (activeSection) {
-            case "Naslovnica":
-                return (
-                    <div className="content-container">
-                        <h4>Najnovije Obavijesti</h4>
-                        {notifications.slice(0, 3).map(renderNotification)}
-                    </div>
-                );
-            case "Obavijesti":
-                return (
-                    <div className="content-container">
-                        <h4>Sve Obavijesti</h4>
-                        {notifications.map(renderNotification)}
-                    </div>
-                );
-            case "Predmeti":
-                return (
-                    <div className="content-container">
-                        <UcenikPredmeti />
-                    </div>
-                );
-            case "Aktivnosti":
-                return (
-                    <div className="content-container">
-                        <UcenikAktivnosti />
-                    </div>
-                );
-            case "Raspored":
-                return (
-                    <div className="content-container">
-                        {userEmail ? <Timetable email={userEmail} /> : <p>Loading timetable...</p>}
-                    </div>
-                );
-            case "Potvrde":
-                return (
-                    <div className="content-container">
-                        {userEmail ? <UcenikPotvrde userEmail={userEmail} /> : <p>Loading...</p>}
-                    </div>
-                );
-            case "Chat":
-                return (
-                    <div className="content-container">
-                        <h1>Ovo je chat učenika</h1>
-                        <button onClick={() => (window.location.href = "/chat")}>
-                            Idi na Chat
-                        </button>
-                    </div>
-                );
-            default:
-                return <h1>Dobrodošli u Učenik panel</h1>;
-        }
-    };
+      if (activeSection === "Potvrde") {
+        return (
+            <div className="content-container">
+                {userEmail ? <UcenikPotvrde userEmail={userEmail} /> : <p>Loading...</p>}
+            </div>
+        );
+      }
 
-    return (
-        <div className="admin-container">
-            <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} menuItems={menuItems} />
-            <div className="admin-content">{renderContent()}</div>
+    if (activeSection === "Chat") {
+      return (
+        <div>
+          <h4>Dobrodošli u Chat!</h4>
+          <button onClick={() => (window.location.href = "/chat")}>
+            Idi na Chat
+          </button>
         </div>
-    );
+      );
+    }
+
+    return <h4>Odaberite sekciju iz izbornika.</h4>;
+  };
+
+  const menuItems = [
+    { name: "Naslovnica", icon: <FaBook /> },
+    { name: "Predmeti", icon: <FaBook /> },
+    { name: "Aktivnosti", icon: <FaTasks /> },
+    { name: "Raspored", icon: <FaCalendarAlt /> },
+    { name: "Obavijesti", icon: <FaEnvelope /> },
+    { name: "Potvrde", icon: <FaEnvelope /> },
+    { name: "Chat", icon: <FaCommentDots /> },
+];
+
+  return (
+    <div className="admin-container">
+      <Sidebar
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
+        menuItems={menuItems}
+      />
+      <div className="admin-content">{renderContent()}</div>
+    </div>
+  );
 };
 
 export default Ucenik;

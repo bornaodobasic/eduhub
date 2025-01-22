@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { FaDownload, FaEnvelope } from "react-icons/fa";
-import UcenikPredmeti from "./UcenikPredmeti";
 
 const UcenikPotvrde = ({ userEmail }) => {
     const handleDownloadPotvrda = async () => {

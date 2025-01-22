@@ -34,7 +34,7 @@ const Satnicar = () => {
 
   const renderContent = () => {
     switch (activeSection) {
-      case "Raspored":
+      case "Naslovnica":
         return  <h4>Naslovnica opa opa</h4>
       case "Raspored":
         return  <button className="generate-schedule-button" onClick={handleGenerateSchedule}>
