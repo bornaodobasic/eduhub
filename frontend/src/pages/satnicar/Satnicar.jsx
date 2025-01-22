@@ -1,11 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaSchool, FaBell, FaCalendarAlt } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
+import WeatherWidget from "../../components/WeatherWidget";
 
 
 
 const Satnicar = () => {
-  const [activeSection, setActiveSection] = useState("Naslovnica");
+  const [activeSection, setActiveSection] = useState("Naslovnica"); const [userName, setUserName] = useState(null);
+    
+    useEffect(() => {
+      const fetchUserName = async () => {
+          try {
+              const response = await fetch('/api/user');
+              if (response.ok) {
+                  const data = await response.json();
+                  setUserName(data.name);
+              } else {
+                  console.error('Greška pri dohvaćanju emaila:', response.statusText);
+              }
+          } catch (error) {
+              console.error('Došlo je do greške:', error);
+          }
+      };
+    
+      fetchUserName();
+    }, []);  
+  
 
   const menuItems = [
     { name: "Naslovnica", icon: <FaCalendarAlt /> },
@@ -35,7 +55,12 @@ const Satnicar = () => {
   const renderContent = () => {
     switch (activeSection) {
       case "Naslovnica":
-        return  <h4>Naslovnica opa opa</h4>
+        return (
+          <div>
+              <h1>Pozdrav, {userName}! </h1>
+               <WeatherWidget />
+          </div>
+        );
       case "Raspored":
         return  <button className="generate-schedule-button" onClick={handleGenerateSchedule}>
                  Generiraj Raspored

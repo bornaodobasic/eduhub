@@ -3,6 +3,7 @@ import { FaChartBar, FaChalkboard, FaComments } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import TableUceniciNastavnik from "../../components/TableUceniciNastavnik";
 import Timetable from "../../components/Timetable";
+import WeatherWidget from "../../components/WeatherWidget";
 import "./Nastavnik.css";
 
 const Nastavnik = () => {
@@ -21,6 +22,26 @@ const Nastavnik = () => {
   const [obavijestSadrzaj, setObavijestSadrzaj] = useState("");
   const [obavijesti, setObavijesti] = useState([]); // Lista obavijesti
 const [isDeletingObavijesti, setIsDeletingObavijesti] = useState(false); // Režim brisanja
+ const [userName, setUserName] = useState(null);
+  
+  useEffect(() => {
+    const fetchUserName = async () => {
+        try {
+            const response = await fetch('/api/user');
+            if (response.ok) {
+                const data = await response.json();
+                setUserName(data.name);
+            } else {
+                console.error('Greška pri dohvaćanju emaila:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Došlo je do greške:', error);
+        }
+    };
+  
+    fetchUserName();
+  }, []);  
+
 
 useEffect(() => {
   if (activeTab === "Obavijesti" && selectedSubject) {
@@ -477,7 +498,8 @@ const renderObavijestiForm = () => (
     if (activeSection === "Naslovnica") {
       return (
         <div>
-          <h4>Naslovnica opa opa</h4>
+            <h1>Pozdrav, {userName}! </h1>
+             <WeatherWidget />
         </div>
       );
     }

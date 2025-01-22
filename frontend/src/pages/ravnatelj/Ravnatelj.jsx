@@ -5,13 +5,34 @@ import TableUcionice from "../../components/TableUcionice";
 import GrafUcionice from "../../components/GrafUcionice";
 import UcioniceForm from "../../components/UcioniceForm";
 import Izvjestaj from "../../components/Izvjestaj";
+import WeatherWidget from "../../components/WeatherWidget";
 import "./Ravnatelj.css";
 
 const Ravnatelj = () => {
   const [activeSection, setActiveSection] = useState("Naslovnica");
   const [obavijestType, setObavijestType] = useState(null);
   const [obavijesti, setObavijesti] = useState([]);
-  const [deleteMode, setDeleteMode] = useState(false);
+  const [deleteMode, setDeleteMode] = useState(false); 
+  const [userName, setUserName] = useState(null);
+    
+    useEffect(() => {
+      const fetchUserName = async () => {
+          try {
+              const response = await fetch('/api/user');
+              if (response.ok) {
+                  const data = await response.json();
+                  setUserName(data.name);
+              } else {
+                  console.error('Greška pri dohvaćanju emaila:', response.statusText);
+              }
+          } catch (error) {
+              console.error('Došlo je do greške:', error);
+          }
+      };
+    
+      fetchUserName();
+    }, []);  
+  
 
   const [formData, setFormData] = useState({
     naslovObavijest: "",
@@ -257,7 +278,12 @@ const Ravnatelj = () => {
   const renderContent = () => {
     switch (activeSection) {
       case "Naslovnica":
-        return <h4>Naslovnica opa opa</h4>;
+        return (
+          <div>
+              <h1>Pozdrav, {userName}! </h1>
+               <WeatherWidget />
+          </div>
+        );
       case "Učionice":
         return (
           <div className="ucionice-section">

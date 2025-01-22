@@ -6,6 +6,8 @@ import Timetable from "../../components/Timetable";
 import UcenikPotvrde from "../../components/UcenikPotvrde";
 import MapRoute from "../../components/MapRoute";
 import UcenikAktivnosti from "../../components/UcenikAktivnosti";
+import WeatherWidger from "../../components/WeatherWidget";
+
 import "./Ucenik.css";
 
 const Ucenik = () => {
@@ -14,10 +16,29 @@ const Ucenik = () => {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [activeTab, setActiveTab] = useState("Materijali");
   const [materials, setMaterials] = useState([]);
-  const [userEmail, setUserEmail] = useState(null);
+  const [userEmail, setUserEmail] = useState(null); 
   const [obavijesti, setObavijesti] = useState([]); // Lista obavijesti
   const [latestObavijesti, setLatestObavijesti] = useState([]);
   const [destination, setDestination] = useState("Unska ulica 3, Zagreb, Hrvatska");
+  const [userName, setUserName] = useState(null);
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+        try {
+            const response = await fetch('/api/user');
+            if (response.ok) {
+                const data = await response.json();
+                setUserName(data.name);
+            } else {
+                console.error('Greška pri dohvaćanju emaila:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Došlo je do greške:', error);
+        }
+    };
+  
+    fetchUserName();
+  }, []);  
 
 
 
@@ -124,7 +145,8 @@ useEffect(() => {
   </div>
 );
 
-  
+
+
   useEffect(() => {
         const fetchUserEmail = async () => {
             try {
@@ -271,8 +293,11 @@ useEffect(() => {
     if (activeSection === "Naslovnica") {
         return (
           <div>
+        
+          <h1>Pozdrav, {userName}! </h1>
             <div className="latest-obavijesti">
               <h3>Najnovije Obavijesti</h3>
+
               {latestObavijesti.length > 0 ? (
                 latestObavijesti.map((obavijest) => (
                   <div key={obavijest.sifObavijest} className="obavijest-item">
@@ -287,6 +312,9 @@ useEffect(() => {
                 <p>Nema obavijesti za prikaz.</p>
               )}
             </div>
+
+            <WeatherWidger />
+
           </div>
         );
       }

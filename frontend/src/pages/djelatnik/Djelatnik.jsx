@@ -1,11 +1,32 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { FaSchool, FaChartBar, FaChalkboard } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
+import WeatherWidget from "../../components/WeatherWidget";
 
 
 
 const Djelatnik = () => {
-  const [activeSection, setActiveSection] = useState("Naslovnica");
+  const [activeSection, setActiveSection] = useState("Naslovnica"); 
+  const [userName, setUserName] = useState(null);
+    
+    useEffect(() => {
+      const fetchUserName = async () => {
+          try {
+              const response = await fetch('/api/user');
+              if (response.ok) {
+                  const data = await response.json();
+                  setUserName(data.name);
+              } else {
+                  console.error('Greška pri dohvaćanju emaila:', response.statusText);
+              }
+          } catch (error) {
+              console.error('Došlo je do greške:', error);
+          }
+      };
+    
+      fetchUserName();
+    }, []);  
+  
 
   const menuItems = [
     { name: "Naslovnica", icon: <FaSchool /> },
@@ -17,7 +38,12 @@ const Djelatnik = () => {
   const renderContent = () => {
     switch (activeSection) {
       case "Naslovnica":
-        return <h4>Naslovnica opa dolaze uskoro!</h4>;
+        return (
+          <div>
+              <h1>Pozdrav, {userName}! </h1>
+               <WeatherWidget />
+          </div>
+        );
       case "Nekaj":
         return <h4>Nekaj dolaze uskoro!</h4>;
         
