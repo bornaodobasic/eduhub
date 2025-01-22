@@ -86,6 +86,38 @@
     font-weight: bold;
     margin-top: 20px;
 }
+.week-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-size: 18px;
+}
+
+.week-button {
+    background-color: #d8cad0;
+    color: white;
+    font-size: 24px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.week-button:hover {
+    background-color: #aea4a9;
+}
+
+.week-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.week-button svg {
+    vertical-align: middle;
+}
+
 @media (max-width: 480px) {
     .timetable {
         grid-template-columns: 1fr;
