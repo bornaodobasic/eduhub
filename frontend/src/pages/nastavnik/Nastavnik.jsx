@@ -5,6 +5,7 @@ import TableUceniciNastavnik from "../../components/TableUceniciNastavnik";
 import Timetable from "../../components/Timetable";
 import WeatherWidget from "../../components/WeatherWidget";
 import "./Nastavnik.css";
+import {Navigate} from "react-router-dom";
 
 const Nastavnik = () => {
   const [activeSection, setActiveSection] = useState("Naslovnica");
@@ -564,10 +565,7 @@ const renderObavijestiForm = () => (
     if (activeSection === "Chat") {
       return (
         <div>
-          <h4>Dobrodošli u Chat!</h4>
-          <button onClick={() => (window.location.href = "/chat")}>
-            Idi na Chat
-          </button>
+          <Navigate to="/chat" />;
         </div>
       );
     }

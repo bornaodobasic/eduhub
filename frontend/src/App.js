@@ -12,6 +12,7 @@ import Satnicar from './pages/satnicar/Satnicar';
 import Djelatnik from './pages/djelatnik/Djelatnik';
 import Admin from './pages/admin/Admin';
 import Chat from './pages/chat/Chat';
+import Chat2 from "./pages/chat2/Chat2";
 
 
 function App() {
@@ -61,6 +62,7 @@ function App() {
         <Route path="/djelatnik" element={<Djelatnik />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/chat2" element={<Chat2 />} />
       </Routes>
     </Router>
   );

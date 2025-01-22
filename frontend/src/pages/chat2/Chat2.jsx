@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Chat.css';
+import "../chat/Chat.css";
 
 const Chat = () => {
     const [currentUserEmail, setCurrentUserEmail] = useState('');
@@ -39,34 +39,16 @@ const Chat = () => {
 
     useEffect(() => {
         if (recipientType === 'nastavnik') {
-            fetch('/api/nastavnik/')
+            fetch('/api/ucenik/nastavnici')
                 .then(response => response.json())
                 .then(data => setRecipients(data))
                 .catch(error => console.error('Error fetching nastavnici:', error));
         } else if (recipientType === 'ucenik') {
-            fetch('/api/nastavnik/predmeti')
+            fetch('/api/ucenik')
                 .then(response => response.json())
-                .then(predmeti => {
-                    const fetchStudentsPromises = predmeti.map(predmet =>
-                        fetch(`/api/nastavnik/uceniciNaPredmetu?predmetId=${predmet.id}`)
-                            .then(response => response.json())
-                            .catch(error => {
-                                console.error(`Error fetching students for predmet ${predmet.id}:`, error);
-                                return []; // Return empty array if fetch fails
-                            })
-                    );
+                .then(data => setRecipients(data))
+                .catch(error => console.error('Error fetching ucenik:', error));
 
-                    // Wait for all fetch requests to complete
-                    Promise.all(fetchStudentsPromises)
-                        .then(studentLists => {
-                            // Combine all students into a single array and remove duplicates
-                            const allStudents = studentLists.flat();
-                            const uniqueStudents = [...new Set(allStudents.map(student => student.email))];
-                            setRecipients(uniqueStudents);
-                        })
-                        .catch(error => console.error('Error consolidating student data:', error));
-                })
-                .catch(error => console.error('Error fetching predmeti:', error));
         } else if (recipientType === 'grupe') {
             fetch('/api/chat/grupe')
                 .then(response => response.json())
@@ -178,17 +160,18 @@ const Chat = () => {
                         </div>
                     ))}
                 </div>
-                <div className="chat-input">
+
+            <div className="chat-input">
                     <textarea
                         value={messageInput}
                         onChange={e => setMessageInput(e.target.value)}
                         placeholder="Unesite poruku..."
                     />
-                    <button onClick={sendMessage}>Pošaljite</button>
-                </div>
+                <button onClick={sendMessage}>Pošaljite</button>
             </div>
+        </div>
 
-            <div className="chat-sidebar">
+    <div className="chat-sidebar">
                 <div className="form-group">
                     <h3>Poruka za:</h3>
                     <select
@@ -248,7 +231,9 @@ const Chat = () => {
                             onChange={e => setGroupName(e.target.value)}
                             placeholder="Unesite ime grupe"
                         />
+                        <br/>
                         <h4>Odaberite članove:</h4>
+                        <br/>
                         <ul>
                             {recipients.map(recipient => (
                                 <li key={recipient} style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
@@ -273,16 +258,16 @@ const Chat = () => {
                     </div>
                 )}
 
-                {showGroups && (
-                    <div className="group-list-container">
-                        <ul>
-                            {groups.map(group => (
-                                <li key={group}>{group}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
+        {showGroups && (
+            <div className="group-list-container">
+                <ul>
+                    {groups.map(group => (
+                        <li key={group}>{group}</li>
+                    ))}
+                </ul>
             </div>
+        )}
+    </div>
         </div>
     );
 };

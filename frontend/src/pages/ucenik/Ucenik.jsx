@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { Navigate } from 'react-router-dom';
 import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots, FaMap} from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import Timetable from "../../components/Timetable";
@@ -356,7 +356,9 @@ useEffect(() => {
     if (activeSection === "Aktivnosti") {
       return (
         <div>
-          <UcenikAktivnosti email={userEmail} />
+          {userEmail ? <UcenikAktivnosti userEmail={userEmail}
+                                         onUpdateAktivnosti={() => console.log("Aktivnosti updated!")}/> :
+              <p>Loading aktivnosti...</p>}
         </div>
       );
     }
@@ -389,10 +391,7 @@ useEffect(() => {
     if (activeSection === "Chat") {
       return (
         <div>
-          <h4>Dobrodošli u Chat!</h4>
-          <button onClick={() => (window.location.href = "/chat")}>
-            Idi na Chat
-          </button>
+          return <Navigate to="/chat2" />;
         </div>
       );
     }

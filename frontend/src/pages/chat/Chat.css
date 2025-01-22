@@ -64,7 +64,7 @@
 }
 
 .chat-input button {
-    background-color: #007bff;
+    background-color: #ff93c0;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -73,7 +73,7 @@
 }
 
 .chat-input button:hover {
-    background-color: #0056b3;
+    background-color: #ff7eb3;
 }
 
 /* Sidebar sa desne strane */
@@ -104,7 +104,7 @@
     width: 100%;
     padding: 10px;
     margin-top: 10px;
-    background-color: #007bff;
+    background-color: #ff93c0;
     color: white;
     border: none;
     border-radius: 4px;
@@ -112,7 +112,7 @@
 }
 
 .chat-sidebar button:hover {
-    background-color: #0056b3;
+    background-color: #ff7eb3;
 }
 
 /* Grupa za kreiranje */
@@ -122,6 +122,8 @@
     border-radius: 8px;
     padding: 20px;
     margin-top: 20px;
+    max-height: 400px; /* Maksimalna visina kontejnera */
+    overflow-y: auto;
 }
 
 .create-group-container h3 {
@@ -149,9 +151,13 @@
 }
 
 .group-list-container li {
+    display: flex; /* Aligns items horizontally */
+    align-items: center; /* Vertically centers the checkbox and name */
+    gap: 10px; /* Adds space between the checkbox and the name */
+    margin-bottom: 10px;
     padding: 10px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 4px;
-    margin-bottom: 10px;
+    word-wrap: break-word; /* Handles long names */
 }
