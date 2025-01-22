@@ -5,6 +5,7 @@ import Sidebar from "../../components/Sidebar";
 import Timetable from "../../components/Timetable";
 import UcenikPotvrde from "../../components/UcenikPotvrde";
 import MapRoute from "../../components/MapRoute";
+import UcenikAktivnosti from "../../components/UcenikAktivnosti";
 import "./Ucenik.css";
 
 const Ucenik = () => {
@@ -322,6 +323,14 @@ useEffect(() => {
         );
       }
       return subjects.length > 0 ? renderSubjects() : <h4>Učitavanje predmeta...</h4>;
+    }
+
+    if (activeSection === "Aktivnosti") {
+      return (
+        <div>
+          <UcenikAktivnosti email={userEmail} />
+        </div>
+      );
     }
 
     if (activeSection === "Obavijesti") {

@@ -1,128 +1,141 @@
-import React, { useState, useEffect } from "react";
-import "./TableUcenik.css";
+import { useState, useEffect } from "react";
+import { FaTrashAlt } from "react-icons/fa";
 
-const UcenikAktivnosti = ({ userEmail, onUpdateAktivnosti }) => {
-    const [aktivnosti, setAktivnosti] = useState([]);
-    const [dostupneAktivnosti, setDostupneAktivnosti] = useState([]);
-    const [selectedAktivnosti, setSelectedAktivnosti] = useState([]);
+const UcenikAktivnosti = ({ email }) => {
+  const [aktivnosti, setAktivnosti] = useState([]);
+  const [unusedActivities, setUnusedActivities] = useState([]);
+  const [selected, setSelected] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        if (userEmail) {
-            fetchAktivnosti();
-            fetchDostupneAktivnosti();
-        }
-    }, [userEmail]);
+  // Fetch aktivnosti koje učenik pohađa
+  const fetchAktivnosti = async () => {
+    setLoading(true);
+    setError(null);
 
-    const fetchAktivnosti = async () => {
-        try {
-            const response = await fetch(`/api/ucenik/aktivnosti/je/${userEmail}`);
-            if (!response.ok) throw new Error("Greška prilikom dohvaćanja aktivnosti.");
+    try {
+      const response = await fetch(`/api/ucenik/aktivnosti/je/${email}`);
+      if (!response.ok) throw new Error("Neuspješno dohvaćanje aktivnosti.");
+      const data = await response.json();
+      setAktivnosti(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            const data = await response.json();
-            setAktivnosti(data);
-        } catch (error) {
-            console.error(error.message);
-        }
-    };
+  // Fetch aktivnosti koje učenik ne pohađa
+  const fetchUnusedActivities = async () => {
+    try {
+      const response = await fetch(`/api/ucenik/aktivnosti/nije/${email}`);
+      if (!response.ok) throw new Error("Neuspješno dohvaćanje neiskorištenih aktivnosti.");
+      const data = await response.json();
+      setUnusedActivities(data);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
-    const fetchDostupneAktivnosti = async () => {
-        try {
-            const response = await fetch(`/api/ucenik/aktivnosti/nije/${userEmail}`);
-            if (!response.ok) throw new Error("Greška prilikom dohvaćanja dostupnih aktivnosti.");
+  // Dodavanje aktivnosti učeniku
+  const handleAdd = async () => {
+    if (selected.length === 0) {
+      alert("Odaberite barem jednu aktivnost prije dodavanja.");
+      return;
+    }
 
-            const data = await response.json();
-            setDostupneAktivnosti(data);
-        } catch (error) {
-            console.error(error.message);
-        }
-    };
+    try {
+      const response = await fetch(`/api/ucenik/dodajAktivnosti/${email}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(selected),
+      });
 
-    const handleAddAktivnosti = async () => {
-        if (selectedAktivnosti.length === 0) {
-            alert("Odaberite barem jednu aktivnost.");
-            return;
-        }
+      if (!response.ok) throw new Error("Greška prilikom dodavanja aktivnosti.");
 
-        try {
-            const response = await fetch(`/api/ucenik/dodajAktivnosti`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(selectedAktivnosti),
-            });
+      alert("Aktivnosti dodane.");
+      fetchAktivnosti();
+      setSelected([]);
+      setShowForm(false);
+    } catch (error) {
+      alert(`Greška: ${error.message}`);
+    }
+  };
+  
 
-            if (!response.ok) throw new Error("Greška prilikom dodavanja aktivnosti.");
-
-            alert("Aktivnosti su dodane.");
-            fetchAktivnosti();
-            setSelectedAktivnosti([]);
-            onUpdateAktivnosti();
-        } catch (error) {
-            console.error(error.message);
-        }
-    };
-
-    const handleToggleCheckbox = (aktivnost) => {
-        setSelectedAktivnosti((prev) =>
-            prev.includes(aktivnost)
-                ? prev.filter((a) => a !== aktivnost)
-                : [...prev, aktivnost]
-        );
-    };
-
-    return (
-        <div className="table-container">
-            <h2 className="table-title">Vaše aktivnosti</h2>
-            <table className="table">
-                <thead>
-                <tr>
-                    <th>Naziv aktivnosti</th>
-                </tr>
-                </thead>
-                <tbody>
-                {aktivnosti.map((aktivnost) => (
-                    <tr key={aktivnost.sifAktivnost}>
-                        <td>{aktivnost.oznAktivnost}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-
-            <h2 className="table-title">Dostupne aktivnosti</h2>
-            <div className="checkbox-form">
-                <table className="table">
-                    <thead>
-                    <tr>
-                        <th>Odaberi</th>
-                        <th>Naziv aktivnosti</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {dostupneAktivnosti.map((aktivnost) => (
-                        <tr key={aktivnost.sifAktivnost} className="checkbox-item">
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    value={aktivnost.oznAktivnost}
-                                    checked={selectedAktivnosti.includes(aktivnost.oznAktivnost)}
-                                    onChange={() => handleToggleCheckbox(aktivnost.oznAktivnost)}
-                                />
-                            </td>
-                            <td>{aktivnost.oznAktivnost}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-                <div className="button-group">
-                    <button className="button" onClick={handleAddAktivnosti}>
-                        Dodaj
-                    </button>
-                    <button className="button" onClick={() => setSelectedAktivnosti([])}>
-                        Poništi odabir
-                    </button>
-                </div>
-            </div>
-        </div>
+  // Checkbox logika
+  const handleCheckboxChange = (oznAktivnost) => {
+    setSelected((prev) =>
+      prev.includes(oznAktivnost)
+        ? prev.filter((item) => item !== oznAktivnost)
+        : [...prev, oznAktivnost]
     );
+  };
+
+  useEffect(() => {
+    fetchAktivnosti();
+  }, [email]);
+
+  if (loading) return <p>Učitavanje podataka...</p>;
+  if (error) return <p className="error">{error}</p>;
+
+  return (
+    <div className="activities-container">
+      <h2>Aktivnosti</h2>
+      <button onClick={() => {
+        setShowForm(!showForm);
+        if (!showForm) fetchUnusedActivities();
+      }}>
+        {showForm ? "Sakrij aktivnosti" : "Dodaj aktivnosti"}
+      </button>
+
+      {showForm && (
+        <div className="checkbox-form">
+          <div className="checkbox-grid">
+            {unusedActivities.map((item) => (
+              <label key={item.sifAktivnost} className="checkbox-item">
+                <input
+                  type="checkbox"
+                  value={item.oznAktivnost}
+                  checked={selected.includes(item.oznAktivnost)}
+                  onChange={() => handleCheckboxChange(item.oznAktivnost)}
+                />
+                {item.oznAktivnost.replace(/_/g, " ")}
+              </label>
+            ))}
+          </div>
+          <button onClick={handleAdd}>Dodaj</button>
+        </div>
+      )}
+
+      <div className="table-container">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Naziv aktivnosti</th>
+              <th>Akcija</th>
+            </tr>
+          </thead>
+          <tbody>
+            {aktivnosti.map((aktivnost) => (
+              <tr key={aktivnost.sifAktivnost}>
+                <td>{aktivnost.oznAktivnost.replace(/_/g, " ")}</td>
+                <td>
+                  <FaTrashAlt
+                    className="icon delete-icon"
+                    title="Obriši"
+                    // Ovo je placeholder za buduću funkciju brisanja
+                    onClick={() => alert("Funkcija brisanja nije implementirana.")}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 };
 
 export default UcenikAktivnosti;
