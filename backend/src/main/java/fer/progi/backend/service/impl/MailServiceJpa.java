@@ -42,5 +42,30 @@ public class MailServiceJpa implements MailService {
             e.printStackTrace();
         }
     }
+    
+    @Override
+    public void RasporedMail(String email) {
+        try {
+           
+        	
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+           
+            helper.setFrom("eduxhubprogi@outlook.com");
+            helper.setTo(email); 
+            helper.setSubject("Raspored");
+            helper.setText("Poštovani,\n\n" +
+                    "Obavještavamo vas da je u aplikaciji dostupan raspored za nadolazeću školsku godinu. " +
+                    "Molimo vas da se prijavite kako biste mogli pregledati detalje i planirati svoje aktivnosti na vrijeme.\n\n", false);
+            
+           
+            mailSender.send(message);
+
+        } catch (MessagingException e) {
+            System.err.println("Greška pri slanju e-maila: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
 
