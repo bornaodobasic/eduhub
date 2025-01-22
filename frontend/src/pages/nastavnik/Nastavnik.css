@@ -203,65 +203,131 @@
   .back-btn:hover {
     background-color: #45a049;
   }
-  .notifications-container {
-    margin: 20px;
-  }
   
-  .add-notification {
-    margin-bottom: 20px;
-  }
-  
-  .notification-input,
-  .notification-textarea {
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .add-notification-btn {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .add-notification-btn:hover {
-    background-color: #45a049;
-  }
-  
-  .notifications-list {
-    margin-top: 20px;
-  }
-  
-  .notification-item {
-    margin-bottom: 20px;
-  }
-  
-  .notification-title {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .notification-content {
-    font-size: 14px;
-    margin: 10px 0;
-  }
-  
-  .delete-notification-btn {
-    background-color: #f44336;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .delete-notification-btn:hover {
-    background-color: #d32f2f;
-  }
-  
-  
+
+.obavijesti-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Razmak između obavijesti */
+  margin-top: 24px; /* Razmak između forme i liste */
+  width: 100%; /* Širina liste */
+}
+
+/* Pojedinačna obavijest */
+.obavijest-item {
+  background-color: #f9f9f9; /* Svijetla pozadina */
+  border: 1px solid #ddd; /* Tanki rub */
+  border-radius: 8px; /* Zaobljeni rubovi */
+  padding: 16px; /* Unutarnji razmak */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Lagani sjena efekt */
+  width: 100%; /* Protezanje preko cijele širine roditeljskog elementa */
+  word-wrap: break-word; /* Prelamanje riječi */
+  overflow-wrap: break-word; /* Prelamanje riječi */
+}
+
+/* Naslov obavijesti */
+.obavijest-item strong {
+  font-size: 18px; /* Veličina fonta za naslov */
+  font-weight: bold; /* Podebljan tekst */
+  display: block; /* Prikaz na novom retku */
+  margin-bottom: 8px; /* Razmak između naslova i sadržaja */
+}
+
+/* Sadržaj obavijesti */
+.obavijest-item div {
+  font-size: 14px; /* Manji font za sadržaj */
+  margin-bottom: 12px; /* Razmak između sadržaja i datuma */
+}
+
+/* Datum obavijesti */
+.obavijest-item .obavijest-datum {
+  font-size: 12px; /* Najmanji font za datum */
+  color: #888; /* Siva boja za manje isticanje */
+  margin-top: 8px;
+}
+
+/* Dugme za brisanje */
+.delete-obavijest-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #e74c3c; /* Crvena boja za smeće */
+  font-size: 16px; /* Veličina ikone */
+  margin-left: auto; /* Pomiče dugme na desni rub */
+}
+
+  /* Kontejner za formu */
+.obavijesti-form {
+  background-color: #fdfdfd; /* Svijetla pozadina */
+  border: 1px solid #ddd; /* Tanki rub */
+  border-radius: 8px; /* Zaobljeni rubovi */
+  padding: 20px; /* Unutarnji razmak */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Lagani sjena efekt */
+  margin-bottom: 24px; /* Razmak između forme i liste obavijesti */
+}
+
+/* Naslov forme */
+.obavijesti-form h2 {
+  font-size: 20px; /* Veličina naslova */
+  font-weight: bold; /* Podebljan tekst */
+  margin-bottom: 16px; /* Razmak ispod naslova */
+  color: #333; /* Tamnija boja za naslov */
+}
+
+/* Grupiranje polja */
+.form-group {
+  margin-bottom: 16px; /* Razmak između polja */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labela za polje */
+.form-group label {
+  font-size: 14px; /* Manji font za labelu */
+  font-weight: bold; /* Podebljan tekst */
+  margin-bottom: 8px; /* Razmak ispod labele */
+  color: #555; /* Neutralna boja */
+}
+
+/* Input polje */
+.form-group input,
+.form-group textarea {
+  border: 1px solid #ccc; /* Rub polja */
+  border-radius: 4px; /* Zaobljeni rubovi */
+  padding: 12px; /* Unutarnji razmak */
+  font-size: 14px; /* Veličina fonta */
+  width: 100%; /* Širina polja */
+  box-sizing: border-box; /* Uključuje padding u širinu */
+}
+
+/* Input polje hover */
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none; /* Uklanja zadani fokus */
+  border-color: #007bff; /* Boja ruba u fokusu */
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.2); /* Lagani sjena efekt */
+}
+
+/* Dugme za slanje */
+.obavijesti-form button {
+  background-color: #007bff; /* Plava pozadina */
+  color: #fff; /* Bijeli tekst */
+  border: none; /* Bez ruba */
+  border-radius: 4px; /* Zaobljeni rubovi */
+  padding: 12px 20px; /* Unutarnji razmak */
+  font-size: 14px; /* Veličina fonta */
+  font-weight: bold; /* Podebljan tekst */
+  cursor: pointer; /* Pokazivač na dugme */
+  transition: background-color 0.3s ease; /* Animacija prelaza boje */
+}
+
+/* Dugme hover */
+.obavijesti-form button:hover {
+  background-color: #0056b3; /* Tamnija plava */
+}
+
+/* Dugme disabled */
+.obavijesti-form button:disabled {
+  background-color: #ccc; /* Siva pozadina */
+  cursor: not-allowed; /* Zabranjen pokazivač */
+}

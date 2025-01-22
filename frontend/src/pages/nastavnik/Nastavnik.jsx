@@ -43,7 +43,10 @@ useEffect(() => {
       });
       if (!response.ok) throw new Error("Greška prilikom dohvaćanja obavijesti.");
       const data = await response.json();
-      setObavijesti(data);
+  
+      // Sortiraj obavijesti od najnovije prema najstarijoj
+      const sortedData = data.sort((a, b) => new Date(b.datumObavijest) - new Date(a.datumObavijest));
+      setObavijesti(sortedData);
     } catch (error) {
       console.error("Greška pri dohvaćanju obavijesti:", error);
     }
@@ -103,79 +106,86 @@ useEffect(() => {
   };
 
 
-  const renderObavijestiList = () => (
-    <div className="obavijesti-list">
-      <h3>Popis obavijesti</h3>
-      {obavijesti.length > 0 ? (
-        <ul>
-          {obavijesti.map((obavijest) => (
-            <li key={obavijest.sifObavijest} className="obavijest-item">
-              <div>
-                <strong>{obavijest.naslovObavijest}</strong> - {obavijest.sadrzajObavijest}
-              </div>
-              {isDeletingObavijesti && (
-                <button
-                  className="delete-obavijest-btn"
-                  onClick={() => handleDeleteObavijest(obavijest.sifObavijest)}
-                >
-                  🗑️
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Nema obavijesti za prikaz.</p>
-      )}
-      <div className="delete-toggle-container">
-        {!isDeletingObavijesti ? (
-          <button
-            onClick={() => setIsDeletingObavijesti(true)}
-            className="delete-toggle-btn"
-          >
-            Obriši obavijesti
-          </button>
-        ) : (
-          <button
-            onClick={() => setIsDeletingObavijesti(false)}
-            className="delete-toggle-btn"
-          >
-            Gotovo
-          </button>
-        )}
+ const renderObavijestiList = () => (
+  <div className="obavijesti-list">
+    <h3>Popis obavijesti</h3>
+    {obavijesti.length > 0 ? (
+      <div>
+        {obavijesti.map((obavijest) => (
+          <div key={obavijest.sifObavijest} className="obavijest-item">
+            <strong>{obavijest.naslovObavijest}</strong>
+            <div>{obavijest.sadrzajObavijest}</div>
+            <div className="obavijest-datum">
+              Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
+            </div>
+            {isDeletingObavijesti && (
+              <button
+                className="delete-obavijest-btn"
+                onClick={() => handleDeleteObavijest(obavijest.sifObavijest)}
+              >
+                🗑️
+              </button>
+            )}
+          </div>
+        ))}
       </div>
+    ) : (
+      <p>Nema obavijesti za prikaz.</p>
+    )}
+    <div className="delete-toggle-container">
+      {!isDeletingObavijesti ? (
+        <button
+          onClick={() => setIsDeletingObavijesti(true)}
+          className="delete-toggle-btn"
+        >
+          Obriši obavijesti
+        </button>
+      ) : (
+        <button
+          onClick={() => setIsDeletingObavijesti(false)}
+          className="delete-toggle-btn"
+        >
+          Gotovo
+        </button>
+      )}
     </div>
-  );
+  </div>
+);
+
   
 
-  const renderObavijestiForm = () => (
-    <div className="obavijesti-section">
-      <div className="obavijesti-form">
-        <h2>Dodaj novu obavijest</h2>
-        <div className="form-group">
-          <label htmlFor="naslov">Naslov obavijesti:</label>
-          <input
-            type="text"
-            id="naslov"
-            value={obavijestNaslov}
-            onChange={(e) => setObavijestNaslov(e.target.value)}
-            placeholder="Unesite naslov"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="sadrzaj">Sadržaj obavijesti:</label>
-          <textarea
-            id="sadrzaj"
-            value={obavijestSadrzaj}
-            onChange={(e) => setObavijestSadrzaj(e.target.value)}
-            placeholder="Unesite sadržaj"
-          ></textarea>
-        </div>
-        <button onClick={handleSendObavijest}>Pošalji obavijest</button>
-      </div>
-      {renderObavijestiList()}
+const renderObavijestiForm = () => (
+  <div className="obavijesti-form">
+    <h2>Dodaj novu obavijest</h2>
+    <div className="form-group">
+      <label htmlFor="naslov">Naslov obavijesti:</label>
+      <input
+        type="text"
+        id="naslov"
+        value={obavijestNaslov}
+        onChange={(e) => setObavijestNaslov(e.target.value)}
+        placeholder="Unesite naslov obavijesti"
+      />
     </div>
-  );
+    <div className="form-group">
+      <label htmlFor="sadrzaj">Sadržaj obavijesti:</label>
+      <textarea
+        id="sadrzaj"
+        value={obavijestSadrzaj}
+        onChange={(e) => setObavijestSadrzaj(e.target.value)}
+        placeholder="Unesite sadržaj obavijesti"
+        rows="5"
+      ></textarea>
+    </div>
+    <button
+      onClick={handleSendObavijest}
+      disabled={!obavijestNaslov || !obavijestSadrzaj || !selectedSubject}
+    >
+      Pošalji obavijest
+    </button>
+  </div>
+);
+
   
   
 
@@ -505,7 +515,12 @@ useEffect(() => {
               />
             )}
             {activeTab === "Materijali" && renderMaterials()}
-            {activeTab === "Obavijesti" && renderObavijestiForm()}
+            {activeTab === "Obavijesti" && (
+            <div>
+              {renderObavijestiForm()} {/* Prikaz forme za dodavanje */}
+              {renderObavijestiList()} {/* Prikaz liste obavijesti */}
+            </div>
+          )}
            
 
           
