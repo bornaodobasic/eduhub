@@ -13,6 +13,7 @@ import Djelatnik from './pages/djelatnik/Djelatnik';
 import Admin from './pages/admin/Admin';
 import Chat from './pages/chat/Chat';
 import Chat2 from "./pages/chat2/Chat2";
+import 'leaflet/dist/leaflet.css';
 
 
 function App() {

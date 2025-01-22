@@ -3,7 +3,7 @@ import { FaSchool, FaBell, FaCalendarAlt } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import WeatherWidget from "../../components/WeatherWidget";
 
-
+import Map from "../../components/Map";
 
 const Satnicar = () => {
   const [activeSection, setActiveSection] = useState("Naslovnica"); const [userName, setUserName] = useState(null);
@@ -67,7 +67,7 @@ const Satnicar = () => {
                 </button>
       
       case "Obavijesti":
-          return <h4>Obavijesti dolaze uskoro!</h4>;
+        return <Map />;
         
       default:
         return <h4>Odaberite sekciju iz izbornika.</h4>;
