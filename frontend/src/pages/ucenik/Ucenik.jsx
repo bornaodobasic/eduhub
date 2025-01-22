@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots} from "react-icons/fa";
+import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots, FaMap} from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
-import TableUceniciNastavnik from "../../components/TableUceniciNastavnik";
 import Timetable from "../../components/Timetable";
 import UcenikPotvrde from "../../components/UcenikPotvrde";
+import MapRoute from "../../components/MapRoute";
 import "./Ucenik.css";
 
 const Ucenik = () => {
@@ -16,6 +16,8 @@ const Ucenik = () => {
   const [userEmail, setUserEmail] = useState(null);
   const [obavijesti, setObavijesti] = useState([]); // Lista obavijesti
   const [latestObavijesti, setLatestObavijesti] = useState([]);
+  const [destination, setDestination] = useState("Unska ulica 3, Zagreb, Hrvatska");
+
 
 
   const fetchLatestObavijesti = async () => {
@@ -358,6 +360,11 @@ useEffect(() => {
       );
     }
 
+    if (activeSection === "Karta") {
+      return <MapRoute />;
+    }
+    // 
+
     return <h4>Odaberite sekciju iz izbornika.</h4>;
   };
 
@@ -369,6 +376,7 @@ useEffect(() => {
     { name: "Obavijesti", icon: <FaEnvelope /> },
     { name: "Potvrde", icon: <FaEnvelope /> },
     { name: "Chat", icon: <FaCommentDots /> },
+    { name: "Karta", icon: <FaMap /> }
 ];
 
   return (
