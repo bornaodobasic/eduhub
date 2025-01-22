@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 public class PDFServiceJPA implements PDFService {
 
     public byte[] generatePDF(String ime, String prezime) {
-    	System.out.println("Metoda generatePDF pozvana u: " + LocalDateTime.now());
+        System.out.println("Metoda generatePDF pozvana u: " + LocalDateTime.now());
 
         Document document = new Document();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -29,28 +29,37 @@ public class PDFServiceJPA implements PDFService {
             PdfWriter writer = PdfWriter.getInstance(document, outputStream);
             document.open();
 
-           
+            // Učitavanje fonta
+            InputStream fontStream = getClass().getClassLoader().getResourceAsStream("fonts/arial.ttf");
+            if (fontStream == null) {
+                throw new FileNotFoundException("Font nije pronađen: fonts/arial.ttf");
+            }
             BaseFont baseFont = BaseFont.createFont(
-                    getClass().getClassLoader().getResource("fonts/arial.ttf").getPath(),
+                    "arial.ttf",
                     BaseFont.IDENTITY_H,
-                    BaseFont.EMBEDDED
+                    BaseFont.EMBEDDED,
+                    true,
+                    fontStream.readAllBytes(),
+                    null
             );
             Font customFont = new Font(baseFont, 12, Font.NORMAL);
             Font titleFont = new Font(baseFont, 18, Font.BOLD);
+            System.out.println("Font uspješno učitan");
 
-            
+            // Dodavanje grba
             try {
-                InputStream inputStream = getClass().getClassLoader().getResourceAsStream("images/hrvatskiGrb.png");
-                if (inputStream == null) {
-                    throw new FileNotFoundException("Resurs nije pronađen: images/hrvatskiGrb.png");
+                InputStream grbStream = getClass().getClassLoader().getResourceAsStream("images/hrvatskiGrb.png");
+                if (grbStream == null) {
+                    throw new FileNotFoundException("Slika nije pronađena: images/hrvatskiGrb.png");
                 }
 
-                byte[] imageBytes = inputStream.readAllBytes();
-                Image grb = Image.getInstance(imageBytes);
+                byte[] grbBytes = grbStream.readAllBytes();
+                Image grb = Image.getInstance(grbBytes);
 
                 grb.scaleToFit(50, 50);
                 grb.setAlignment(Image.LEFT);
                 document.add(grb);
+                System.out.println("Grb uspješno dodan");
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Greška pri učitavanju slike grba.");
@@ -63,7 +72,7 @@ public class PDFServiceJPA implements PDFService {
 
             document.add(new Paragraph("\n\n\n"));
 
-            
+            // Sadržaj
             Paragraph content = new Paragraph(
                     "Potvrđujemo da je učenik: " + ime + " " + prezime + " upisan u školsku godinu 2025./2026.",
                     customFont
@@ -73,23 +82,25 @@ public class PDFServiceJPA implements PDFService {
 
             document.add(new Paragraph("\n\n\n"));
 
-
+            // Dodavanje logotipa
             try {
-                InputStream inputStreamLogo = getClass().getClassLoader().getResourceAsStream("images/Eduhub.png");
-                if (inputStreamLogo == null) {
-                    throw new FileNotFoundException("Resurs nije pronađen: images/logo.png");
+                InputStream logoStream = getClass().getClassLoader().getResourceAsStream("images/Eduhub.png");
+                if (logoStream == null) {
+                    throw new FileNotFoundException("Slika nije pronađena: images/Eduhub.png");
                 }
 
-                byte[] logoBytes = inputStreamLogo.readAllBytes();
+                byte[] logoBytes = logoStream.readAllBytes();
                 Image logo = Image.getInstance(logoBytes);
                 logo.scaleToFit(200, 150);
                 logo.setAbsolutePosition(36, 50);
                 writer.getDirectContent().addImage(logo);
+                System.out.println("Logotip uspješno dodan");
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Greška pri učitavanju slike logotipa.");
             }
 
+            // Footer
             PdfContentByte canvas = writer.getDirectContent();
             String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
             Phrase footerPhrase = new Phrase("Potvrda generirana: " + currentDate, customFont);
@@ -104,16 +115,15 @@ public class PDFServiceJPA implements PDFService {
             );
 
             document.close();
-          
-
-          
+            System.out.println("Dokument uspješno generiran i zatvoren");
 
         } catch (Exception e) {
-           
+            e.printStackTrace();
+            System.out.println("Greška pri generiranju PDF-a: " + e.getMessage());
         }
 
+        System.out.println("Veličina generiranog PDF-a: " + outputStream.size());
         return outputStream.toByteArray();
     }
-
-
 }
+
