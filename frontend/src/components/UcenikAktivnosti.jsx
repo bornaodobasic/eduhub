@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./TableUcenik.css";
 
-const UcenikAktivnosti = ({ userEmail, onUpdateAktivnosti }) => {
+const UcenikAktivnosti = ({ userEmail }) => {
   const [aktivnosti, setAktivnosti] = useState([]);
   const [dostupneAktivnosti, setDostupneAktivnosti] = useState([]);
   const [selectedAktivnosti, setSelectedAktivnosti] = useState([]);
@@ -55,7 +55,6 @@ const UcenikAktivnosti = ({ userEmail, onUpdateAktivnosti }) => {
       alert("Aktivnosti su dodane.");
       fetchAktivnosti();
       setSelectedAktivnosti([]);
-      onUpdateAktivnosti();
     } catch (error) {
       console.error(error.message);
     }
@@ -68,7 +67,9 @@ const UcenikAktivnosti = ({ userEmail, onUpdateAktivnosti }) => {
             : [...prev, aktivnost]
     );
   };
+
   const formatActivityName = (name) => name.replace(/_/g, " ");
+
   return (
       <div className="table-container">
         <h2 className="table-title">Vaše aktivnosti</h2>
