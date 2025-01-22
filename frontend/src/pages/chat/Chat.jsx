@@ -23,33 +23,28 @@ const Chat = () => {
                 const ws = new WebSocket(`wss://eduhub-rfsg.onrender.com/chat?email=${encodeURIComponent(email.trim())}`);
                 setSocket(ws);
 
-                // Pratite stanje veze
-                ws.onopen = () => {
-                    console.log("WebSocket veza je uspostavljena:", ws.readyState); // Treba vratiti 1
-                };
-  
-                ws.onerror = (error) => {
-                    console.error("Došlo je do pogreške s WebSocket vezom:", error);
-                };
+                ws.onopen = () => console.log('WebSocket connection established.');
 
                 ws.onmessage = event => {
-                    const message = JSON.parse(event.data);
-                    console.log("Primljena poruka preko WebSocket-a:", message);
-                    setMessages(prevMessages => [...prevMessages, message]);
+                    console.log('Primljeni podaci putem WebSocketa:', event.data);
+                    try {
+                        const message = typeof event.data === 'string' && event.data.startsWith('{')
+                            ? JSON.parse(event.data)
+                            : { sadrzaj: event.data }; // Pretpostavka za slučaj kada nije JSON
+                        setMessages(prevMessages => [...prevMessages, message]);
+                    } catch (error) {
+                        console.error('Greška pri parsiranju podataka:', error, event.data);
+                    }
                 };
+                ws.onerror = error => console.error('WebSocket error:', error);
 
-                ws.onclose = () => console.log('WebSocket veza je zatvorena:', ws.readyState);
-
-                // Provjera nakon kratkog kašnjenja
-                setTimeout(() => {
-                    console.log("Stanje veze nakon 3 sekunde:", ws.readyState);
-                }, 3000);
+                ws.onclose = () => console.log('WebSocket closed.');
             });
 
         return () => {
             if (socket) socket.close();
         };
-    }, [socket]);
+    }, []);
 
     useEffect(() => {
         if (recipientType === 'nastavnik') {
@@ -82,7 +77,7 @@ const Chat = () => {
         if (recipientType !== 'grupe' && selectedRecipient) {
             fetchMessages(currentUserEmail, selectedRecipient);
         }
-    }, [selectedRecipient, recipientType, currentUserEmail]);
+    }, [selectedRecipient, recipientType]);
     
     useEffect(() => {
         if (recipientType === 'grupe' && selectedRecipient) {
@@ -116,8 +111,7 @@ const Chat = () => {
             sadrzaj: messageInput,
             oznakaVremena: new Date().toISOString()
         };
-
-        console.log("Poruka koja se šalje:", message);
+        console.log('Slanje poruke:', message);
         if (socket) socket.send(JSON.stringify(message));
         setMessages(prevMessages => [...prevMessages, message]);
         setMessageInput('');

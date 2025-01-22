@@ -1,6 +1,6 @@
 #FileLock
-#Tue Jan 21 22:40:22 CET 2025
+#Wed Jan 22 18:20:50 CET 2025
 hostName=Maja
-id=1948acf2cd355ba43dde0ec6c57589f600d3f7031ca
+id=1948f07eb2f5351336fce44d97889e6be1df28f6658
 method=file
-server=192.168.0.3\:57204
+server=10.129.139.120\:56011
