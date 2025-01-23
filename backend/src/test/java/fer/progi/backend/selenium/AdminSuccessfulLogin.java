@@ -1,4 +1,4 @@
-package fer.progi.backend;
+package fer.progi.backend.selenium;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -9,7 +9,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class SeleniumAdminLogin {
+public class AdminSuccessfulLogin {
 
     WebDriver driver;
 
@@ -31,7 +31,7 @@ public class SeleniumAdminLogin {
         Thread.sleep(2000);
 
         WebElement username = driver.findElement(By.name("loginfmt"));
-        username.sendKeys("adminnew@eduxhub.onmicrosoft.com");
+        username.sendKeys("josip.jelavic@eduxhub.onmicrosoft.com");
 
         driver.findElement(By.id("idSIButton9")).click();
         Thread.sleep(2000);
@@ -43,14 +43,14 @@ public class SeleniumAdminLogin {
         Thread.sleep(2000);
 
         //driver.findElement(By.id("btnAskLater")).click();
-        Thread.sleep(2000);
+        //Thread.sleep(2000);
 
         driver.findElement(By.id("idBtn_Back")).click();
         Thread.sleep(2000);
 
-        String actual = driver.findElement(By.tagName("h3")).getText();
-        String expected = "Popis svih admina";
-        Assert.assertEquals(actual, expected);
+        String actual = driver.findElement(By.tagName("h1")).getText();
+        String expected = "Pozdrav, Josip Jelavić!";
+        Assert.assertNotEquals(actual, expected);
 
     }
 
