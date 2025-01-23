@@ -1,6 +1,7 @@
 package fer.progi.backend.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import fer.progi.backend.domain.Admin;
@@ -19,6 +20,8 @@ public interface SatnicarService {
 
 	List<Satnicar> findAllSatnicars();
 	void deleteSatnicar(String email);
+
+	Map<String, Double> pregledZauzecaUcionica();
 	
 
 }

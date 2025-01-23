@@ -103,8 +103,17 @@ public class UcenikServiceJpa implements UcenikService {
 	public boolean dodajAktivnostiPoNazivu(String email, List<String> oznAktivnosti) {
 
 		Ucenik ucenik = ucenikRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
-		List<Aktivnost> listaAktivnosti = aktivnostService.findByOznAktivnosti(oznAktivnosti);
-		ucenik.setAktivnosti(listaAktivnosti);
+		// Dohvat trenutnih aktivnosti
+		List<Aktivnost> trenutneAktivnosti = ucenik.getAktivnosti();
+
+		// Dohvat novih aktivnosti
+		List<Aktivnost> noveAktivnosti = aktivnostService.findByOznAktivnosti(oznAktivnosti);
+
+		// Dodavanje novih aktivnosti u postojeći popis
+		trenutneAktivnosti.addAll(noveAktivnosti);
+
+		// Spremanje ažuriranog objekta ucenik u bazu
+		ucenikRepo.save(ucenik);
 
 		return true;
 
