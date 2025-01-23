@@ -7,6 +7,7 @@ import UcenikPotvrde from "../../components/UcenikPotvrde";
 import MapRoute from "../../components/MapRoute";
 import UcenikAktivnosti from "../../components/UcenikAktivnosti";
 import WeatherWidger from "../../components/WeatherWidget";
+import Map from "../../components/Map";
 
 import "./Ucenik.css";
 
@@ -19,7 +20,6 @@ const Ucenik = () => {
   const [userEmail, setUserEmail] = useState(null);
   const [obavijesti, setObavijesti] = useState([]); // Lista obavijesti
   const [latestObavijesti, setLatestObavijesti] = useState([]);
-  const [destination, setDestination] = useState("Unska ulica 3, Zagreb, Hrvatska");
   const [userName, setUserName] = useState(null);
 
   useEffect(() => {
@@ -122,7 +122,7 @@ const Ucenik = () => {
       console.error("Greška pri dohvaćanju obavijesti:", error);
     }
   };
-
+  
 
 
   const renderObavijestiList = () => (
@@ -133,6 +133,14 @@ const Ucenik = () => {
                   <div key={obavijest.sifObavijest} className="obavijest-item">
                     <strong>{obavijest.naslovObavijest}</strong>
                     <div>{obavijest.sadrzajObavijest}</div>
+                   
+                    {obavijest?.adresaLokacija && obavijest?.gradLokacija && obavijest?.drzavaLoakcija && (
+  <div>
+    <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
+    <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
+  </div>
+)}
+    
                     <div className="obavijest-datum">
                       Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
                     </div>

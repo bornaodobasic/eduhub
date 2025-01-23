@@ -175,7 +175,6 @@ useEffect(() => {
 );
 
   
-
 const renderObavijestiForm = () => (
   <div className="obavijesti-form">
     <h2>Dodaj novu obavijest</h2>
@@ -209,8 +208,6 @@ const renderObavijestiForm = () => (
 );
 
   
-  
-
   
   useEffect(() => {
         const fetchUserEmail = async () => {
@@ -441,12 +438,12 @@ const renderObavijestiForm = () => (
 
   const renderMaterials = () => (
     <div className="materials-grid">
-      <button onClick={handleAddMaterial} className="add-material-btn">
+      <button onClick={handleAddMaterial} >
         Dodaj materijal
       </button>
       {!isDeleting ? (
         <button
-          className="delete-materials-btn"
+    
           onClick={() => setIsDeleting(true)}
         >
           Obriši materijale

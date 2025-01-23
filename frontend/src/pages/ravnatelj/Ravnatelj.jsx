@@ -180,6 +180,7 @@ const Ravnatelj = () => {
     );
   };
 
+
   const renderObavijestiContent = () => {
     if (!obavijestType) {
       return (
@@ -203,7 +204,7 @@ const Ravnatelj = () => {
     }
 
     return (
-      <div className="form-container">
+      <div className="obavijesti-form">
         <h4>
           {obavijestType === "opca" ? "Dodaj Opću Obavijest" : "Dodaj Obavijest o Terenskoj Nastavi"}
         </h4>
@@ -213,54 +214,65 @@ const Ravnatelj = () => {
             handleAddObavijest();
           }}
         >
-          <label>
-            Naslov:
+
+        <div className="form-group">
+          <label htmlFor="naslov">
+            Naslov obavijesti:
             <input
               type="text"
               name="naslovObavijest"
               value={formData.naslovObavijest}
+              placeholder="Unesite naslov obavijesti"
               onChange={handleInputChange}
               required
             />
           </label>
-          <label>
-            Sadržaj:
+          </div>
+
+          <div className="form-group">
+          <label htmlFor="sadrzaj">
+            Sadržaj obavijesti:
             <textarea
               name="sadrzajObavijest"
               value={formData.sadrzajObavijest}
               onChange={handleInputChange}
+              placeholder="Unesite sadržaj obavijesti"
+            rows="5"
               required
             />
           </label>
+          </div>
+
+
           {obavijestType === "terenska" && (
             <>
               <label>
-                Adresa Lokacija:
                 <input
                   type="text"
                   name="adresaLokacija"
                   value={formData.adresaLokacija}
                   onChange={handleInputChange}
+                  placeholder="Adresa odredišta"
                   required
                 />
               </label>
               <label>
-                Grad Lokacija:
                 <input
                   type="text"
                   name="gradLokacija"
                   value={formData.gradLokacija}
                   onChange={handleInputChange}
+                  placeholder="Grad"
                   required
                 />
               </label>
               <label>
-                Država Lokacija:
                 <input
                   type="text"
                   name="drzavaLokacija"
                   value={formData.drzavaLokacija}
                   onChange={handleInputChange}
+                  placeholder="Država"
                   required
                 />
               </label>
