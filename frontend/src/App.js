@@ -18,7 +18,7 @@ import 'leaflet/dist/leaflet.css';
 
 function App() {
   const handleLogin = () => {
-    window.location.href = "https://eduhub-rfsg.onrender.com/oauth2/authorization/azure-dev";
+    window.location.href = "http://localhost:8080/oauth2/authorization/azure-dev";
   };
 
   return (

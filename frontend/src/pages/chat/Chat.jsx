@@ -21,7 +21,7 @@ const Chat = () => {
             .then(response => response.text())
             .then(email => {
                 setCurrentUserEmail(email.trim());
-                const ws = new WebSocket(`wss://eduhub-rfsg.onrender.com/chat?email=${encodeURIComponent(email.trim())}`);
+                const ws = new WebSocket(`wss://localhost:8080/chat?email=${encodeURIComponent(email.trim())}`);
                 setSocket(ws);
 
                 ws.onopen = () => console.log('WebSocket connection established.');

@@ -24,7 +24,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         // Registriramo WebSocket handler za "/chat" endpoint
         registry.addHandler(chatWebSocketHandler, "/chat", "/chat2")
-        		.setAllowedOrigins("https://eduhub-rfsg.onrender.com");
+        		.setAllowedOrigins("http://localhost:8080");
         		
     }
 }
