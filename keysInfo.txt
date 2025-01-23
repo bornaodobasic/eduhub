@@ -2,7 +2,26 @@ tenant id : a983c51c-e23d-4e05-b97e-fd9ccf9476c8
 app id : 80e82501-5674-424a-8280-51c13c8b2014
 secret value : kcM8Q~isBvkVHJOywHt0ZHqKJ.a3_~vKFr3lidvb
 
-lozinka svakog racuna : Lozinka1
-učenik : ucenik@eduxhub.onmicrosoft.com
-učenik koji još nije upisan : upis@eduxhub.onmicrosoft.com
-admin : admin@eduxhub.onmicrosoft.com
+ravnatelj: davor.ceric@eduxhub.onmicrosoft.com
+lozinka: Lozinka2
+
+satnicar: ante.brekalo@eduxhub.onmicrosoft.com
+lozinka: Lozinka2
+
+djelatnik: marko.blazevic@eduxhub.onmicrosoft.com
+lozinka: Lozinka2
+
+nastavnik: ema.pavlovic@eduxhub.onmicrosoft.com
+lozinka: Lozinka2
+
+nastavnik: tomislav.krnic@eduxhub.onmicrosoft.com
+lozinka: Lozinka2
+
+admin: josip.jelavic@eduxhub.onmicrosoft.com
+lozinka: Lozinka2
+
+ucenik: petra.peric@eduxhub.onmicrosoft.com
+lozinka: Lozinka2
+
+ucenik: katarina.katic@eduxhub.onmicrosoft.com
+lozinka: Lozinka2
