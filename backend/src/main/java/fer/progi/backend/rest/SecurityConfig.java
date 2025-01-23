@@ -241,7 +241,7 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests(auth -> auth
-                		.requestMatchers("/ws/**", "/chat/**").permitAll() //zamijeniti ws sa stvarnim endpointom
+                		.requestMatchers("/ws/**", "/chat/**", "/chat2/**").permitAll()
                         .requestMatchers("/oauth2/authorization/**", "/login/**", "/static/**", "/index.html", "/", "/favicon.ico", "/logo192.png", "/manifest.json", "/h2-console/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("Admin")
                         .requestMatchers("/api/nastavnik/**").hasAuthority("Nastavnik")
