@@ -19,4 +19,6 @@ public interface RazredPredmetNastavnikService {
     void saveAll(List<RazredPredmetNastavnik> razredPredmetNastavnik);
 
     List<RazredPredmetNastavnik> findByNastavnik(Nastavnik nastavnik);
+
+    List<RazredPredmetNastavnik> findByRazred(Razred razred);
 }

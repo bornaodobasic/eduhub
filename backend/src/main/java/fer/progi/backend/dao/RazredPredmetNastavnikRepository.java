@@ -11,5 +11,6 @@ public interface RazredPredmetNastavnikRepository extends JpaRepository<RazredPr
 
     RazredPredmetNastavnik findByRazredAndPredmet(Razred razred, Predmet predmet);
     List<RazredPredmetNastavnik> findByNastavnik(Nastavnik nastavnik);
+    List<RazredPredmetNastavnik> findByRazred(Razred razred);
 
 }

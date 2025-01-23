@@ -1,6 +1,8 @@
 package fer.progi.backend.domain;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,11 +28,8 @@ public class Nastavnik {
 			inverseJoinColumns = @JoinColumn(name = "sifPredmet"))
 	@JsonManagedReference
 	private List<Predmet> predmeti;
-	/*
-	@ManyToMany(mappedBy = "nastavnici", fetch = FetchType.EAGER)
-	@JsonBackReference
-	private List<Predmet> predmeti;
-*/
+
+
 	@Override
 	public String toString() {
 		return "Nastavnik{" +
@@ -40,5 +39,9 @@ public class Nastavnik {
 				", email='" + email + '\'' +
 				'}';
 	}
+
+	@OneToOne(mappedBy = "razrednik", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+	@JsonBackReference
+	private Razred razred;
 	
 }

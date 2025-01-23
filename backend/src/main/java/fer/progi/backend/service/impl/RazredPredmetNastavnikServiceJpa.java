@@ -100,4 +100,9 @@ public class RazredPredmetNastavnikServiceJpa implements RazredPredmetNastavnikS
         return rpnRepo.findByNastavnik(nastavnik);
     }
 
+    @Override
+    public List<RazredPredmetNastavnik> findByRazred(Razred razred) {
+        return rpnRepo.findByRazred(razred);
+    }
+
 }

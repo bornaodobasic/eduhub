@@ -23,4 +23,8 @@ public class Razred implements Serializable {
 	@OneToMany(mappedBy = "razred", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonManagedReference
     private Set<Ucenik> ucenici;
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+	@JoinColumn(name = "razrednik_id", referencedColumnName = "id", unique = true)
+	private Nastavnik razrednik;
 }

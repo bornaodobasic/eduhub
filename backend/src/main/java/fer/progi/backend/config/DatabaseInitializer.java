@@ -5,6 +5,8 @@ import fer.progi.backend.domain.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -42,9 +44,63 @@ public class DatabaseInitializer {
     @Autowired
     private UcenikRepository ucenikRepository;
 
+    @Autowired
+    private RavnateljRepository ravnateljRepository;
+
+    @Autowired
+    private SatnicarRepository satnicarRepository;
+
+    @Autowired
+    private DjelatnikRepository djelatnikRepository;
+
 
     @PostConstruct
     public void init() {
+
+        try {
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(getClass().getResourceAsStream("/db/djelatnici.csv"))
+            );
+
+            List<String> lines = reader.lines().skip(1).collect(Collectors.toList());
+
+            if(lines.size() < 3) {
+                throw new IllegalArgumentException("Djelatnici CSV ne sadrži dovoljno podataka.");
+            }
+
+            String[] ravnateljFields = lines.get(0).split(",");
+            Ravnatelj ravnatelj = new Ravnatelj();
+            ravnatelj.setImeRavnatelj(ravnateljFields[0].trim());
+            ravnatelj.setPrezimeRavnatelj(ravnateljFields[1].trim());
+            ravnatelj.setEmail(ravnateljFields[2].trim());
+            ravnateljRepository.save(ravnatelj);
+
+            String[] satnicarFields = lines.get(1).split(",");
+            Satnicar satnicar = new Satnicar();
+            satnicar.setImeSatnicar(satnicarFields[0].trim());
+            satnicar.setPrezimeSatnicar(satnicarFields[1].trim());
+            satnicar.setEmail(satnicarFields[2].trim());
+            satnicarRepository.save(satnicar);
+
+            List<Djelatnik> djelatnici = lines.stream()
+                    .skip(2)
+                    .map(line -> {
+                        String[] fields = line.split(",");
+                        Djelatnik djelatnik = new Djelatnik();
+                        djelatnik.setImeDjel(fields[0].trim());
+                        djelatnik.setPrezimeDjel(fields[1].trim());
+                        djelatnik.setEmail(fields[2].trim());
+                        return djelatnik;
+                    })
+                    .collect(Collectors.toList());
+
+            if (!djelatnici.isEmpty()) {
+                djelatnikRepository.saveAll(djelatnici);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         try {
             BufferedReader reader = new BufferedReader(

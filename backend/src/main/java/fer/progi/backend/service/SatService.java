@@ -10,4 +10,5 @@ public interface SatService {
     void generirajRaspored();
     DayOfWeek findDay(int sat);
     List<Sat> listAll();
+    void dodijeliRazrednike();
 }

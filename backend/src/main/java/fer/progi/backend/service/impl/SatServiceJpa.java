@@ -1,5 +1,6 @@
 package fer.progi.backend.service.impl;
 
+import fer.progi.backend.dao.RazredRepository;
 import fer.progi.backend.dao.SatRepository;
 import fer.progi.backend.domain.*;
 import fer.progi.backend.service.*;
@@ -37,6 +38,9 @@ public class SatServiceJpa implements SatService {
 
     @Autowired
     private NastavnikService nastavnikService;
+
+    @Autowired
+    private RazredRepository razredRepository;
 
     @Override
     public DayOfWeek findDay(int sat) {
@@ -475,4 +479,31 @@ public class SatServiceJpa implements SatService {
         }
 
     }
+
+    @Override
+    public void dodijeliRazrednike() {
+
+        List<Nastavnik> sviNastavnici = new ArrayList<>(nastavnikService.findAllNastavniks());
+        List<Razred> sviRazredi = razredService.listAll();
+
+        for (Razred r : sviRazredi) {
+            List<RazredPredmetNastavnik> rpnLista = rpnService.findByRazred(r);
+
+            List<Nastavnik> potencijalniRazrednici = rpnLista.stream()
+                    .map(RazredPredmetNastavnik::getNastavnik)
+                    .filter(sviNastavnici::contains)
+                    .collect(Collectors.toList());
+
+            Collections.shuffle(potencijalniRazrednici);
+            Nastavnik razrednik = potencijalniRazrednici.getFirst();
+
+            Razred raz = razredRepository.getByNazRazred(r.getNazRazred());
+            raz.setRazrednik(razrednik);
+            razredRepository.save(raz);
+            sviNastavnici.remove(razrednik);
+        }
+
+
+    }
+
 }
