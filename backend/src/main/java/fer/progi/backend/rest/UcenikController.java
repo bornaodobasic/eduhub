@@ -3,7 +3,7 @@ package fer.progi.backend.rest;
 import fer.progi.backend.domain.*;
 import fer.progi.backend.service.*;
 import fer.progi.backend.service.impl.S3Service;
-import fer.progi.backend.domain.Aktivnost;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -56,7 +56,19 @@ public class UcenikController {
     
     @Autowired
     private ObavijestService obavijestService;
-
+    
+    @GetMapping("/getName")
+    public String getUcenikIme(@PathVariable String email) {
+    	Optional<Ucenik> u = ucenikService.findByEmailUcenik(email);
+    	return u.get().getImeUcenik() + " " + u.get().getPrezimeUcenik();
+    }
+    
+    @GetMapping("/getNastavniciName")
+    public String getNastavnikIme(@PathVariable String email) {
+    	Optional<Nastavnik> n = nastavnikService.findByEmail(email);
+    	return n.get().getImeNastavnik() + " " + n.get().getPrezimeNastavnik();
+    }
+    
     @GetMapping("")
     public List<String> getUceniciMailovi(Authentication authentication) {
     	List<String> mailoviUcenika = new ArrayList<>();

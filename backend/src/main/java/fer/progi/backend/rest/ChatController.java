@@ -28,12 +28,6 @@ public class ChatController {
     
     @Autowired
     private ChatServiceJpa chatService;
-
-//    // Endpoint za slanje poruke, koja ide prema WebSocket handleru
-//    @PostMapping("/sendMessage")
-//    public void sendMessage(@RequestBody ChatMessage message) throws IOException {
-//        chatWebSocketHandler.sendToPrimatelj(message);
-//    }
     
     @GetMapping("/messages")
     public ResponseEntity<List<ChatMessage>> getMessagesBetweenUsers(

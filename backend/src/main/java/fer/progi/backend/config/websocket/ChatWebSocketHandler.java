@@ -3,6 +3,7 @@ package fer.progi.backend.config.websocket;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.web.socket.CloseStatus;
@@ -72,8 +73,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private void sendToGrupa(ChatMessage chatMessage) {
-        TextMessage textMessage = new TextMessage(chatMessage.getSadrzaj());
+    private void sendToGrupa(ChatMessage chatMessage) throws JsonProcessingException {
+    	String jsonMessage = objectMapper.writeValueAsString(chatMessage);
+        TextMessage textMessage = new TextMessage(jsonMessage);
         List<String> members = chatService.getMembersEmails(chatMessage.getImeGrupe()); // Dohvati članove grupe
 
         for (WebSocketSession session : sessions) {
