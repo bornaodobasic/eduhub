@@ -1,25 +1,46 @@
-.empty-container{
-    display: flex;
-    flex-direction: column;
+.notification-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
 }
 
-.sidebar-left {
-    overflow-y: auto;
+.notification-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
-.activities-container {
-    margin: 20px;
+.notification-content {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #333;
 }
 
-.checkbox-form {
+.karte-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.karte-button:hover {
+    background-color: #0056b3;
+}
+
+.notification-date {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.notification-divider {
+    border: none;
+    border-top: 1px solid #ccc;
     margin-top: 10px;
 }
 
-.checkbox-list {
-    list-style: none;
-    padding: 0;
-}
 
-.checkbox-item {
-    margin: 5px 0;
-}
+  

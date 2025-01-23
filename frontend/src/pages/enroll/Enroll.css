@@ -1,160 +1,159 @@
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box; 
-    }
-  
-
-  body, html {
-    height: 100%;
-    font-family: 'Arial', sans-serif;
-    background: #fff;
-    color: #333;
-    overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; 
   }
-  
 
-  .enroll-page {
-    padding-top: 40px; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  
+
+body, html {
+  height: 100%;
+  font-family: 'Arial', sans-serif;
+  background: #fff;
+  color: #333;
+  overflow-x: hidden;
+}
+
+
+.enroll-page {
+  padding-top: 40px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.enroll-form {
+  max-width: 800px;
+  width: 90%; 
+  padding: 30px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+  position: relative;
+}
+
+.enroll-form h1 {
+  font-size: 28px;
+  color: #5c5c5c;
+  margin-bottom: 10px;
+}
+
+.enroll-form p {
+  color: #8c8c8c;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-column {
+  flex: 1;
+  min-width: 300px; 
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.enroll-button {
+  background: linear-gradient(to right, #ff7eb3, #ff758c);
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  width: 100%;
+  transition: background 0.3s ease;
+  margin-top: 20px;
+}
+
+.continue-button:hover {
+  background: linear-gradient(to right, #ff758c, #ff7eb3);
+}
+
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #5c5c5c; 
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: linear-gradient(to bottom, #fff, #f0f0f0), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24'%3E%3Cpath fill='%23999' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.form-group select:focus {
+  border-color: #ff758c; 
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 117, 140, 0.5); 
+}
+
+@media only screen and (max-width: 768px) {
   .enroll-form {
-    max-width: 800px;
-    width: 90%; 
-    padding: 30px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 2;
-    position: relative;
+    max-width: 70%; 
+    padding: 30px; 
+    margin: auto; 
+    margin-top: 5vh;
   }
-  
+
+  .form-row {
+    flex-direction: column; 
+    gap: 5px; 
+  }
+
+  .form-column {
+    min-width: 100%;
+    flex: none;
+  }
+
+  .enroll-button {
+    font-size: 18px; /* Zadrži veličinu teksta dugmeta */
+    padding: 15px; /* Prilagodi padding za dugme */
+    padding: 10px 10px;
+
+  }
+
+  .form-group {
+    margin-bottom: 1vh;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 5px;
+  }
+
   .enroll-form h1 {
     font-size: 28px;
     color: #5c5c5c;
-    margin-bottom: 10px;
+    margin-bottom: 23px;
   }
-  
-  .enroll-form p {
-    color: #8c8c8c;
-    margin-bottom: 20px;
-  }
-  
-  .form-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .form-column {
-    flex: 1;
-    min-width: 300px; 
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  .form-group input,
-  .form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  .enroll-button {
-    background: linear-gradient(to right, #ff7eb3, #ff758c);
-    color: white;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 18px;
-    width: 100%;
-    transition: background 0.3s ease;
-    margin-top: 20px;
-  }
-  
-  .continue-button:hover {
-    background: linear-gradient(to right, #ff758c, #ff7eb3);
-  }
-
-.form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    background-color: #fff;
-    color: #5c5c5c; 
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: linear-gradient(to bottom, #fff, #f0f0f0), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24'%3E%3Cpath fill='%23999' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
-  }
-  
-  .form-group select:focus {
-    border-color: #ff758c; 
-    outline: none;
-    box-shadow: 0 0 5px rgba(255, 117, 140, 0.5); 
-  }
-  
-  @media only screen and (max-width: 768px) {
-    .enroll-form {
-      max-width: 70%; 
-      padding: 30px; 
-      margin: auto; 
-      margin-top: 5vh;
-    }
-  
-    .form-row {
-      flex-direction: column; 
-      gap: 5px; 
-    }
-  
-    .form-column {
-      min-width: 100%;
-      flex: none;
-    }
-
-    .enroll-button {
-      font-size: 18px; /* Zadrži veličinu teksta dugmeta */
-      padding: 15px; /* Prilagodi padding za dugme */
-      padding: 10px 10px;
-
-    }
-
-    .form-group {
-      margin-bottom: 1vh;
-    }
-
-    .form-group input,
-    .form-group select {
-      padding: 5px;
-    }
-  
-    .enroll-form h1 {
-      font-size: 28px;
-      color: #5c5c5c;
-      margin-bottom: 23px;
-    }
-  }
-  
+}

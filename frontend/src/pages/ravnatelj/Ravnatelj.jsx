@@ -1,222 +1,336 @@
 import React, { useState, useEffect } from "react";
-import Header from "../../components/Header";
+import { FaSchool, FaChartBar, FaChalkboard, FaBell, FaTrashAlt } from "react-icons/fa";
+import Sidebar from "../../components/Sidebar";
+import TableUcionice from "../../components/TableUcionice";
+import GrafUcionice from "../../components/GrafUcionice";
+import UcioniceForm from "../../components/UcioniceForm";
+import Izvjestaj from "../../components/Izvjestaj";
 import WeatherWidget from "../../components/WeatherWidget";
-import "../../components/MainContent.css";
+import "./Ravnatelj.css";
 
 const Ravnatelj = () => {
-    const [potvrde, setPotvrde] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [ucionice, setUcionice] = useState([]);
-    const [newUcionica, setNewUcionica] = useState({ oznakaUc: "", kapacitet: "" });
-    const [activeSidebarOption, setActiveSidebarOption] = useState("");
-
-    const roles = ["Raspored", "Statistika", "Učionice"];
-
-    const fetchUcionice = async () => {
-        try {
-            const response = await fetch("/api/ravnatelj/ucionice");
-            const data = await response.json();
-            setUcionice(data);
-        } catch (error) {
-            console.error("Greška pri dohvaćanju učionica:", error);
-        }
-    };
-
+  const [activeSection, setActiveSection] = useState("Naslovnica");
+  const [obavijestType, setObavijestType] = useState(null);
+  const [obavijesti, setObavijesti] = useState([]);
+  const [deleteMode, setDeleteMode] = useState(false); 
+  const [userName, setUserName] = useState(null);
+    
     useEffect(() => {
-        if (activeSidebarOption === "Statistika") {
-            fetchPotvrde();
-        }
-    }, [activeSidebarOption]);
+      const fetchUserName = async () => {
+          try {
+              const response = await fetch('/api/user');
+              if (response.ok) {
+                  const data = await response.json();
+                  setUserName(data.name);
+              } else {
+                  console.error('Greška pri dohvaćanju emaila:', response.statusText);
+              }
+          } catch (error) {
+              console.error('Došlo je do greške:', error);
+          }
+      };
+    
+      fetchUserName();
+    }, []);  
+  
 
-    const handleAddUcionica = async (event) => {
-        event.preventDefault();
-        try {
-            const response = await fetch("/api/ravnatelj/ucionice/add", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newUcionica),
-            });
+  const [formData, setFormData] = useState({
+    naslovObavijest: "",
+    sadrzajObavijest: "",
+    adresaLokacija: "",
+    gradLokacija: "",
+    drzavaLokacija: "",
+  });
 
-            if (response.ok) {
-                const addedUcionica = await response.json();
-                setUcionice((prev) => [...prev, addedUcionica]);
-                setNewUcionica({ oznakaUc: "", kapacitet: "" }); // Resetiraj formu
-                alert("Učionica uspješno dodana!");
-            } else {
-                const errorMessage = await response.text();
-                alert(`Greška: ${errorMessage}`);
-            }
-        } catch (error) {
-            console.error("Greška pri dodavanju učionice:", error);
-            alert("Došlo je do pogreške pri komunikaciji s poslužiteljem.");
-        }
-    };
+  const menuItems = [
+    { name: "Naslovnica", icon: <FaSchool /> },
+    { name: "Učionice", icon: <FaSchool /> },
+    { name: "Učenici", icon: <FaChartBar /> },
+    { name: "Izvještaj", icon: <FaChalkboard /> },
+    { name: "Obavijesti", icon: <FaBell /> },
+  ];
 
-    const handleDeleteUcionica = async (oznakaUc) => {
-        try {
-            const response = await fetch(`/api/ravnatelj/ucionice/delete/${oznakaUc}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify([oznakaUc]),
-            });
+  const fetchObavijesti = async () => {
+    try {
+      const response = await fetch("/api/ravnatelj/obavijesti");
+      if (response.ok) {
+        const data = await response.json();
+        const sortedData = data.sort(
+          (a, b) => new Date(b.datumObavijest) - new Date(a.datumObavijest)
+        );
+        setObavijesti(sortedData);
+      } else {
+        alert("Greška pri dohvaćanju obavijesti.");
+      }
+    } catch (error) {
+      console.error("Greška pri dohvaćanju obavijesti:", error);
+      alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
+    }
+  };
 
-            if (!response.ok) throw new Error("Greška prilikom brisanja učionice.");
+  const deleteObavijest = async (sifObavijest) => {
+    try {
+      const response = await fetch(`/api/ravnatelj/obavijesti?sifObavijest=${sifObavijest}`, {
+        method: "DELETE",
+      });
 
-            alert("Učionica obrisana.");
-            fetchUcionice();
-        } catch (error) {
-            alert(`Greška: ${error.message}`);
-        }
-    };
+      if (response.ok) {
+        alert("Obavijest uspješno izbrisana!");
+        setObavijesti((prev) => prev.filter((o) => o.sifObavijest !== sifObavijest));
+      } else {
+        alert("Došlo je do greške pri brisanju obavijesti.");
+      }
+    } catch (error) {
+      console.error("Greška pri brisanju obavijesti:", error);
+      alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
+    }
+  };
 
-    useEffect(() => {
-        if (activeSidebarOption === "Učionice") {
-            fetchUcionice();
-        }
-    }, [activeSidebarOption]);
+  useEffect(() => {
+    fetchObavijesti();
+  }, []);
 
-    const fetchPotvrde = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const response = await fetch("/api/ravnatelj/pogledajIzdanePotvrde", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-            if (!response.ok) {
-                throw new Error("Failed to fetch data");
-            }
+  const handleAddUcionica = async (newUcionica) => {
+    try {
+      const response = await fetch("/api/ravnatelj/ucionice/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUcionica),
+      });
 
-            const data = await response.json();
-            setPotvrde(data);
-        } catch (error) {
-            setError(error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+      if (response.ok) {
+        alert("Učionica uspješno dodana!");
+      } else {
+        alert("Došlo je do greške pri dodavanju učionice.");
+      }
+    } catch (error) {
+      console.error("Greška pri dodavanju učionice:", error);
+      alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
+    }
+  };
 
-    const renderContent = () => {
-        if (activeSidebarOption === "Statistika") {
-            if (loading) return <div>Loading...</div>;
-            if (error) return <div>Error: {error}</div>;
-            return (
-                <ul>
-                    {potvrde.map((potvrda, index) => (
-                        <li key={index}>
-                            Ime: {potvrda.imeUcenik}, Prezime: {potvrda.prezimeUcenik}
-                        </li>
-                    ))}
-                </ul>
-            );
-        }
+  const handleAddObavijest = async () => {
+    const payload =
+      obavijestType === "opca"
+        ? {
+            naslov: formData.naslovObavijest,
+            sadrzaj: formData.sadrzajObavijest,
+          }
+        : {
+            naslov: formData.naslovObavijest,
+            sadrzaj: formData.sadrzajObavijest,
+            odredisteAdresa: formData.adresaLokacija,
+            gradOdrediste: formData.gradLokacija,
+            drzavaOdrediste: formData.drzavaLokacija,
+          };
 
-        return ["Obavijest1", "Obavijest2", "Obavijest3"].map((obavijest, index) => (
-            <div key={index} className="notification-box">
-                {obavijest}
-            </div>
-        ));
-    };
+    try {
+      const response = await fetch("/api/ravnatelj/obavijesti", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        alert("Obavijest uspješno dodana!");
+        setFormData({
+          naslovObavijest: "",
+          sadrzajObavijest: "",
+          adresaLokacija: "",
+          gradLokacija: "",
+          drzavaLokacija: "",
+        });
+        setObavijestType(null);
+        fetchObavijesti();
+      } else {
+        alert("Došlo je do greške pri dodavanju obavijesti.");
+      }
+    } catch (error) {
+      console.error("Greška pri dodavanju obavijesti:", error);
+      alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
+    }
+  };
+
+  const renderNotification = (obavijest) => {
+    const isTerenska = obavijest.adresaLokacija;
 
     return (
-        <div className="homepage">
-            <Header/>
-            <div className="homepage-container">
-                <aside className="sidebar-left">
-                    {roles.map((role, index) => (
-                        <button
-                            key={index}
-                            className={`sidebar-button ${activeSidebarOption === role ? "active" : ""}`}
-                            onClick={() => setActiveSidebarOption(role)}
-                        >
-                            {role}
-                        </button>
-                    ))}
-                </aside>
-
-                <div className="main-content">
-                    {["Učionice", "Statistika"].includes(activeSidebarOption) ? (
-                        activeSidebarOption === "Učionice" ? (
-                            <div className="main-content-center">
-                                {<div className="main-content-center">
-                                    <h4>Popis učionica</h4>
-                                    <div className="table-container">
-                                        <table className="styled-table">
-                                            <thead>
-                                            <tr>
-                                                <th>Oznaka učionice</th>
-                                                <th>Kapacitet</th>
-                                                <th>Akcija</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {ucionice.map((ucionica) => (
-                                                <tr key={ucionica.oznakaUc}>
-                                                    <td>{ucionica.oznakaUc}</td>
-                                                    <td>{ucionica.kapacitet}</td>
-                                                    <td>
-                                                        <button
-                                                            onClick={() => handleDeleteUcionica(ucionica.oznakaUc)}
-                                                        >
-                                                            Obriši
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>}
-                            </div>
-                        ) : (
-                            renderContent()
-                        )
-                    ) : (
-                        <p>Odaberite opciju iz lijevog izbornika.</p>
-                    )}
-                </div>
-
-                <aside className="sidebar-right">
-                    {activeSidebarOption === "Učionice" && (
-                        <form className="add-ucionica-form" onSubmit={handleAddUcionica}>
-                            <h4>Dodaj učionicu</h4>
-                            <div>
-                                <label>Oznaka učionice:</label>
-                                <input
-                                    type="text"
-                                    value={newUcionica.oznakaUc}
-                                    onChange={(e) => setNewUcionica({...newUcionica, oznakaUc: e.target.value})}
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label>Kapacitet:</label>
-                                <input
-                                    type="number"
-                                    value={newUcionica.kapacitet}
-                                    onChange={(e) => setNewUcionica({
-                                        ...newUcionica,
-                                        kapacitet: parseInt(e.target.value, 10)
-                                    })}
-                                    required
-                                    min="1"
-                                />
-                            </div>
-                            <button type="submit">Dodaj</button>
-                        </form>
-                    )}
-                    <div className="empty-container"></div>
-                    <div className="weather-widget-container">
-                        <WeatherWidget/>
-                    </div>
-                </aside>
-            </div>
-        </div>
+      <div key={obavijest.sifObavijest} className="notification-item">
+        <h3 className="notification-title">{obavijest.naslovObavijest}</h3>
+        <p className="notification-content">{obavijest.sadrzajObavijest}</p>
+        {isTerenska && <button className="karte-button">Karte</button>}
+        <p className="notification-date">
+          {new Date(obavijest.datumObavijest).toLocaleDateString("hr-HR")}
+        </p>
+        {deleteMode && (
+          <button
+            className="delete-button"
+            onClick={() => deleteObavijest(obavijest.sifObavijest)}
+          >
+            <FaTrashAlt />
+          </button>
+        )}
+        <hr className="notification-divider" />
+      </div>
     );
+  };
+
+
+  const renderObavijestiContent = () => {
+    if (!obavijestType) {
+      return (
+        <div className="obavijesti-section">
+          <div className="action-buttons">
+            <button className="add-button" onClick={() => setObavijestType("opca")}>
+              Dodaj Opću Obavijest
+            </button>
+            <button className="add-button" onClick={() => setObavijestType("terenska")}>
+              Dodaj Obavijest o Terenskoj Nastavi
+            </button>
+          </div>
+          <button className="delete-mode-button" onClick={() => setDeleteMode((prev) => !prev)}>
+            {deleteMode ? "Gotovo" : "Obriši Obavijesti"}
+          </button>
+          <div className="obavijesti-list">
+            {obavijesti.map(renderNotification)}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="obavijesti-form">
+        <h4>
+          {obavijestType === "opca" ? "Dodaj Opću Obavijest" : "Dodaj Obavijest o Terenskoj Nastavi"}
+        </h4>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleAddObavijest();
+          }}
+        >
+
+        <div className="form-group">
+          <label htmlFor="naslov">
+            Naslov obavijesti:
+            <input
+              type="text"
+              name="naslovObavijest"
+              value={formData.naslovObavijest}
+              placeholder="Unesite naslov obavijesti"
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          </div>
+
+          <div className="form-group">
+          <label htmlFor="sadrzaj">
+            Sadržaj obavijesti:
+            <textarea
+              name="sadrzajObavijest"
+              value={formData.sadrzajObavijest}
+              onChange={handleInputChange}
+              placeholder="Unesite sadržaj obavijesti"
+            rows="5"
+              required
+            />
+          </label>
+          </div>
+
+
+          {obavijestType === "terenska" && (
+            <>
+              <label>
+                <input
+                  type="text"
+                  name="adresaLokacija"
+                  value={formData.adresaLokacija}
+                  onChange={handleInputChange}
+                  placeholder="Adresa odredišta"
+                  required
+                />
+              </label>
+              <label>
+                <input
+                  type="text"
+                  name="gradLokacija"
+                  value={formData.gradLokacija}
+                  onChange={handleInputChange}
+                  placeholder="Grad"
+                  required
+                />
+              </label>
+              <label>
+                <input
+                  type="text"
+                  name="drzavaLokacija"
+                  value={formData.drzavaLokacija}
+                  onChange={handleInputChange}
+                  placeholder="Država"
+                  required
+                />
+              </label>
+            </>
+          )}
+          <button type="submit">Dodaj Obavijest</button>
+          <button type="button" onClick={() => setObavijestType(null)}>
+            Poništi
+          </button>
+        </form>
+      </div>
+    );
+  };
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case "Naslovnica":
+        return (
+          <div>
+              <h1>Pozdrav, {userName}! </h1>
+               <WeatherWidget />
+          </div>
+        );
+      case "Učionice":
+        return (
+          <div className="ucionice-section">
+            <div className="graf-i-forma">
+              <div className="graf-container">
+                <GrafUcionice />
+              </div>
+              <div className="forma-container">
+                <UcioniceForm onAddUcionica={handleAddUcionica} />
+              </div>
+            </div>
+            <TableUcionice />
+          </div>
+        );
+      case "Učenici":
+        return <h4>Učenici dolaze uskoro!</h4>;
+      case "Izvještaj":
+        return <Izvjestaj />;
+      case "Obavijesti":
+        return renderObavijestiContent();
+      default:
+        return <h4>Odaberite sekciju iz izbornika.</h4>;
+    }
+  };
+
+  return (
+    <div className="admin-container">
+      <Sidebar
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
+        menuItems={menuItems}
+      />
+      <div className="admin-content">{renderContent()}</div>
+    </div>
+  );
 };
 
 export default Ravnatelj;

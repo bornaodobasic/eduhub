@@ -11,7 +11,7 @@ public interface ObavijestService {
 	        String naslovObavijest,
 	        String sadrzajObavijest,
 	        Date datumObavijest,
-	        Integer sifPredmet, 
+	        String nazPredmet,
 	        String imeNastavnik,
 	        String prezimeNastavnik,
 	        String adresaLokacija,

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './Enroll.css';
-import Header from '../../components/Header';
 import Circles from '../../components/Circles';
 
 const Enroll = () => {
@@ -68,7 +67,7 @@ const Enroll = () => {
 
   return (
       <div className="enroll-page">
-        <Header />
+    
         <Circles />
 
         <main className="enroll-form">

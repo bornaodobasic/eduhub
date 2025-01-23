@@ -29,7 +29,7 @@ import fer.progi.backend.service.impl.S3Service;
 @RequestMapping("/api/djelatnik")
 @PreAuthorize("hasAuthority('Djelatnik')")
 public class DjelatnikController {
-	
+
 	@Autowired
 	private DjelatnikService DjelatnikService;
 	private String csvFilePath;
@@ -42,7 +42,7 @@ public class DjelatnikController {
 	public List<Djelatnik> listDjelatnik() {
 		return DjelatnikService.listAll();
 	}
-	
+
 	@PostMapping("/add")
 	@Secured("ROLE_administrator")
 	public Djelatnik dodajDjelatnik(@RequestBody Djelatnik djelatnik) {
@@ -53,7 +53,7 @@ public class DjelatnikController {
 	public List<ZahtjeviDTO> pregledIzdanihPotvrda() throws ParseException {
 		List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String csvFileKey = "zahtjevi/zahtjevi.csv"; // Ključ datoteke na S3
+		String csvFileKey = "zahtjevi/zahtjevinew.csv"; // Ključ datoteke na S3
 
 		Path tempFilePath = null;
 
@@ -72,11 +72,12 @@ public class DjelatnikController {
 
 				while ((line = reader.readLine()) != null) {
 					String[] row = line.split(",");
-					if (row.length == 3) {
+					if (row.length == 4) {
 						listaZahtjeva.add(new ZahtjeviDTO(
 								row[0],
 								row[1],
-								dateFormat.parse(row[2].trim())
+								row[2],
+								dateFormat.parse(row[3].trim())
 						));
 					} else {
 						System.err.println("Invalid row format: " + line);
@@ -101,10 +102,10 @@ public class DjelatnikController {
 
 
 	@GetMapping("/pogledajIzdanePotvrdeImePrezime")
-	public List<ZahtjeviDTO> pregledIzdanihPotvrdaImePrezime(@RequestParam String imeUcenik, @RequestParam String prezimeUcenik) throws ParseException {
+	public List<ZahtjeviDTO> pregledIzdanihPotvrdaImePrezime(@RequestParam String email) throws ParseException {
 		List<ZahtjeviDTO> listaZahtjeva = new ArrayList<>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String csvFileKey = "zahtjevi/zahtjevi.csv";
+		String csvFileKey = "zahtjevi/zahtjevinew.csv";
 
 		Path tempFilePath = null;
 
@@ -123,11 +124,12 @@ public class DjelatnikController {
 
 				while ((line = reader.readLine()) != null) {
 					String[] row = line.split(",");
-					if (row.length == 3 && row[0].equals(imeUcenik) && row[1].equals(prezimeUcenik)) {
+					if (row[2].equals(email)) {
 						listaZahtjeva.add(new ZahtjeviDTO(
 								row[0],
 								row[1],
-								dateFormat.parse(row[2].trim())
+								row[2],
+								dateFormat.parse(row[3].trim())
 						));
 					} else if (row.length != 3) {
 						System.err.println("Invalid row format: " + line);
@@ -149,6 +151,4 @@ public class DjelatnikController {
 
 		return listaZahtjeva;
 	}
-	   
-
 }

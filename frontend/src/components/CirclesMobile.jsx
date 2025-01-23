@@ -1,5 +1,5 @@
 import React from 'react';
-import './CirclesMobile.css';
+import './CirclesMobile.jsx';
 
 
 const CirclesMobile = () => {
