@@ -52,11 +52,57 @@ public class DatabaseInitializer {
 
     @Autowired
     private DjelatnikRepository djelatnikRepository;
+    
+    @Autowired
+	private ChatGroupRepository chatGroupRepository;
 
 
     @PostConstruct
     public void init() {
 
+        try {
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(getClass().getResourceAsStream("/db/djelatnici.csv"))
+            );
+
+            List<String> lines = reader.lines().skip(1).collect(Collectors.toList());
+
+            if(lines.size() < 3) {
+                throw new IllegalArgumentException("Djelatnici CSV ne sadrži dovoljno podataka.");
+            }
+
+            String[] ravnateljFields = lines.get(0).split(",");
+            Ravnatelj ravnatelj = new Ravnatelj();
+            ravnatelj.setImeRavnatelj(ravnateljFields[0].trim());
+            ravnatelj.setPrezimeRavnatelj(ravnateljFields[1].trim());
+            ravnatelj.setEmail(ravnateljFields[2].trim());
+            ravnateljRepository.save(ravnatelj);
+
+            String[] satnicarFields = lines.get(1).split(",");
+            Satnicar satnicar = new Satnicar();
+            satnicar.setImeSatnicar(satnicarFields[0].trim());
+            satnicar.setPrezimeSatnicar(satnicarFields[1].trim());
+            satnicar.setEmail(satnicarFields[2].trim());
+            satnicarRepository.save(satnicar);
+
+            List<Djelatnik> djelatnici = lines.stream()
+                    .skip(2)
+                    .map(line -> {
+                        String[] fields = line.split(",");
+                        Djelatnik djelatnik = new Djelatnik();
+                        djelatnik.setImeDjel(fields[0].trim());
+                        djelatnik.setPrezimeDjel(fields[1].trim());
+                        djelatnik.setEmail(fields[2].trim());
+                        return djelatnik;
+                    })
+                    .collect(Collectors.toList());
+
+            if (!djelatnici.isEmpty()) {
+                djelatnikRepository.saveAll(djelatnici);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         try {
@@ -325,6 +371,37 @@ public class DatabaseInitializer {
             ucenikRepository.saveAll(ucenici);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        
+        try {
+    
+            List<Razred> razredi = razredRepository.findAll();
+
+            for (Razred razred : razredi) {
+
+                String imeGrupe = razred.getNazRazred();
+                if (chatGroupRepository.existsByImeGrupe(imeGrupe)) {
+                    continue; 
+                }
+
+                ChatGroup chatGroup = new ChatGroup();
+                chatGroup.setImeGrupe(imeGrupe);
+
+                List<String> clanovi = razred.getUcenici().stream()
+                    .map(Ucenik::getEmail)
+                    .collect(Collectors.toList());
+
+                if (razred.getRazrednik() != null) {
+                    clanovi.add(razred.getRazrednik().getEmail());
+                }
+
+                chatGroup.setClanovi(clanovi);
+
+                chatGroupRepository.save(chatGroup);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Dogodila se pogreška prilikom kreiranja chat grupa: " + e.getMessage());
         }
 
 

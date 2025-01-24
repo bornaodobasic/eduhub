@@ -15,30 +15,30 @@ const Chat = () => {
     const [groupMembers, setGroupMembers] = useState([]);
     const [recipientType, setRecipientType] = useState('');
     const [showGroups, setShowGroups] = useState(false);
+    const [messageTimestamps, setMessageTimestamps] = useState({});
+    const [senderNames, setSenderNames] = useState({});
 
     useEffect(() => {
         fetch('/api/user/emailOnly')
             .then(response => response.text())
             .then(email => {
                 setCurrentUserEmail(email.trim());
-                const ws = new WebSocket(`wss://localhost:8080/chat?email=${encodeURIComponent(email.trim())}`);
+                const ws = new WebSocket(`ws://localhost:8080/chat2?email=${encodeURIComponent(email.trim())}`);
                 setSocket(ws);
-
-                ws.onopen = () => console.log('WebSocket connection established.');
-
+    
                 ws.onmessage = event => {
                     console.log('Primljeni podaci putem WebSocketa:', event.data);
                     try {
                         const message = typeof event.data === 'string' && event.data.startsWith('{')
                             ? JSON.parse(event.data)
                             : { sadrzaj: event.data }; // Pretpostavka za slučaj kada nije JSON
+    
                         setMessages(prevMessages => [...prevMessages, message]);
+
                     } catch (error) {
                         console.error('Greška pri parsiranju podataka:', error, event.data);
                     }
                 };
-                ws.onerror = error => console.error('WebSocket error:', error);
-
                 ws.onclose = () => console.log('WebSocket closed.');
             });
 
@@ -47,43 +47,41 @@ const Chat = () => {
         };
     }, []);
 
+        useEffect(() => {
+            messages.forEach(msg => {
+                if (msg.posiljatelj && !senderNames[msg.posiljatelj]) {
+                    fetch(`/api/chat/getUserName/${msg.posiljatelj}`)
+                        .then(response => response.text())
+                        .then(name => {
+                            setSenderNames(prev => ({
+                                ...prev,
+                                [msg.posiljatelj]: name
+                            }));
+                        })
+                        .catch(error => console.error('Greška pri dohvaćanju imena pošiljatelja:', error));
+                }
+            });
+        }, [messages, senderNames]);
+        
+
     useEffect(() => {
         if (recipientType === 'nastavnik') {
-            fetch('/api/nastavnik/')
+            fetch('/api/nastavnik')
                 .then(response => response.json())
                 .then(data => setRecipients(data))
                 .catch(error => console.error('Error fetching nastavnici:', error));
         } else if (recipientType === 'ucenik') {
-            fetch('/api/nastavnik/predmeti')
+            fetch('/api/nastavnik/ucenici')
                 .then(response => response.json())
-                .then(predmeti => {
-                    const fetchStudentsPromises = predmeti.map(predmet =>
-                        fetch(`/api/nastavnik/uceniciNaPredmetu?predmetId=${predmet.id}`)
-                            .then(response => response.json())
-                            .catch(error => {
-                                console.error(`Error fetching students for predmet ${predmet.id}:`, error);
-                                return []; // Return empty array if fetch fails
-                            })
-                    );
-
-                    // Wait for all fetch requests to complete
-                    Promise.all(fetchStudentsPromises)
-                        .then(studentLists => {
-                            // Combine all students into a single array and remove duplicates
-                            const allStudents = studentLists.flat();
-                            const uniqueStudents = [...new Set(allStudents.map(student => student.email))];
-                            setRecipients(uniqueStudents);
-                        })
-                        .catch(error => console.error('Error consolidating student data:', error));
-                })
-                .catch(error => console.error('Error fetching predmeti:', error));
+                .then(data => setRecipients(data))
+                .catch(error => console.error('Error fetching ucenici:', error));
         } else if (recipientType === 'grupe') {
             fetch('/api/chat/grupe')
                 .then(response => response.json())
                 .then(data => setRecipients(data))
                 .catch(error => console.error('Error fetching grupe:', error));
         } else {
-            setRecipients([]);
+            setRecipients([]); // Reset recipients if no type is selected
         }
     }, [recipientType]);
 
@@ -113,7 +111,7 @@ const Chat = () => {
     };
 
     const fetchGroupMessages = group => {
-        fetch(`/api/chat/messagesGrupa?grupaNaziv=${group}`)
+        fetch(`/api/chat/groupMessages/${group}`)
             .then(response => response.json())
             .then(data => setMessages(data))
             .catch(error => console.error('Error fetching group messages:', error));
@@ -167,38 +165,90 @@ const Chat = () => {
     const loadGroups = () => {
         fetch('/api/chat/grupe')
             .then(response => response.json())
-            .then(data => setGroups(data));
+            .then(data => {
+                setGroups(data);
+                if (recipientType === 'grupe') setRecipients(data); 
+            })
+            .catch(error => console.error('Error loading groups:', error));
+    };
+
+    const toggleTimestamp = index => {
+        setMessageTimestamps(prev => ({
+            ...prev,
+            [index]: !prev[index]
+        }));
+    };
+
+    const formatTime = (timestamp) => {
+        console.log("Raw timestamp:", timestamp);
+        try {
+            let date;
+            
+            if (Array.isArray(timestamp)) {
+                date = new Date(timestamp[0], timestamp[1] - 1, timestamp[2], timestamp[3], timestamp[4], timestamp[5], timestamp[6] / 1000000); 
+            } 
+            else if (typeof timestamp === 'string') {
+                date = new Date(timestamp);
+            }
+            
+            if (isNaN(date)) throw new Error("Invalid Date");
+    
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        } catch (error) {
+            console.error("Error formatting time:", error);
+            return "Invalid Time";
+        }
     };
 
     return (
         <div className="chat-container">
             <div className="chat-main">
-                <div className="chat-messages">
+            {selectedRecipient && (
+                <div className="selected-recipient">
+                    <h3>
+                        {recipientType === 'grupe'
+                            ? selectedRecipient
+                            : recipients.find(r => r.email === selectedRecipient)?.ime || ""}
+                    </h3>
+                </div>
+                )}
+                 <div className="chat-messages">
                     {messages.map((msg, index) => (
                         <div
                             key={index}
-                            className={`message ${
-                                msg.posiljatelj === currentUserEmail ? 'sent' : 'received'
-                            }`}
+                            className={`message ${msg.posiljatelj === currentUserEmail ? 'sent' : 'received'}`}
+                            onClick={() =>
+                                setMessages(prevMessages =>
+                                    prevMessages.map((m, i) =>
+                                            i === index ? { ...m, showTime: !m.showTime } : m
+                                    )       
+                                )
+                            }
                         >
                             <p>
-                                {msg.posiljatelj === currentUserEmail ? 'Vi: ' : ''}
+                                {recipientType === 'grupe' && msg.posiljatelj !== currentUserEmail ? (
+                                    <strong>{senderNames[msg.posiljatelj] || msg.posiljatelj}: </strong> // Display sender name if it's a group message
+                                ) : (
+                                    msg.posiljatelj === currentUserEmail ? 'Vi: ' : ''
+                                    )}
                                 {msg.sadrzaj}
                             </p>
+                            {msg.showTime && <small className="message-time">{formatTime(msg.oznakaVremena)}</small>}
                         </div>
                     ))}
                 </div>
-                <div className="chat-input">
+
+            <div className="chat-input">
                     <textarea
                         value={messageInput}
                         onChange={e => setMessageInput(e.target.value)}
                         placeholder="Unesite poruku..."
                     />
-                    <button onClick={sendMessage}>Pošaljite</button>
-                </div>
+                <button onClick={sendMessage}>Pošaljite</button>
             </div>
+        </div>
 
-            <div className="chat-sidebar">
+    <div className="chat-sidebar">
                 <div className="form-group">
                     <h3>Poruka za:</h3>
                     <select
@@ -223,8 +273,8 @@ const Chat = () => {
                     >
                         <option value="">--Odaberite--</option>
                         {recipients.map(recipient => (
-                            <option key={recipient} value={recipient}>
-                                {recipient}
+                            <option key={recipient.email || recipient} value={recipient.email || recipient}>
+                                {recipient.ime || recipient}
                             </option>
                         ))}
                     </select>
@@ -234,7 +284,7 @@ const Chat = () => {
                     <button
                         onClick={() => {
                             setRecipientType('ucenik');
-                            setShowCreateGroup(true);
+                            setShowCreateGroup(prev => !prev);
                         }}
                     >
                         Kreiraj grupu
@@ -258,24 +308,26 @@ const Chat = () => {
                             onChange={e => setGroupName(e.target.value)}
                             placeholder="Unesite ime grupe"
                         />
+                        <br/>
                         <h4>Odaberite članove:</h4>
+                        <br/>
                         <ul>
                             {recipients.map(recipient => (
-                                <li key={recipient} style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                                <li key={recipient.email} style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
                                     <input
                                         type="checkbox"
-                                        value={recipient}
+                                        value={recipient.email}
                                         onChange={e => {
                                             if (e.target.checked) {
-                                                setGroupMembers(prev => [...prev, recipient]);
+                                                setGroupMembers(prev => [...prev, recipient.email]);
                                             } else {
                                                 setGroupMembers(prev =>
-                                                    prev.filter(member => member !== recipient)
+                                                    prev.filter(member => member !== recipient.email)
                                                 );
                                             }
                                         }}
                                     />
-                                    <span>{recipient}</span>
+                                    <span>{recipient.ime}</span>
                                 </li>
                             ))}
                         </ul>
@@ -283,16 +335,16 @@ const Chat = () => {
                     </div>
                 )}
 
-                {showGroups && (
-                    <div className="group-list-container">
-                        <ul>
-                            {groups.map(group => (
-                                <li key={group}>{group}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
+        {showGroups && (
+            <div className="group-list-container">
+                <ul>
+                    {groups.map(group => (
+                        <li key={group}>{group}</li>
+                    ))}
+                </ul>
             </div>
+        )}
+    </div>
         </div>
     );
 };
