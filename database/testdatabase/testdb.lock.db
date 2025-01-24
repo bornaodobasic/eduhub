@@ -1,6 +1,6 @@
 #FileLock
-#Fri Jan 24 03:40:35 CET 2025
-hostName=localhost
-id=194962ec631cccd836ddb3101c1792a5bcfc29a252f
+#Fri Jan 24 03:50:32 CET 2025
+hostName=172.20.10.2
+id=1949637e0736c20a03ab48f9b073b6af9008ec42466
 method=file
-server=localhost\:54565
+server=172.20.10.2\:54702

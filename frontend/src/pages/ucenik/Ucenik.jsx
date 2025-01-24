@@ -342,7 +342,7 @@ const Ucenik = () => {
   {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
 </button>
       
-      {showMap && (
+      {showMapp && (
         <div>
       
           <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
