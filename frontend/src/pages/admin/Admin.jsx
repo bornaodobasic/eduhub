@@ -1,269 +1,103 @@
-import React, { useState } from "react";
-import Header from "../../components/Header"; 
-import './Admin.css';
+import React, { useState, useEffect } from "react";
+import { FaUserGraduate, FaChalkboardTeacher, FaUserTie, FaClock, FaUsers, FaUserShield, FaHome } from "react-icons/fa";
+import Sidebar from "../../components/Sidebar";
+import TableUcenik from "../../components/TableUcenik";
+import "./Admin.css";
+import TableNastavnik from "../../components/TableNastavnik";
+import TableRavnatelj from "../../components/TableRavnatelj";
+import TableDjelatnik from "../../components/TableDjelatnik";
+import TableSatnicar from "../../components/TableSatnicar";
+import TableAdmin from "../../components/TableAdmin";
+import UcenikForm from "../../components/UcenikForm";
+import KorisnikForm from "../../components/KorisnikForm";
+import WeatherWidget from "../../components/WeatherWidget";
 
 const Admin = () => {
-    const [content, setContent] = useState("Dobrodošli na početnu stranicu admina!");
-
-    const handleNastavnikSubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = {
-            ime: formData.get("ime"),
-            prezime: formData.get("prezime"),
-            email: formData.get("email"),
-        };
-
-        try {
-            const response = await fetch('/admin/add/nastavnik', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                alert("Nastavnik dodan!");
-            } else {
-                const error = await response.json();
-                alert(`Greška: ${error.message || 'Nije moguće dodati nastavnika'}`);
-            }
-        } catch (error) {
-            alert(`Greška pri slanju zahtjeva: ${error.message}`);
-        }
-    };
+  const [activeSection, setActiveSection] = useState("Naslovnica");
+   const [userName, setUserName] = useState(null);
+    
+    useEffect(() => {
+      const fetchUserName = async () => {
+          try {
+              const response = await fetch('/api/user');
+              if (response.ok) {
+                  const data = await response.json();
+                  setUserName(data.name);
+              } else {
+                  console.error('Greška pri dohvaćanju emaila:', response.statusText);
+              }
+          } catch (error) {
+              console.error('Došlo je do greške:', error);
+          }
+      };
+    
+      fetchUserName();
+    }, []);  
+  
 
 
-    const handleRavnateljSubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = {
-            ime: formData.get("ime"),
-            prezime: formData.get("prezime"),
-            email: formData.get("email"),
-        };
+  const menuItems = [
+    { name: "Naslovnica", icon: <FaHome /> },
+    { name: "Učenici", icon: <FaUserGraduate /> },
+    { name: "Nastavnici", icon: <FaChalkboardTeacher /> },
+    { name: "Ravnatelji", icon: <FaUserTie /> },
+    { name: "Satničari", icon: <FaClock /> },
+    { name: "Djelatnici", icon: <FaUsers /> },
+    { name: "Admini", icon: <FaUserShield /> },
+  ];
 
-        try {
-            const response = await fetch('/admin/add/ravnatelj', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                alert("Ravnatelj dodan!");
-            } else {
-                const error = await response.json();
-                alert(`Greška: ${error.message || 'Nije moguće dodati ravnatelja'}`);
-            }
-        } catch (error) {
-            alert(`Greška pri slanju zahtjeva: ${error.message}`);
-        }
-    };
-
-
-    const handleDjelatnikSubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = {
-            ime: formData.get("ime"),
-            prezime: formData.get("prezime"),
-            email: formData.get("email"),
-        };
-
-        try {
-            const response = await fetch('/admin/add/djelatnik', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                alert("Djelatnik dodan!");
-            } else {
-                const error = await response.json();
-                alert(`Greška: ${error.message || 'Nije moguće dodati djelatnika'}`);
-            }
-        } catch (error) {
-            alert(`Greška pri slanju zahtjeva: ${error.message}`);
-        }
-    };
-
-
-    const handleSatnicarSubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = {
-            ime: formData.get("ime"),
-            prezime: formData.get("prezime"),
-            email: formData.get("email"),
-        };
-
-        try {
-            const response = await fetch('/admin/add/satnicar', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                alert("Satničar dodan!");
-            } else {
-                const error = await response.json();
-                alert(`Greška: ${error.message || 'Nije moguće dodati satničara'}`);
-            }
-        } catch (error) {
-            alert(`Greška pri slanju zahtjeva: ${error.message}`);
-        }
-    };
-
-
-    const handleAdminSubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = {
-            ime: formData.get("ime"),
-            prezime: formData.get("prezime"),
-            email: formData.get("email"),
-        };
-
-        try {
-            const response = await fetch('/admin/add/admin', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                alert("Admin dodan!");
-            } else {
-                const error = await response.json();
-                alert(`Greška: ${error.message || 'Nije moguće dodati admina'}`);
-            }
-        } catch (error) {
-            alert(`Greška pri slanju zahtjeva: ${error.message}`);
-        }
-    };
-
-
-    const handleButtonClick = (type) => {
-        if (type === "dodajKorisnika") {
-            setContent(
-                <div className="add-container">
-                    {/* Nastavnik */}
-                    <div>
-                    <h4 className="add-title">Dodaj nastavnika:</h4>
-                    <form onSubmit={handleNastavnikSubmit} className="user-form">
-                        
-                        <input type="text" name="ime" placeholder="Ime nastavnika" className="add-input" />
-                        <input type="text" name="prezime" placeholder="Prezime nastavnika" className="add-input" />
-                        <input type="email" name="email" placeholder="Email nastavnika" className="add-input" />
-                        <button type="submit" className="add-button">DODAJ</button>
-                    </form>
-                    </div>
-                   
-                    
-                    {/* Ravnatelj */}
-                    <div>
-                    <h4 className="add-title">Dodaj ravnatelja:</h4>
-                    <form onSubmit={handleRavnateljSubmit} className="user-form">
-                        
-                        <input type="text" name="ime" placeholder="Ime ravnatelja" className="add-input" />
-                        <input type="text" name="prezime" placeholder="Prezime ravnatelja" className="add-input" />
-                        <input type="email" name="email" placeholder="Email ravnatelja" className="add-input" />
-                        <button type="submit" className="add-button">DODAJ</button>
-                    </form>
-                    </div>
-                    
-                    {/* Djelatnik */}
-                    <div>
-                    <h4 className="add-title">Dodaj djelatnika:</h4>
-                    <form onSubmit={handleDjelatnikSubmit} className="user-form">
-                        
-                        <input type="text" name="ime" placeholder="Ime djelatnika" className="add-input" />
-                        <input type="text" name="prezime" placeholder="Prezime djelatnika" className="add-input" />
-                        <input type="email" name="email" placeholder="Email djelatnika" className="add-input" />
-                        <button type="submit" className="add-button">DODAJ</button>
-                    </form>
-                    </div>
-
-                    {/* Satničar */}
-                    <div>
-                    <h4 className="add-title">Dodaj satničara:</h4>
-                    <form onSubmit={handleSatnicarSubmit} className="user-form">
-                       
-                        <input type="text" name="ime" placeholder="Ime satničara" className="add-input" />
-                        <input type="text" name="prezime" placeholder="Prezime satničara" className="add-input" />
-                        <input type="email" name="email" placeholder="Email satničara" className="add-input" />
-                        <button type="submit" className="add-button">DODAJ</button>
-                    </form>
-                    </div>
-                    
-                    {/* Admin */}
-                    <div>
-                    <h4 className="add-title">Dodaj admina:</h4>
-                    <form onSubmit={handleAdminSubmit} className="user-form">
-                       
-                        <input type="text" name="ime" placeholder="Ime admina" className="add-input" />
-                        <input type="text" name="prezime" placeholder="Prezime admina" className="add-input" />
-                        <input type="email" name="email" placeholder="Email admina" className="add-input" />
-                        <button type="submit" className="add-button">DODAJ</button>
-                    </form>
-                    </div>
-                </div>
-            );
-        } else {
-            setContent(type);
-        }
-    };
-
-    return (
-        <div className="homepage">
-            <Header />
-            <div className="homepage-container-admin">
-                <aside className="sidebar-left-admin">
-                    <button 
-                        className="sidebar-button-admin" 
-                        onClick={() => handleButtonClick("dodajKorisnika")}
-                    >
-                        Dodaj korisnika
-                    </button>
-                    <button 
-                        className="sidebar-button-admin" 
-                        onClick={() => handleButtonClick("Funkcija2")}
-                    >
-                        Funkcija2
-                    </button>
-                    <button 
-                        className="sidebar-button-admin" 
-                        onClick={() => handleButtonClick("Funkcija3")}
-                    >
-                        Funkcija3
-                    </button>
-                </aside>
-
-                <div className="main-content-admin">
-                    {content}
-                </div>
-
-                <aside className="sidebar-right-admin">
-                    <div className="empty-container-admin"></div>
-                    <div className="weather-widget-container-admin">
-                        <div className="weather-widget-admin">
-                            <div className="weather-icon">
-                                <img 
-                                    src={require("../../components/5.png")} 
-                                    alt="Weather Icon" 
-                                    style={{ width: "50px", height: "50px" }} 
-                                />
-                            </div> 
-                            <p>21°C</p> 
-                            <p>Zagreb, Hrvatska</p>
-                        </div>
-                    </div>
-                </aside>
+  const renderContent = () => {
+    switch (activeSection) { 
+      case "Naslovnica":
+        return (
+          <div>
+              <h2>Pozdrav, {userName}! </h2>
+               <WeatherWidget />
+          </div>
+        );
+      case "Učenici":
+        return (
+            <div className="content-container">
+                <TableUcenik />
             </div>
+          );
+      case "Nastavnici":
+        return (
+          <div className="content-container">
+              <TableNastavnik />
+          </div>
+        );
+      case "Ravnatelji": return (
+        <div className="content-container">
+            <TableRavnatelj />
         </div>
-    );
+      );
+      case "Satničari": return (
+        <div className="content-container">
+            <TableSatnicar />
+        </div>
+      );
+      case "Djelatnici": return (
+        <div className="content-container">
+            <TableDjelatnik />
+        </div>
+      );
+      case "Admini": return (
+        <div className="content-container">
+            <TableAdmin />
+        </div>
+      );
+      default:
+        return <h1>Odaberite sekciju</h1>;
+    }
+  };
+
+  return (
+    <div className="admin-container">
+      <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} menuItems={menuItems}/>
+      <div className="admin-content">{renderContent()}</div>
+    </div>
+  );
 };
 
 export default Admin;

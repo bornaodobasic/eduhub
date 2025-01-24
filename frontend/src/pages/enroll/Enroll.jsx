@@ -1,7 +1,5 @@
-
 import React, { useState } from 'react';
 import './Enroll.css';
-import Header from '../../components/Header';
 import Circles from '../../components/Circles';
 
 const Enroll = () => {
@@ -12,6 +10,7 @@ const Enroll = () => {
     datumRodenja: '',
     spol: '',
     smjer: '',
+    vjerounauk: '',
   });
 
   const handleChange = (e) => {
@@ -51,9 +50,10 @@ const Enroll = () => {
           datumRodenja: '',
           spol: '',
           smjer: '',
+          vjerounauk: '',
         });
         alert('Upis uspješan!');
-        window.location.href = '/ucenik'; // Redirect to /ucenik page
+        window.location.href = '/ucenik';
       } else {
         const errorData = await response.text();
         alert(`Greška: ${errorData || 'Neuspješan upis'}`);
@@ -67,7 +67,7 @@ const Enroll = () => {
 
   return (
       <div className="enroll-page">
-        <Header />
+    
         <Circles />
 
         <main className="enroll-form">
@@ -113,6 +113,20 @@ const Enroll = () => {
                     <option value="zenski">Ž</option>
                   </select>
                 </div>
+
+                <div className="form-group">
+            <label htmlFor="vjeronauk">Odabir:</label>
+            <select
+              id="vjeronauk"
+              value={formData.vjeronauk}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Odaberite Vjeronauk ili Etika</option>
+              <option value="true">Vjeronauk</option>
+              <option value="false">Etika</option>
+            </select>
+          </div>
               </div>
 
               <div className="form-column">
@@ -148,11 +162,11 @@ const Enroll = () => {
                       required
                   >
                     <option value="">Odaberite željeni smjer</option>
-                    <option value="opca">Opća gimnazija</option>
-                    <option value="prirodoslovno-matematicka">
+                    <option value="opca1">Opća gimnazija</option>
+                    <option value="primat1">
                       Prirodoslovno-matematička gimnazija
                     </option>
-                    <option value="jezicna">Jezična gimnazija</option>
+                    <option value="jezicna1">Jezična gimnazija</option>
                   </select>
                 </div>
               </div>

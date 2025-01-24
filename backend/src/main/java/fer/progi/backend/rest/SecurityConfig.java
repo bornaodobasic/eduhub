@@ -1,5 +1,6 @@
 package fer.progi.backend.rest;
 
+import fer.progi.backend.dto.AddDTO;
 import fer.progi.backend.service.RazredService;
 import fer.progi.backend.service.impl.AdminServiceJpa;
 import fer.progi.backend.service.impl.NastavnikServiceJpa;
@@ -41,6 +42,7 @@ import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.*;
 
 @Configuration
@@ -74,13 +76,14 @@ public class SecurityConfig {
     public LogoutSuccessHandler customLogoutSuccessHandler() {
         return (request, response, authentication) -> {
             System.out.println("Logout uspješan");
-            String log = "https://login.microsoftonline.com/a983c51c-e23d-4e05-b97e-fd9ccf9476c8/oauth2/v2.0/logout";
-            String post1 = "?post_logout_redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F";
 
-            response.sendRedirect(log + post1);
+            String microsoftLogout = "https://login.microsoftonline.com/a983c51c-e23d-4e05-b97e-fd9ccf9476c8/oauth2/v2.0/logout";
+            String postLogoutRedirect = "https://eduhub-rfsg.onrender.com";
+            String logoutRedirect = microsoftLogout + "?post_logout_redirect_uri=" + URLEncoder.encode(postLogoutRedirect, "UTF-8");
+
+            response.sendRedirect(logoutRedirect);
         };
     }
-
 
 
     @Bean
@@ -95,36 +98,42 @@ public class SecurityConfig {
                 String email;
                 boolean present = false;
                 boolean exists = true;
+                AddDTO addDTO = new AddDTO();
 
-                if(!razredService.findByNazRazred("1a")) razredService.dodajRazred("1a", "opca");
-                if(!razredService.findByNazRazred("1b")) razredService.dodajRazred("1b", "prirodoslovno-matematicka");
-                if(!razredService.findByNazRazred("1c")) razredService.dodajRazred("1c", "jezicna");
 
                 if (principal instanceof Jwt) {
                     Jwt jwt = (Jwt) principal;
                     List<String> roles = jwt.getClaimAsStringList("roles");
-                    role = roles != null && !roles.isEmpty() ? roles.get(0) : null;
+                    role = roles != null && !roles.isEmpty() ? roles.getFirst() : null;
 
                     email = jwt.getClaimAsString("preferred_username");
+                    String userFullName = jwt.getClaimAsString("name");
                     System.out.println(email);
+                    addDTO.setEmail(email);
+
+                    int firstSpace = userFullName.indexOf(' ');
+                    String firstName = userFullName.substring(0, firstSpace);
+                    String lastName = userFullName.substring(firstSpace + 1);
+                    addDTO.setIme(firstName);
+                    addDTO.setPrezime(lastName);
 
                     if (role.equals("Admin")) {
-                        present = adminService.createIfNeeded(email);
+                        present = adminService.createIfNeeded(addDTO);
                     } else if (role.equals("Nastavnik")) {
-                        present = nastavnikService.createIfNeeded(email);
+                        present = nastavnikService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Djelatnik")) {
-                        present = djelatnikService.createIfNeeded(email);
+                        present = djelatnikService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Satnicar")) {
-                        present = satnicarService.createIfNeeded(email);
+                        present = satnicarService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Ucenik")) {
                         exists = ucenikService.findByEmail(email);
                         present = true;
 
                     } else if (role.equals("Ravnatelj")) {
-                        present  = ravnateljService.createIfNeeded(email);
+                        present  = ravnateljService.createIfNeeded(addDTO);
                     }
 
                     if (!exists) {
@@ -139,29 +148,39 @@ public class SecurityConfig {
                     OidcUser oidcUser = (OidcUser) principal;
                     List<String> roles = (List<String>) oidcUser.getAttributes().get("roles");
 
-                    role = roles != null && !roles.isEmpty() ? roles.get(0) : null;
+                    role = roles != null && !roles.isEmpty() ? roles.getFirst() : null;
 
                     email = (String) oidcUser.getAttributes().get("preferred_username");
+                    String userFullName = (String) oidcUser.getAttributes().get("name");
+
+
+                    addDTO.setEmail(email);
+                    int firstSpace = userFullName.indexOf(' ');
+                    String firstName = userFullName.substring(0, firstSpace);
+                    String lastName = userFullName.substring(firstSpace + 1);
+                    addDTO.setIme(firstName);
+                    addDTO.setPrezime(lastName);
+
                     System.out.println(email);
                     System.out.println(role);
 
                     if (role.equals("Admin")) {
-                        present = adminService.createIfNeeded(email);
+                        present = adminService.createIfNeeded(addDTO);
                     } else if (role.equals("Nastavnik")) {
-                        present = nastavnikService.createIfNeeded(email);
+                        present = nastavnikService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Djelatnik")) {
-                        present = djelatnikService.createIfNeeded(email);
+                        present = djelatnikService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Satnicar")) {
-                        present = satnicarService.createIfNeeded(email);
+                        present = satnicarService.createIfNeeded(addDTO);
 
                     } else if (role.equals("Ucenik")) {
                         exists = ucenikService.findByEmail(email);
                         present = true;
 
                     } else if (role.equals("Ravnatelj")) {
-                        present  = ravnateljService.createIfNeeded(email);
+                        present  = ravnateljService.createIfNeeded(addDTO);
                     }
 
                     if (!exists) {
@@ -223,13 +242,14 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/oauth2/authorization/**", "/login/**", "/static/**", "/index.html", "/", "/favicon.ico", "/logo192.png", "/manifest.json", "/h2-console/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("Admin")
-                        .requestMatchers("/nastavnik/**").hasAuthority("Nastavnik")
-                        .requestMatchers("/djelatnik/**").hasAuthority("Djelatnik")
-                        .requestMatchers("/ravnatelj/**").hasAuthority("Ravnatelj")
-                        .requestMatchers("/satnicar/**").hasAuthority("Satnicar")
-                        .requestMatchers("/ucenik/**").hasAuthority("Ucenik")
+                		.requestMatchers("/ws/**", "/chat/**", "/chat2/**").permitAll()
+                        .requestMatchers("/oauth2/authorization/**", "/login/**", "/static/**", "/index.html", "/", "/favicon.ico", "/logo192.png", "/manifest.json").permitAll()
+                        .requestMatchers("/api/admin/**", "/h2-console/**").hasAuthority("Admin")
+                        .requestMatchers("/api/nastavnik/**").hasAuthority("Nastavnik")
+                        .requestMatchers("/api/djelatnik/**").hasAuthority("Djelatnik")
+                        .requestMatchers("/api/ravnatelj/**").hasAuthority("Ravnatelj")
+                        .requestMatchers("/api/satnicar/**").hasAuthority("Satnicar")
+                        .requestMatchers("/api/ucenik/**").hasAuthority("Ucenik")
                         .requestMatchers("/upis").hasAuthority("Upis")
                         .anyRequest().authenticated()
                 )

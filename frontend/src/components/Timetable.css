@@ -1,0 +1,130 @@
+.timetable {
+    display: grid;
+    grid-template-columns: 1fr repeat(5, 1fr);
+    grid-template-rows: auto repeat(7, 1fr);
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.empty-header {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.interval-column {
+    grid-column: span 1;
+    grid-row: 2 / span 7;
+    display: grid;
+    grid-template-rows: repeat(7, 1fr);
+    background-color: #fff;
+    border-right: 1px solid #eee;
+}
+
+
+.interval-entry {
+    background-color: #ffa0c8;
+    border: 1px solid #ffe6f1;
+    border-radius: 4px;
+    margin: 5px 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.day-header {
+    grid-column: span 1;
+    grid-row: 1;
+    text-align: center;
+    background-color: #ff7eb3;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-transform: uppercase;
+}
+
+.day-column {
+    grid-column: span 1;
+    grid-row: 2 / span 7;
+    display: grid;
+    grid-template-rows: repeat(7, 1fr);
+    background-color: #fff;
+    border-right: 1px solid #eee;
+}
+
+.day-column:last-child {
+    border-right: none;
+}
+
+.timetable-entry {
+    background-color: #ffe6f1;
+
+    border: 1px solid #ffe6f1;
+    border-radius: 4px;
+    margin: 5px 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.subject-ime {
+    color: #ff7eb3;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+}
+.week-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-size: 18px;
+}
+
+.week-button {
+    background-color: #d8cad0;
+    color: white;
+    font-size: 24px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.week-button:hover {
+    background-color: #aea4a9;
+}
+
+.week-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.week-button svg {
+    vertical-align: middle;
+}
+
+@media (max-width: 480px) {
+
+
+    .week-button {
+        font-size: 20px; /* Smanji veličinu strelica */
+        padding: 8px 16px; /* Smanji padding */
+        margin-bottom: 10px;
+    }
+}

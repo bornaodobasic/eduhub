@@ -3,7 +3,10 @@ package fer.progi.backend.service;
 import java.util.List;
 import java.util.Optional;
 
+import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Djelatnik;
+import fer.progi.backend.dto.RasporedDTO;
+import fer.progi.backend.dto.AddDTO;
 
 
 public interface DjelatnikService {
@@ -12,6 +15,11 @@ public interface DjelatnikService {
 	
 	Djelatnik dodajDjelatnik (Djelatnik djelatnik);
 
-	boolean createIfNeeded(String email);
+	boolean createIfNeeded(AddDTO addDTO);
+
+	List<Djelatnik> findAllDjelatniks();
+	void deleteDjelatnik(String email);
+
+	List<RasporedDTO> getRasporedZaNastavnika(String email);
 
 }

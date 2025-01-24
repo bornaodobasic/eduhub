@@ -1,61 +1,95 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Header from "../../components/Header"; 
-import "../../components/MainContent.css"; 
+import React, { useState, useEffect } from "react";
+import { FaBook, FaBell, FaCalendarAlt, FaHome } from "react-icons/fa";
+import Sidebar from "../../components/Sidebar";
+import WeatherWidget from "../../components/WeatherWidget";
+import Zauzece from "../../components/Zauzece";
+import Map from "../../components/Map";
+import { IoReturnUpBackOutline } from "react-icons/io5";
 
 const Satnicar = () => {
-    const roles = [
-        { name: "Rasporedi"},
-        { name: "Učionice"},
-        { name: "Oprema"},
+  const [activeSection, setActiveSection] = useState("Naslovnica"); const [userName, setUserName] = useState(null);
     
-    ];
+    useEffect(() => {
+      const fetchUserName = async () => {
+          try {
+              const response = await fetch('/api/user');
+              if (response.ok) {
+                  const data = await response.json();
+                  setUserName(data.name);
+              } else {
+                  console.error('Greška pri dohvaćanju emaila:', response.statusText);
+              }
+          } catch (error) {
+              console.error('Došlo je do greške:', error);
+          }
+      };
+    
+      fetchUserName();
+    }, []);  
+  
 
-    return (
-        <div className="homepage">
-            <Header />
-            <div className="homepage-container">
-                <aside className="sidebar-left">
-                    
-                    {roles.map((role) => (
-                        <Link key={role.name} to={role.path}>
-                            <button className="sidebar-button">{role.name}</button>
-                        </Link>
-                    ))}
-                </aside>
+  const menuItems = [
+    { name: "Naslovnica", icon: <FaHome /> },
+    { name: "Raspored", icon: <FaCalendarAlt /> },
+    { name: "Učionice", icon: <FaBook /> },
+  ];
 
-                
-                <div className="main-content">
-                    {["Obavijest1", "Obavijest2", "Obavijest3"].map((obavijest, index) => (
-                        <div key={index} className="notification-box">
-                            {obavijest}
-                        </div>
-                    ))}
-                </div>
 
-             
-                <aside className="sidebar-right">
-                    <div className="empty-container"></div>
-                    
-                    <div className="weather-widget-container">
-                        <div className="weather-widget">
-                            <div className="weather-icon">
-                                <img 
-                                    src={require("../../components/5.png")} 
-                                    alt="Weather Icon" 
-                                    style={{ width: "50px", height: "50px" }} 
-                                />
-                            </div> 
-                         
-                            <p>21°C</p> 
-                            
-                            <p>Zagreb, Hrvatska</p>
-                        </div>
-                    </div>
-                </aside>
-            </div>
-        </div>
-    );
+  const handleGenerateSchedule = async () => {
+    try {
+        const response = await fetch("/api/satnicar/raspored", {
+            method: "GET",
+        });
+
+        if (response.ok) {
+            alert("Raspored je uspješno generiran!");
+        } else {
+            alert("Dogodila se pogreška pri generiranju rasporeda.");
+        }
+    } catch (error) {
+        console.error("Error generating schedule:", error);
+        alert("Dogodila se pogreška pri generiranju rasporeda.");
+    }
+  };
+
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case "Naslovnica":
+        return (
+          <div>
+              <h2>Pozdrav, {userName}! </h2>
+               <WeatherWidget />
+          </div>
+        );
+      case "Raspored":
+        return  <button className="add-button" onClick={handleGenerateSchedule}>
+                 Generiraj Raspored
+                </button>
+      
+
+      case "Učionice":
+        return (
+          <div>
+              <h2>Tjedno zauzeće učionica </h2>
+              <Zauzece />;
+          </div>
+        );
+     
+        
+      default:
+        return <h4>Odaberite sekciju iz izbornika.</h4>;
+    }
+  };
+
+  return (
+    <div className="admin-container">
+      <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} menuItems={menuItems} />
+      <div className="admin-content">
+        {renderContent()}
+      </div>
+    </div>
+  );
 };
 
 export default Satnicar;

@@ -43,8 +43,10 @@ public class AktivnostServiceJpa implements AktivnostService{
 		return aktivnostRepo.findById(sifAktivnost)
 				.orElseThrow(() -> new RuntimeException("Aktivnost nije pronađena"));
 	}
-
-
 	
+	@Override
+	public List<Aktivnost> findByOznAktivnosti(List<String> oznAktivnosti) {
+		return aktivnostRepo.findByOznAktivnostIn(oznAktivnosti);
+	}	
 	
 }

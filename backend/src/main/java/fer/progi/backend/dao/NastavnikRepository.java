@@ -8,4 +8,7 @@ import fer.progi.backend.domain.Nastavnik;
 
 public interface NastavnikRepository extends JpaRepository<Nastavnik, Integer>{
     Optional<Nastavnik> findByEmail(String email);
+    void deleteByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

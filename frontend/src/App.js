@@ -2,19 +2,23 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Enroll from './pages/enroll/Enroll';
-import Admin from './pages/admin/Admin';
-import Certificate from './pages/certificate/Certificate';
 import Circles from './components/Circles';
 import CirclesMobile from './components/CirclesMobile';
-import Nastavnik from './pages/nastavnik/Nastavnik';
+import FileUpload from './components/FileUpload';
 import Ucenik from './pages/ucenik/Ucenik';
-import Djelatnik from './pages/djelatnik/Djelatnik';
-import Satnicar from './pages/satnicar/Satnicar';
+import Nastavnik from './pages/nastavnik/Nastavnik';
 import Ravnatelj from './pages/ravnatelj/Ravnatelj';
+import Satnicar from './pages/satnicar/Satnicar';
+import Djelatnik from './pages/djelatnik/Djelatnik';
+import Admin from './pages/admin/Admin';
+import Chat from './pages/chat/Chat';
+import Chat2 from "./pages/chat2/Chat2";
+import 'leaflet/dist/leaflet.css';
+
 
 function App() {
   const handleLogin = () => {
-    window.location.href = "http:/localhost:8080/oauth2/authorization/azure-dev";
+    window.location.href = "https://eduhub-rfsg.onrender.com/oauth2/authorization/azure-dev";
   };
 
   return (
@@ -51,13 +55,15 @@ function App() {
         />
 
         <Route path="/upis" element={<Enroll />} />
-        <Route path="/certificate" element={<Certificate />} />
-        <Route path="/nastavnik" element={<Nastavnik />} />
+        <Route path="/upload" element={<FileUpload />} />
         <Route path="/ucenik" element={<Ucenik />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/djelatnik" element={<Djelatnik />} />
-        <Route path="/satnicar" element={<Satnicar />} />
+        <Route path="/nastavnik" element={<Nastavnik />} />
         <Route path="/ravnatelj" element={<Ravnatelj />} />
+        <Route path="/satnicar" element={<Satnicar />} />
+        <Route path="/djelatnik" element={<Djelatnik />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/chat2" element={<Chat2 />} />
       </Routes>
     </Router>
   );

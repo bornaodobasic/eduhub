@@ -3,7 +3,8 @@ package fer.progi.backend.service;
 import java.util.List;
 
 import fer.progi.backend.domain.*;
-import fer.progi.backend.rest.AddDTO;
+import fer.progi.backend.dto.AddDTO;
+import fer.progi.backend.dto.AdminAddUcenikDTO;
 
 
 public interface AdminService {
@@ -15,7 +16,8 @@ public interface AdminService {
 	Nastavnik addNastavnik (AddDTO addDTO);
 	Ravnatelj addRavnatelj (AddDTO addDTO);
 	Satnicar addSatnicar (AddDTO addDTO);
-
-	boolean createIfNeeded(String email);
-
+	Ucenik addUcenik (AdminAddUcenikDTO adminAddUcenikDTO);
+	boolean createIfNeeded(AddDTO addDTO);
+	List<Admin> findAllAdmins();
+	void deleteAdmin(String email);
 }

@@ -1,0 +1,46 @@
+.notification-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.notification-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.notification-content {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.karte-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.karte-button:hover {
+    background-color: #0056b3;
+}
+
+.notification-date {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.notification-divider {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+
+  

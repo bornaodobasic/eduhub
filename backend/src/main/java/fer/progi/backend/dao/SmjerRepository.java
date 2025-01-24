@@ -10,4 +10,5 @@ public interface SmjerRepository extends JpaRepository<Smjer, Integer>{
 	
 	Optional<Smjer> findByNazivSmjer(String naziv);
 
+	boolean existsByNazivSmjer(String nazivSmjer);
 }

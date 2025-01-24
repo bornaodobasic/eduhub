@@ -1,23 +1,23 @@
 package fer.progi.backend.domain;
 
-import java.util.Set;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
 public class Aktivnost {
 	
+	@GeneratedValue
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int sifAktivnost;
+	
 	private String oznAktivnost;
 	
-//    @ManyToMany(mappedBy = "aktivnosti")
-//    private Set<Ucenik> ucenici;
+   @ManyToMany(mappedBy = "aktivnosti", fetch = FetchType.EAGER)
+   @JsonBackReference
+   private List<Ucenik> ucenici;
+    
+    
 }

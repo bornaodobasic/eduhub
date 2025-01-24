@@ -1,15 +1,10 @@
 package fer.progi.backend.domain;
 
-import java.util.Set;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -21,19 +16,37 @@ public class Predmet {
 	private Integer sifPredmet;
 	
 	private String nazPredmet;
-	private int ukBrSatiTjedno;
+	private Integer ukBrSatiTjedno;
 	
 	@ManyToOne
+	@JsonBackReference
 	private Smjer smjer;
-	
-	@ManyToMany
+
+	/*
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "predmet_nastavnik",
 			joinColumns = @JoinColumn(name = "sifPredmet"),
 			inverseJoinColumns = @JoinColumn(name = "sifNastavnik"))
-	private Set<Nastavnik> nastavnici;
+	@JsonManagedReference
+	private List<Nastavnik> nastavnici;
+*/
 
+	@ManyToMany(mappedBy = "predmeti", fetch = FetchType.EAGER)
+	@JsonBackReference
+	private List<Nastavnik> nastavnici;
+
+	@Override
+	public String toString() {
+		return "Predmet{" +
+				"id=" + sifPredmet +
+				", nazivPredmet='" + nazPredmet + '\'' +
+				'}';
+	}
 	
-	
+    @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Obavijest> obavijesti;
+
 
 }
