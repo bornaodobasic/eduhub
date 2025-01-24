@@ -193,6 +193,7 @@ const TableUcenik = () => {
           </div>
         )}
         <div className="table-container">
+        <div className="table-scroll">
           <table className="table">
             <thead>
               <tr>
@@ -215,6 +216,7 @@ const TableUcenik = () => {
               ))}
             </tbody>
           </table>
+        </div>
         </div>
       </div>
     );
