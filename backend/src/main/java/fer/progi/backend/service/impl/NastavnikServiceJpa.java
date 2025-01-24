@@ -3,13 +3,13 @@ package fer.progi.backend.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import fer.progi.backend.rest.AddDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fer.progi.backend.dao.NastavnikRepository;
 import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Predmet;
+import fer.progi.backend.dto.AddDTO;
 import fer.progi.backend.service.NastavnikService;
 
 @Service

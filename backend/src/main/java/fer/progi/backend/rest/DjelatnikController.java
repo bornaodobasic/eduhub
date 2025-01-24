@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import fer.progi.backend.domain.Djelatnik;
+import fer.progi.backend.dto.ZahtjeviDTO;
 import fer.progi.backend.service.DjelatnikService;
 import fer.progi.backend.service.impl.S3Service;
 

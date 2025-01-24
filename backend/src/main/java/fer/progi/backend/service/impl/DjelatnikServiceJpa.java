@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import fer.progi.backend.domain.Ucenik;
-import fer.progi.backend.rest.AddDTO;
+import fer.progi.backend.dto.AddDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import fer.progi.backend.dao.DjelatnikRepository;

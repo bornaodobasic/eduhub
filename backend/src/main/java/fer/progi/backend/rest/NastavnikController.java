@@ -29,6 +29,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import fer.progi.backend.domain.*;
+import fer.progi.backend.dto.PredmetMaterijaliDTO;
+import fer.progi.backend.dto.PristupMaterijaliDTO;
 import fer.progi.backend.service.NastavnikService;
 import fer.progi.backend.service.ObavijestService;
 import fer.progi.backend.service.PredmetService;

@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Satnicar;
+import fer.progi.backend.dto.AddDTO;
 import fer.progi.backend.domain.Satnicar;
-import fer.progi.backend.rest.AddDTO;
 
 
 public interface SatnicarService {

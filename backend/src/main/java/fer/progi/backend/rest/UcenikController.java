@@ -4,6 +4,8 @@ import fer.progi.backend.domain.*;
 import fer.progi.backend.service.*;
 import fer.progi.backend.service.impl.S3Service;
 import fer.progi.backend.domain.Aktivnost;
+import fer.progi.backend.dto.RasporedDTO;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

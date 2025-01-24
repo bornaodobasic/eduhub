@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Predmet;
-import fer.progi.backend.rest.AddDTO;
+import fer.progi.backend.dto.AddDTO;
 
 public interface NastavnikService {
 	

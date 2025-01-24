@@ -3,8 +3,8 @@ package fer.progi.backend.service.impl;
 
 import fer.progi.backend.dao.UcenikRepository;
 import fer.progi.backend.domain.*;
-import fer.progi.backend.rest.RasporedDTO;
-import fer.progi.backend.rest.UpisDTO;
+import fer.progi.backend.dto.RasporedDTO;
+import fer.progi.backend.dto.UpisDTO;
 import fer.progi.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -15,6 +15,9 @@ import java.util.Date;
 import java.util.List;
 
 import fer.progi.backend.domain.Ucionica;
+import fer.progi.backend.dto.ObavijestDTO;
+import fer.progi.backend.dto.ZahtjeviDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

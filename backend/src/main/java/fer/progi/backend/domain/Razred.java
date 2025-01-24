@@ -20,7 +20,7 @@ public class Razred implements Serializable {
 	@JsonBackReference
 	private Smjer smjer;
 
-	@OneToMany(mappedBy = "razred", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "razred", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonManagedReference
     private Set<Ucenik> ucenici;
 

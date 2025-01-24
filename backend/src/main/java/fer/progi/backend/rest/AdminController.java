@@ -1,6 +1,8 @@
 package fer.progi.backend.rest;
 
 import fer.progi.backend.domain.*;
+import fer.progi.backend.dto.AddDTO;
+import fer.progi.backend.dto.AdminAddUcenikDTO;
 import fer.progi.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

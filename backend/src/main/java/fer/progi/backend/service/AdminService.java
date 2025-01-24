@@ -3,8 +3,8 @@ package fer.progi.backend.service;
 import java.util.List;
 
 import fer.progi.backend.domain.*;
-import fer.progi.backend.rest.AddDTO;
-import fer.progi.backend.rest.AdminAddUcenikDTO;
+import fer.progi.backend.dto.AddDTO;
+import fer.progi.backend.dto.AdminAddUcenikDTO;
 
 
 public interface AdminService {

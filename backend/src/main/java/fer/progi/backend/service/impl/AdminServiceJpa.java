@@ -2,8 +2,8 @@ package fer.progi.backend.service.impl;
 
 import fer.progi.backend.dao.*;
 import fer.progi.backend.domain.*;
-import fer.progi.backend.rest.AddDTO;
-import fer.progi.backend.rest.AdminAddUcenikDTO;
+import fer.progi.backend.dto.AddDTO;
+import fer.progi.backend.dto.AdminAddUcenikDTO;
 import fer.progi.backend.service.RazredService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

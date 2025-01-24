@@ -9,4 +9,5 @@ import fer.progi.backend.domain.Djelatnik;
 public interface DjelatnikRepository extends JpaRepository<Djelatnik,Integer> {
 	Optional<Djelatnik> findByEmail(String email);
 	void deleteByEmail(String email);
+	boolean existsByEmail(String email);
 }

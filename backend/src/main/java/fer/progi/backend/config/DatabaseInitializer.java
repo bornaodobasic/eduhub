@@ -13,8 +13,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -60,49 +62,64 @@ public class DatabaseInitializer {
     @PostConstruct
     public void init() {
 
-        try {
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(getClass().getResourceAsStream("/db/djelatnici.csv"))
-            );
+    	try {
+    	    BufferedReader reader = new BufferedReader(
+    	            new InputStreamReader(getClass().getResourceAsStream("/db/djelatnici.csv"))
+    	    );
 
-            List<String> lines = reader.lines().skip(1).collect(Collectors.toList());
+    	    List<String> lines = reader.lines().skip(1).collect(Collectors.toList());
 
-            if(lines.size() < 3) {
-                throw new IllegalArgumentException("Djelatnici CSV ne sadrži dovoljno podataka.");
-            }
+    	    if (lines.size() < 3) {
+    	        throw new IllegalArgumentException("Djelatnici CSV ne sadrži dovoljno podataka.");
+    	    }
 
-            String[] ravnateljFields = lines.get(0).split(",");
-            Ravnatelj ravnatelj = new Ravnatelj();
-            ravnatelj.setImeRavnatelj(ravnateljFields[0].trim());
-            ravnatelj.setPrezimeRavnatelj(ravnateljFields[1].trim());
-            ravnatelj.setEmail(ravnateljFields[2].trim());
-            ravnateljRepository.save(ravnatelj);
+    	    // Ravnatelj
+    	    String[] ravnateljFields = lines.get(0).split(",");
+    	    String ravnateljEmail = ravnateljFields[2].trim();
+    	    if (!ravnateljRepository.existsByEmail(ravnateljEmail)) {
+    	        Ravnatelj ravnatelj = new Ravnatelj();
+    	        ravnatelj.setImeRavnatelj(ravnateljFields[0].trim());
+    	        ravnatelj.setPrezimeRavnatelj(ravnateljFields[1].trim());
+    	        ravnatelj.setEmail(ravnateljEmail);
+    	        ravnateljRepository.save(ravnatelj);
+    	    }
 
-            String[] satnicarFields = lines.get(1).split(",");
-            Satnicar satnicar = new Satnicar();
-            satnicar.setImeSatnicar(satnicarFields[0].trim());
-            satnicar.setPrezimeSatnicar(satnicarFields[1].trim());
-            satnicar.setEmail(satnicarFields[2].trim());
-            satnicarRepository.save(satnicar);
+    	    // Satnicar
+    	    String[] satnicarFields = lines.get(1).split(",");
+    	    String satnicarEmail = satnicarFields[2].trim();
+    	    if (!satnicarRepository.existsByEmail(satnicarEmail)) {
+    	        Satnicar satnicar = new Satnicar();
+    	        satnicar.setImeSatnicar(satnicarFields[0].trim());
+    	        satnicar.setPrezimeSatnicar(satnicarFields[1].trim());
+    	        satnicar.setEmail(satnicarEmail);
+    	        satnicarRepository.save(satnicar);
+    	    }
 
-            List<Djelatnik> djelatnici = lines.stream()
-                    .skip(2)
-                    .map(line -> {
-                        String[] fields = line.split(",");
-                        Djelatnik djelatnik = new Djelatnik();
-                        djelatnik.setImeDjel(fields[0].trim());
-                        djelatnik.setPrezimeDjel(fields[1].trim());
-                        djelatnik.setEmail(fields[2].trim());
-                        return djelatnik;
-                    })
-                    .collect(Collectors.toList());
+    	    // Djelatnici
+    	    List<Djelatnik> djelatnici = lines.stream()
+    	            .skip(2)
+    	            .map(line -> {
+    	                String[] fields = line.split(",");
+    	                String email = fields[2].trim();
+    	                if (!djelatnikRepository.existsByEmail(email)) { // Provjera da ne postoji
+    	                    Djelatnik djelatnik = new Djelatnik();
+    	                    djelatnik.setImeDjel(fields[0].trim());
+    	                    djelatnik.setPrezimeDjel(fields[1].trim());
+    	                    djelatnik.setEmail(email);
+    	                    return djelatnik;
+    	                }
+    	                return null; // Ako već postoji, vraća null
+    	            })
+    	            .filter(Objects::nonNull) // Uklanja null vrijednosti
+    	            .collect(Collectors.toList());
 
-            if (!djelatnici.isEmpty()) {
-                djelatnikRepository.saveAll(djelatnici);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    	    if (!djelatnici.isEmpty()) {
+    	        djelatnikRepository.saveAll(djelatnici);
+    	    }
+    	} catch (Exception e) {
+    	    e.printStackTrace();
+    	}
+
 
 
         try {
@@ -376,6 +393,7 @@ public class DatabaseInitializer {
         try {
     
             List<Razred> razredi = razredRepository.findAll();
+            List<Ucenik> ucenici = ucenikRepository.findAll();
 
             for (Razred razred : razredi) {
 
@@ -387,9 +405,13 @@ public class DatabaseInitializer {
                 ChatGroup chatGroup = new ChatGroup();
                 chatGroup.setImeGrupe(imeGrupe);
 
-                List<String> clanovi = razred.getUcenici().stream()
-                    .map(Ucenik::getEmail)
-                    .collect(Collectors.toList());
+                List<String> clanovi = new ArrayList<>();
+                for(Ucenik u : ucenici) {
+                	if(u.getRazred().getNazRazred().equals(razred.getNazRazred())) {
+                		clanovi.add(u.getEmail());
+                	}
+                	
+                }
 
                 if (razred.getRazrednik() != null) {
                     clanovi.add(razred.getRazrednik().getEmail());

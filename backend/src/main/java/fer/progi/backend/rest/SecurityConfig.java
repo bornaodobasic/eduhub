@@ -1,5 +1,6 @@
 package fer.progi.backend.rest;
 
+import fer.progi.backend.dto.AddDTO;
 import fer.progi.backend.service.RazredService;
 import fer.progi.backend.service.impl.AdminServiceJpa;
 import fer.progi.backend.service.impl.NastavnikServiceJpa;
@@ -77,7 +78,7 @@ public class SecurityConfig {
             System.out.println("Logout uspješan");
 
             String microsoftLogout = "https://login.microsoftonline.com/a983c51c-e23d-4e05-b97e-fd9ccf9476c8/oauth2/v2.0/logout";
-            String postLogoutRedirect = "https://eduhub-rfsg.onrender.com";
+            String postLogoutRedirect = "http://localhost:8080";
             String logoutRedirect = microsoftLogout + "?post_logout_redirect_uri=" + URLEncoder.encode(postLogoutRedirect, "UTF-8");
 
             response.sendRedirect(logoutRedirect);

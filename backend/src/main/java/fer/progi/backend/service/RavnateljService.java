@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Ravnatelj;
-import fer.progi.backend.rest.AddDTO;
+import fer.progi.backend.dto.AddDTO;
 
 
 public interface RavnateljService {
