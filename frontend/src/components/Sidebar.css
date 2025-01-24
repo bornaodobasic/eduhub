@@ -69,15 +69,15 @@
 
 /* Hamburger Menu and Mobile Styles */
 .mobile-header {
-  display: none; 
-  color: white;
+  display: none;
+  color: lightgray;
   display: flex;
   align-items: center;
   justify-content: flex-start; /* Poravnanje u lijevi kut */
   padding: 5px 10px; /* Malo unutarnjeg razmaka */
   border-radius: 8px; /* Zaokruži rubove za estetski izgled */
   position: fixed;
-  top: 10px; /* Udaljenost od vrha */
+  bottom: 10px; /* Udaljenost od vrha */
   left: 10px; /* Udaljenost od lijevog ruba */
   z-index: 1001;
   width: auto; /* Prilagodi širinu sadržaju */
@@ -127,6 +127,8 @@
 
 /* Responsive Styling */
 @media screen and (max-width: 768px) {
+
+
   .sidebar {
     position: fixed;
     top: 0;
