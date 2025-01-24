@@ -148,7 +148,7 @@ const Ucenik = () => {
           <div>
             <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
           <div>
-              <button onClick={handleButtonClick}>
+              <button className="karte-button" onClick={handleButtonClick}>
                 {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
               </button>
       
@@ -325,8 +325,9 @@ const Ucenik = () => {
 
             <h2>Pozdrav, {userName}! </h2>
             <div className="latest-obavijesti">
-              <h3>Najnovije Obavijesti</h3>
+              
               <div className="obavijesti-list">
+              <h3>Najnovije Obavijesti</h3>
         {latestObavijesti.length > 0 ? (
             <div>
               {latestObavijesti.map((obavijest) => (
@@ -338,7 +339,7 @@ const Ucenik = () => {
   <div>
     <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
     <div>
-    <button onClick={handleButtonClickk}>
+    <button className="karte-button" onClick={handleButtonClickk}>
   {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
 </button>
       

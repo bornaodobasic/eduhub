@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSchool, FaChartBar, FaChalkboard, FaBell, FaTrashAlt, FaHome } from "react-icons/fa";
+import { FaListAlt, FaBook, FaBell, FaTrashAlt, FaHome } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import TableUcionice from "../../components/TableUcionice";
 import GrafUcionice from "../../components/GrafUcionice";
@@ -16,7 +16,17 @@ const Ravnatelj = () => {
   const [deleteMode, setDeleteMode] = useState(false); 
   const [userName, setUserName] = useState(null);
   const [showMap, setShowMap] = useState(false); // Stanje koje određuje treba li prikazati mapu
+  const [prikaziFormu, setPrikaziFormu] = useState(false);
   
+    const toggleForma = () => {
+      setPrikaziFormu(!prikaziFormu);
+    };
+  
+    const [prikaziGraf, setPrikaziGraf] = useState(false);
+  
+    const toggleGraf = () => {
+      setPrikaziGraf(!prikaziGraf);
+    };
   const handleButtonClick = () => {
     setShowMap(!showMap); // Prebacuje stanje između true i false
   };
@@ -50,8 +60,8 @@ const Ravnatelj = () => {
 
   const menuItems = [
     { name: "Naslovnica", icon: <FaHome /> },
-    { name: "Učionice", icon: <FaSchool /> },
-    { name: "Izvještaj", icon: <FaChalkboard /> },
+    { name: "Učionice", icon: <FaBook /> },
+    { name: "Izvještaj", icon: <FaListAlt /> },
     { name: "Obavijesti", icon: <FaBell /> },
   ];
 
@@ -179,7 +189,7 @@ const Ravnatelj = () => {
     <div>
       <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
     <div>
-        <button onClick={handleButtonClick}>
+        <button className="karte-button" onClick={handleButtonClick}>
           {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
         </button>
 
@@ -342,12 +352,24 @@ const Ravnatelj = () => {
         return (
           <div className="ucionice-section">
             <div className="graf-i-forma">
-              <div className="graf-container">
-                <GrafUcionice />
-              </div>
+
               <div className="forma-container">
-                <UcioniceForm onAddUcionica={handleAddUcionica} />
+
+                 <button className="add-button" onClick={toggleForma}>
+                   {prikaziFormu ? 'Gotovo' : 'Dodaj učionicu'}
+                 </button>
+                  {prikaziFormu &&  <UcioniceForm onAddUcionica={handleAddUcionica} /> }
+               
               </div>
+              <div className="graf-container">
+
+                 <button className="add-button" onClick={toggleGraf}>
+                   {prikaziGraf ? 'Sakrij graf' : 'Prikaži graf'}
+                 </button>
+                  {prikaziGraf &&  <GrafUcionice />}
+               
+              </div>
+
             </div>
             <TableUcionice />
           </div>

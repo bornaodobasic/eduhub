@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSchool, FaBell, FaCalendarAlt, FaHome } from "react-icons/fa";
+import { FaBook, FaBell, FaCalendarAlt, FaHome } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import WeatherWidget from "../../components/WeatherWidget";
 import Zauzece from "../../components/Zauzece";
@@ -31,7 +31,7 @@ const Satnicar = () => {
   const menuItems = [
     { name: "Naslovnica", icon: <FaHome /> },
     { name: "Raspored", icon: <FaCalendarAlt /> },
-    { name: "Učionice", icon: <FaBell /> },
+    { name: "Učionice", icon: <FaBook /> },
   ];
 
 
@@ -63,7 +63,7 @@ const Satnicar = () => {
           </div>
         );
       case "Raspored":
-        return  <button className="generate-schedule-button" onClick={handleGenerateSchedule}>
+        return  <button className="add-button" onClick={handleGenerateSchedule}>
                  Generiraj Raspored
                 </button>
       

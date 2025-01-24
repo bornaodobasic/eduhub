@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaDownload, FaEnvelope } from "react-icons/fa";
+import "./UcenikPotvrde.css";
 
 const UcenikPotvrde = ({ userEmail }) => {
     const handleDownloadPotvrda = async () => {
@@ -52,15 +53,19 @@ const UcenikPotvrde = ({ userEmail }) => {
     };
 
     return (
-        <div className="button-group">
-            <button className="button" onClick={handleDownloadPotvrda}>
-                <span className="button-text">Preuzmi potvrdu</span>
-                <FaDownload className="button-icon" />
+        <div className="potvrde-group">
+            <div className="gumbbbb">
+            <button className="add-button" onClick={handleDownloadPotvrda}>
+                <span className="button-text">Preuzmi potvrdu  <FaDownload className="button-icon" /></span>
+               
             </button>
-            <button className="button" onClick={handleEmailPotvrda}>
-                <span className="button-text">Pošalji potvrdu na mail</span>
-                <FaEnvelope className="button-icon" />
+            </div>
+            <div>
+            <button className="add-button" onClick={handleEmailPotvrda}>
+                <span className="button-text">Pošalji potvrdu na mail  <FaEnvelope className="button-icon" /></span>
+                
             </button>
+            </div>
         </div>
     );
 };
