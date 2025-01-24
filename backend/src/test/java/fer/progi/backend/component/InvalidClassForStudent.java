@@ -3,7 +3,7 @@ package fer.progi.backend.component;
 import fer.progi.backend.dao.RazredRepository;
 import fer.progi.backend.dao.UcenikRepository;
 import fer.progi.backend.domain.Ucenik;
-import fer.progi.backend.rest.AdminAddUcenikDTO;
+import fer.progi.backend.dto.AdminAddUcenikDTO;
 import fer.progi.backend.service.impl.AdminServiceJpa;
 import fer.progi.backend.service.impl.RazredServiceJpa;
 import org.assertj.core.api.Assertions;

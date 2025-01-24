@@ -2,7 +2,7 @@ package fer.progi.backend.component;
 
 import fer.progi.backend.dao.AdminRepository;
 import fer.progi.backend.domain.Admin;
-import fer.progi.backend.rest.AddDTO;
+import fer.progi.backend.dto.AddDTO;
 import fer.progi.backend.service.impl.AdminServiceJpa;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
