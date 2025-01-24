@@ -331,3 +331,41 @@
   background-color: #ccc; /* Siva pozadina */
   cursor: not-allowed; /* Zabranjen pokazivač */
 }
+
+@media screen and (max-width: 768px) {
+  .subjects-grid {
+    grid-template-columns: 1fr; /* Samo jedan stupac */
+    gap: 10px; /* Smanji razmak između pravokutnika */
+    padding: 10px; /* Dodaj malo unutarnjeg razmaka za grid */
+  }
+
+  .subject-card {
+    width: calc(100% - 20px); /* Zauzmi gotovo cijelu širinu s malo margine */
+    margin: 0 auto; /* Centriraj pravokutnik */
+    border-radius: 4px; /* Dodaj malo zaobljenja za pravokutnik */
+    padding: 15px; /* Smanji padding unutar pravokutnika */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Poravnaj sadržaj prema gore */
+    align-items: flex-start; /* Poravnaj sadržaj prema lijevom rubu */
+    text-align: left; /* Lijevo poravnanje teksta */
+  }
+
+  .subject-name {
+    font-size: 20px; /* Lagano smanji font */
+    margin-bottom: 10px;
+    width: auto; /* Ukloni pozadinsko bojenje cijele širine */
+    background-color: transparent; /* Transparentna pozadina */
+    padding: 0; /* Ukloni padding */
+  }
+
+  .subject-razred {
+    font-size: 16px; /* Smanji font za razred */
+    margin-bottom: 5px;
+  }
+
+  .subject-smjer {
+    font-size: 14px; /* Još manji font za smjer */
+    color: #666;
+  }
+}
