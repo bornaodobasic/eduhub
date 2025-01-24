@@ -16,4 +16,6 @@ public interface RazredService {
 	void dodajRazred(String nazRazred, String nazivSmjer);
 
 	Razred findRazred(String nazRazred);
+
+	Razred findByNazivRazred(String nazRazred);
 }

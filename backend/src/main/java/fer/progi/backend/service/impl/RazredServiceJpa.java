@@ -45,7 +45,7 @@ public class RazredServiceJpa implements RazredService{
 		tempRazredi.removeIf(razred -> !razred.getNazRazred().startsWith("1"));
 
 
-		Razred bestClass = tempRazredi.get(0);
+		Razred bestClass = tempRazredi.getFirst();
 		for(Razred razred : tempRazredi){
 			int ucenikCount = razred.getUcenici().size();
 			if (ucenikCount < bestClass.getUcenici().size()) {
@@ -57,8 +57,13 @@ public class RazredServiceJpa implements RazredService{
 
 	public boolean findByNazRazred(String nazRazred) {
 		Optional<Razred> optionalRazred = razredRepo.findByNazRazred(nazRazred);
-		if(optionalRazred.isEmpty()) {return false;}
-		else {return true;}
+        return optionalRazred.isPresent();
+	}
+
+	@Override
+	public Razred findByNazivRazred(String nazRazred) {
+		Optional<Razred> optionalRazred = razredRepo.findByNazRazred(nazRazred);
+        return optionalRazred.orElse(null);
 	}
 
 	@Override

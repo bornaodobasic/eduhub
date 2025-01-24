@@ -44,6 +44,13 @@ public class AdminServiceJpa implements AdminService {
 
     @Override
     public Admin addAdmin(AddDTO addDTO) {
+        Optional<Admin> optionalAdmin = adminRepo.findByEmail(addDTO.getEmail());
+        if (optionalAdmin.isPresent()) {
+            throw new IllegalArgumentException("Admin s ovim e-mailom već postoji.");
+        }
+        if (addDTO.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("Email ne može biti null.");
+        }
         Admin admin = new Admin();
         admin.setImeAdmin(addDTO.getIme());
         admin.setPrezimeAdmin(addDTO.getPrezime());
@@ -76,6 +83,11 @@ public class AdminServiceJpa implements AdminService {
     @Override
     public Satnicar addSatnicar(AddDTO addDTO) {
         Satnicar satnicar = new Satnicar();
+        Optional<Satnicar> optionalSatnicar = satnicarRepo.findByEmail(addDTO.getEmail());
+        if (optionalSatnicar.isPresent()) {
+            throw new IllegalArgumentException("Satnicar s ovim e-mailom već postoji.");
+        }
+
         satnicar.setImeSatnicar(addDTO.getIme());
         satnicar.setPrezimeSatnicar(addDTO.getPrezime());
         satnicar.setEmail(addDTO.getEmail());
@@ -118,18 +130,33 @@ public class AdminServiceJpa implements AdminService {
 
     @Override
     public Ucenik addUcenik(AdminAddUcenikDTO adminAddUcenikDTO) {
+
+        Optional<Ucenik> optionalUcenik = ucenikRepo.findByEmail(adminAddUcenikDTO.getEmail());
+        if(optionalUcenik.isPresent()) {
+            throw new IllegalArgumentException("Ucenik s e-mailom već postoji.");
+        }
+
+        Razred optionalRazred = razredService.findByNazivRazred(adminAddUcenikDTO.getRazred());
+        if (optionalRazred == null) {
+            throw new IllegalArgumentException("Razred s ovim nazivom ne postoji.");
+        }
+
         Ucenik ucenik = new Ucenik();
         ucenik.setSpol(adminAddUcenikDTO.getSpol());
         ucenik.setImeUcenik(adminAddUcenikDTO.getImeUcenik());
         ucenik.setOib(adminAddUcenikDTO.getOib());
         ucenik.setPrezimeUcenik(adminAddUcenikDTO.getPrezimeUcenik());
         ucenik.setDatumRodenja(adminAddUcenikDTO.getDatumRodenja());
-        ucenik.setRazred(razredService.findRazred(adminAddUcenikDTO.getRazred()));
+        ucenik.setRazred(optionalRazred);
         ucenik.setEmail(adminAddUcenikDTO.getEmail());
         ucenik.setVjeronauk(adminAddUcenikDTO.getVjeronauk());
+
         return ucenikRepo.save(ucenik);
     }
 
-
+    public void deleteAdminByName(String name) {
+        //Samo za potrebe testiranja
+        throw new UnsupportedOperationException("Metoda nije implementirana.");
+    }
 
 }

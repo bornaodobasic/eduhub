@@ -104,11 +104,10 @@ public class UcenikServiceJpa implements UcenikService {
 
 		Ucenik ucenik = ucenikRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Učenik nije pronađen s emailom: " + email));
 		List<Aktivnost> listaAktivnosti = aktivnostService.findByOznAktivnosti(oznAktivnosti);
-		ucenik.setAktivnosti(listaAktivnosti);
+		ucenik.getAktivnosti().addAll(listaAktivnosti);
+        ucenikRepo.save(ucenik);
 
 		return true;
-
-
 	}
 
     @Override
