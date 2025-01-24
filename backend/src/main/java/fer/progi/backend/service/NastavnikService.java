@@ -26,5 +26,5 @@ public interface NastavnikService {
 
 	Optional<Nastavnik> findByEmail(String email);
 
-	List<RasporedDTO> getRasporedZaNastavnika(String email);
+
 }

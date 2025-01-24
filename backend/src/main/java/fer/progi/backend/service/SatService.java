@@ -12,6 +12,6 @@ public interface SatService {
     DayOfWeek findDay(int sat);
     List<Sat> listAll();
     void dodijeliRazrednike();
-	List<RasporedDTO> getRasporedZaNastavnika(String email);
+	
 	
 }

@@ -97,11 +97,7 @@ public class NastavnikServiceJpa implements NastavnikService{
 		return nastavnik.getPredmeti();
 	}
 
-	@Override
-	public List<RasporedDTO> getRasporedZaNastavnika(String email) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	
 	
 
