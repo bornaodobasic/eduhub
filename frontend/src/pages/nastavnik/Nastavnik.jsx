@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaChartBar, FaChalkboard, FaComments, FaHome } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import TableUceniciNastavnik from "../../components/TableUceniciNastavnik";
-import Timetable from "../../components/Timetable";
+import TimetableNast from "../../components/TimetableNast";
 import WeatherWidget from "../../components/WeatherWidget";
 import "./Nastavnik.css";
 import {Navigate} from "react-router-dom";
@@ -554,7 +554,7 @@ const renderObavijestiForm = () => (
       
                 return (
                     <div className="content-container">
-                        {userEmail ? <Timetable email={userEmail} /> : <p>Loading timetable...</p>}
+                        {userEmail ? <TimetableNast email={userEmail} /> : <p>Loading timetable...</p>}
                     </div>
                 );
       }
