@@ -331,7 +331,7 @@ const Ucenik = () => {
             className="add-button"
             onClick={() => setSelectedSubject(null)}
         >
-          Natrag
+          Povratak
         </button>
 
 
