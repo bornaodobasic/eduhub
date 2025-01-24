@@ -1,4 +1,5 @@
 import { FaEye, FaTrashAlt, FaArrowLeft, FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
+import UcenikForm from "./UcenikForm";
 import "./TableUcenik.css";
 import { useState, useEffect } from "react";
 
@@ -14,7 +15,11 @@ const TableUcenik = () => {
   const [imePrezime, setImePrezime] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: "prezimeUcenik", direction: "asc" });
+ const [prikaziFormu, setPrikaziFormu] = useState(false);
 
+  const toggleForma = () => {
+    setPrikaziFormu(!prikaziFormu);
+  };
 
 
   // Sortiranje podataka
@@ -217,6 +222,12 @@ const TableUcenik = () => {
   
 
   return (
+    <div>
+<button className="add-button" onClick={toggleForma}>
+        
+{prikaziFormu ? 'Gotovo' : 'Dodaj učenika'}
+      </button>
+      {prikaziFormu &&  <UcenikForm />}
     <div className="table-container">
       <h2 className="table-title">Popis svih učenika</h2>
       <table className="table">
@@ -250,6 +261,7 @@ const TableUcenik = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

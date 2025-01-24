@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { FaEye, FaTrashAlt, FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
+import KorisnikForm from "./KorisnikForm";
 
 const TableAdmin = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-    const [sortConfig, setSortConfig] = useState({ key: "prezimeAdmin", direction: "asc" });
+  const [sortConfig, setSortConfig] = useState({ key: "prezimeAdmin", direction: "asc" });
+  const [prikaziFormu, setPrikaziFormu] = useState(false);
       
+  const toggleForma = () => {
+    setPrikaziFormu(!prikaziFormu);
+  };
       
       
         // Sortiranje podataka
@@ -75,6 +80,13 @@ const TableAdmin = () => {
   if (error) return <p className="error">{error}</p>;
 
   return (
+    <div>
+     <button className="add-button" onClick={toggleForma}>
+       
+       {prikaziFormu ? 'Gotovo' : 'Dodaj admina'}
+      </button>
+      {prikaziFormu &&  <KorisnikForm korisnik="admin" />}
+ 
     <div className="table-container">
       <h2 className="table-title">Popis svih admina</h2>
       <table className="table">
@@ -104,6 +116,7 @@ const TableAdmin = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

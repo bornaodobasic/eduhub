@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from 'react-router-dom';
-import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots, FaMap} from "react-icons/fa";
+import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots, FaHome} from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import Timetable from "../../components/Timetable";
 import UcenikPotvrde from "../../components/UcenikPotvrde";
@@ -323,7 +323,7 @@ const Ucenik = () => {
       return (
           <div>
 
-            <h1>Pozdrav, {userName}! </h1>
+            <h2>Pozdrav, {userName}! </h2>
             <div className="latest-obavijesti">
               <h3>Najnovije Obavijesti</h3>
               <div className="obavijesti-list">
@@ -457,7 +457,7 @@ const Ucenik = () => {
   };
 
   const menuItems = [
-    { name: "Naslovnica", icon: <FaBook /> },
+    { name: "Naslovnica", icon: <FaHome /> },
     { name: "Predmeti", icon: <FaBook /> },
     { name: "Aktivnosti", icon: <FaTasks /> },
     { name: "Raspored", icon: <FaCalendarAlt /> },

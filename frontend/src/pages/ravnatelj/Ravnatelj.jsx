@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSchool, FaChartBar, FaChalkboard, FaBell, FaTrashAlt } from "react-icons/fa";
+import { FaSchool, FaChartBar, FaChalkboard, FaBell, FaTrashAlt, FaHome } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import TableUcionice from "../../components/TableUcionice";
 import GrafUcionice from "../../components/GrafUcionice";
@@ -49,7 +49,7 @@ const Ravnatelj = () => {
   });
 
   const menuItems = [
-    { name: "Naslovnica", icon: <FaSchool /> },
+    { name: "Naslovnica", icon: <FaHome /> },
     { name: "Učionice", icon: <FaSchool /> },
     { name: "Izvještaj", icon: <FaChalkboard /> },
     { name: "Obavijesti", icon: <FaBell /> },
@@ -334,7 +334,7 @@ const Ravnatelj = () => {
       case "Naslovnica":
         return (
           <div>
-              <h1>Pozdrav, {userName}! </h1>
+              <h2>Pozdrav, {userName}! </h2>
                <WeatherWidget />
           </div>
         );

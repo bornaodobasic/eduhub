@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaChartBar, FaChalkboard, FaComments } from "react-icons/fa";
+import { FaChartBar, FaChalkboard, FaComments, FaHome } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import TableUceniciNastavnik from "../../components/TableUceniciNastavnik";
 import Timetable from "../../components/Timetable";
@@ -496,7 +496,7 @@ const renderObavijestiForm = () => (
     if (activeSection === "Naslovnica") {
       return (
         <div>
-            <h1>Pozdrav, {userName}! </h1>
+            <h2>Pozdrav, {userName}! </h2>
              <WeatherWidget />
         </div>
       );
@@ -571,7 +571,7 @@ const renderObavijestiForm = () => (
   };
 
   const menuItems = [
-    { name: "Naslovnica", icon: <FaChartBar /> },
+    { name: "Naslovnica", icon: <FaHome /> },
     { name: "Predmeti", icon: <FaChartBar /> },
     { name: "Raspored", icon: <FaChalkboard /> },
     { name: "Chat", icon: <FaComments /> },

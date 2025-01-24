@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSchool, FaBell, FaCalendarAlt } from "react-icons/fa";
+import { FaSchool, FaBell, FaCalendarAlt, FaHome } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import WeatherWidget from "../../components/WeatherWidget";
 import Zauzece from "../../components/Zauzece";
@@ -29,8 +29,7 @@ const Satnicar = () => {
   
 
   const menuItems = [
-    { name: "Naslovnica", icon: <FaCalendarAlt /> },
-    { name: "Obavijesti", icon: <FaBell /> },
+    { name: "Naslovnica", icon: <FaHome /> },
     { name: "Raspored", icon: <FaCalendarAlt /> },
     { name: "Učionice", icon: <FaBell /> },
   ];
@@ -59,7 +58,7 @@ const Satnicar = () => {
       case "Naslovnica":
         return (
           <div>
-              <h1>Pozdrav, {userName}! </h1>
+              <h2>Pozdrav, {userName}! </h2>
                <WeatherWidget />
           </div>
         );
@@ -68,8 +67,6 @@ const Satnicar = () => {
                  Generiraj Raspored
                 </button>
       
-      case "Obavijesti":
-        return <Map />;
 
       case "Učionice":
         return (
