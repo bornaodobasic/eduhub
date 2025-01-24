@@ -1,16 +1,24 @@
 package fer.progi.backend.service.impl;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 import fer.progi.backend.rest.AddDTO;
+import fer.progi.backend.rest.RasporedDTO;
+
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fer.progi.backend.dao.NastavnikRepository;
-import fer.progi.backend.domain.Nastavnik;
+import fer.progi.backend.dao.*;
+import fer.progi.backend.domain.*;
 import fer.progi.backend.domain.Predmet;
+import fer.progi.backend.domain.RazredPredmetNastavnik;
 import fer.progi.backend.service.NastavnikService;
+import fer.progi.backend.service.*;
 
 @Service
 public class NastavnikServiceJpa implements NastavnikService{
@@ -88,5 +96,14 @@ public class NastavnikServiceJpa implements NastavnikService{
 		System.out.println("Predmeti: " + nastavnik.getPredmeti());
 		return nastavnik.getPredmeti();
 	}
+
+	@Override
+	public List<RasporedDTO> getRasporedZaNastavnika(String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+
 		
 }

@@ -29,6 +29,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import fer.progi.backend.domain.*;
+import fer.progi.backend.service.DjelatnikService;
 import fer.progi.backend.service.NastavnikService;
 import fer.progi.backend.service.ObavijestService;
 import fer.progi.backend.service.PredmetService;
@@ -55,6 +56,9 @@ public class NastavnikController {
 
     @Autowired
     private UcenikService ucenikService;
+    
+    @Autowired
+    private DjelatnikService djelatnikService;
 
 
 
@@ -299,5 +303,9 @@ public class NastavnikController {
         return ResponseEntity.ok(ucenici);
     }
 
+    @GetMapping("/{email}/raspored")
+    public List<RasporedDTO> getRaspored(@PathVariable String email) {
+        return djelatnikService.getRasporedZaNastavnika(email);
+    }
 
 }

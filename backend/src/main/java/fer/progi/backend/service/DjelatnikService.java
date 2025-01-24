@@ -6,6 +6,7 @@ import java.util.Optional;
 import fer.progi.backend.domain.Admin;
 import fer.progi.backend.domain.Djelatnik;
 import fer.progi.backend.rest.AddDTO;
+import fer.progi.backend.rest.RasporedDTO;
 
 
 public interface DjelatnikService {
@@ -18,5 +19,7 @@ public interface DjelatnikService {
 
 	List<Djelatnik> findAllDjelatniks();
 	void deleteDjelatnik(String email);
+
+	List<RasporedDTO> getRasporedZaNastavnika(String email);
 
 }
