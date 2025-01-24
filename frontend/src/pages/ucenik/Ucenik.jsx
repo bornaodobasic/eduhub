@@ -24,6 +24,46 @@ const Ucenik = () => {
   const [showMap, setShowMap] = useState(false); // Stanje koje određuje treba li prikazati mapu
   const [showMapp, setShowMapp] = useState(false); // Stanje koje određuje treba li prikazati mapu
 
+
+
+const handleDownload = async (material) => {
+  try {
+    // Backend URL
+    const url = `/api/ucenik/${selectedSubject}/materijali/download?suffix=${encodeURIComponent(material)}`;
+
+    // Fetch request to backend
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to download material");
+    }
+
+    // Read response as a Blob
+    const blob = await response.blob();
+
+    // Create a URL for the Blob and trigger download
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+
+    // Use the material as the filename or set a default
+    link.download = material || "downloaded_file";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    // Release the Blob URL after download
+    window.URL.revokeObjectURL(downloadUrl);
+  } catch (error) {
+    console.error("Error downloading material:", error);
+  }
+};
+
   const handleButtonClick = () => {
     setShowMap(!showMap); // Prebacuje stanje između true i false
   };
@@ -311,14 +351,16 @@ const Ucenik = () => {
                     <div className="material-icon">
                       <img src="/path/to/pdf-icon.png" alt="PDF"/>
                     </div>
-                    <div className="material-details">
+                    <div className="material-details" onClick={() => handleDownload(material)}>
                       <a
                           href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="material-link"
                       >
-                        {material.split("_").pop()}
+                
+                          {material.split("_").pop()}
+                               
                       </a>
                     </div>
                   </div>
