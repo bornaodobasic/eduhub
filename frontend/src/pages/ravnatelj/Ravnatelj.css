@@ -23,8 +23,6 @@
   border-radius: 4px;
   cursor: pointer;
   margin-right: 10px;
-  width: 120px; /* Set a consistent width */
-  text-align: center; /* Center-align text inside the button */
 }
 
 .add-button:hover {
