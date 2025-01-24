@@ -27,7 +27,7 @@ public class MailServiceJpa implements MailService {
 
            
             helper.setFrom("eduxhubprogi@outlook.com");
-            helper.setTo("dr53873@fer.hr"); 
+            helper.setTo(email);
             helper.setSubject("Potvrda o statusu učenika");
             helper.setText("Poštovani, u privitku se nalazi potvrda o vašem statusu.", false);
 

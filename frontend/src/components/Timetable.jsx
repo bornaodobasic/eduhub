@@ -6,14 +6,13 @@ const Timetable = ({ email }) => {
     const [timetable, setTimetable] = useState([]);
     const [error, setError] = useState(null);
 
-    // Calculate the default week containing today's date in 2026
     const getCurrentWeek = () => {
-        const startDate = new Date("2025-09-08"); // Adjust according to your calendar's week 1 start
+        const startDate = new Date("2025-09-08");
         const today = new Date();
-        today.setFullYear(2026); // Set year to 2026
+        today.setFullYear(2026);
 
         const diffInDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-        return Math.max(0, Math.floor(diffInDays / 7)); // Ensure non-negative week
+        return Math.max(0, Math.floor(diffInDays / 7));
     };
 
     const [currentWeek, setCurrentWeek] = useState(getCurrentWeek());

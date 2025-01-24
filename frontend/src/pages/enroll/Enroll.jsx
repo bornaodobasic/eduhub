@@ -53,7 +53,7 @@ const Enroll = () => {
           vjerounauk: '',
         });
         alert('Upis uspješan!');
-        window.location.href = '/ucenik'; // Redirect to /ucenik page
+        window.location.href = '/ucenik';
       } else {
         const errorData = await response.text();
         alert(`Greška: ${errorData || 'Neuspješan upis'}`);

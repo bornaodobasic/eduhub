@@ -56,7 +56,7 @@
 }
   
   .view-icon {
-    color: #007bff; /* Plava za "pregled" */
+    color: #007bff;
   }
   
   .view-icon:hover {
@@ -64,21 +64,21 @@
   }
 
   .delete-icon {
-    color: #dc3545; /* Crvena za "obriši" */
-    font-size: 1rem; /* Smanjena veličina */
+    color: #dc3545;
+    font-size: 1rem;
     cursor: pointer;
-    transition: color 0.3s, transform 0.3s; /* Efekti za hover */
+    transition: color 0.3s, transform 0.3s;
   }
   
   .delete-icon:hover {
     color: #a71d2a;
-    transform: scale(1.1); /* Blago povećanje na hover */
+    transform: scale(1.1);
   }
   
   .checkbox-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 stupca */
-    gap: 10px; /* Razmak između stavki */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
   }
   
   .checkbox-item {

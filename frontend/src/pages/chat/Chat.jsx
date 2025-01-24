@@ -31,7 +31,7 @@ const Chat = () => {
                     try {
                         const message = typeof event.data === 'string' && event.data.startsWith('{')
                             ? JSON.parse(event.data)
-                            : { sadrzaj: event.data }; // Pretpostavka za slučaj kada nije JSON
+                            : { sadrzaj: event.data };
     
                         setMessages(prevMessages => [...prevMessages, message]);
 
@@ -64,7 +64,7 @@ const Chat = () => {
                 .then(data => setRecipients(data))
                 .catch(error => console.error('Error fetching grupe:', error));
         } else {
-            setRecipients([]); // Reset recipients if no type is selected
+            setRecipients([]);
         }
     }, [recipientType]);
 
@@ -115,7 +115,7 @@ const Chat = () => {
         console.log('Slanje poruke:', message);
         if (currentUserEmail && !senderNames[currentUserEmail]) {
             console.log(`Dodavanje imena pošiljatelja za ${currentUserEmail}`);
-            // Pretpostavljamo da već imate način da dohvatite ime korisnika na temelju emaila
+
             fetch(`/api/chat/getUserName/${currentUserEmail}`)
                 .then(response => response.text())
                 .then(name => {
@@ -223,7 +223,7 @@ const Chat = () => {
                         >
                             <p>
                                 {recipientType === 'grupe' && msg.posiljatelj !== currentUserEmail ? (
-                                    <strong>{senderNames[msg.posiljatelj].name || msg.posiljatelj}: </strong> // Display sender name if it's a group message
+                                    <strong>{senderNames[msg.posiljatelj].name || msg.posiljatelj}: </strong>
                                 ) : (
                                     msg.posiljatelj === currentUserEmail ? 'Vi: ' : ''
                                     )}
