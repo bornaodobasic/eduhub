@@ -3,11 +3,9 @@ package fer.progi.backend.service.impl;
 import fer.progi.backend.dao.RazredRepository;
 import fer.progi.backend.dao.SatRepository;
 import fer.progi.backend.domain.*;
-import fer.progi.backend.rest.RasporedDTO;
 import fer.progi.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.DayOfWeek;
 import java.util.*;
 import java.util.stream.Collectors;

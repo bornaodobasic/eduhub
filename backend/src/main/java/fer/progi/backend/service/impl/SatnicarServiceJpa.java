@@ -1,21 +1,15 @@
 package fer.progi.backend.service.impl;
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import fer.progi.backend.domain.Admin;
-import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.dto.AddDTO;
-
 import fer.progi.backend.domain.Ucionica;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import fer.progi.backend.dao.*;
-import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.*;
 import fer.progi.backend.service.SatnicarService;
 
