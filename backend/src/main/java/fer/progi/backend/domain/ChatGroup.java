@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,7 +20,7 @@ public class ChatGroup {
 	
 	private String imeGrupe;
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
     private List<String> clanovi; // Lista korisničkih ID-ova
 
 }

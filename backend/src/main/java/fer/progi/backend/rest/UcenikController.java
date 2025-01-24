@@ -16,7 +16,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,18 +60,36 @@ public class UcenikController {
     private ObavijestService obavijestService;
 
     @GetMapping("")
-    public List<String> getUceniciMailovi(Authentication authentication) {
-        List<String> mailoviUcenika = new ArrayList<>();
+    public List<Map<String, String>> getUceniciMailovi(Authentication authentication) {
+        List<Map<String, String>> ucenici = new ArrayList<>();
 
         OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
         String email = oidcUser.getAttribute("preferred_username");
 
-        for(Ucenik u :ucenikService.findAllUceniks()) {
-            if(!u.getEmail().equals(email))
-                mailoviUcenika.add(u.getEmail());
+        for (Ucenik u : ucenikService.findAllUceniks()) {
+            if (!u.getEmail().equals(email)) {
+                Map<String, String> ucenikInfo = new HashMap<>();
+                ucenikInfo.put("email", u.getEmail());
+                ucenikInfo.put("ime", u.getImeUcenik() + " " + u.getPrezimeUcenik());
+                ucenici.add(ucenikInfo);
+            }
         }
 
-        return mailoviUcenika;
+        return ucenici;
+    }
+    
+    @GetMapping("/nastavnici")
+    public List<Map<String, String>> getNastavniciMailovi() {
+        List<Map<String, String>> nastavnici = new ArrayList<>();
+
+        for (Nastavnik n : nastavnikService.findAllNastavniks()) {
+            Map<String, String> nastavnikInfo = new HashMap<>();
+            nastavnikInfo.put("email", n.getEmail());
+            nastavnikInfo.put("ime", n.getImeNastavnik() + " " + n.getPrezimeNastavnik());
+            nastavnici.add(nastavnikInfo);
+        }
+
+        return nastavnici;
     }
 
     @GetMapping("/aktivnosti/je/{email}")
@@ -88,15 +108,6 @@ public class UcenikController {
             return null;
         }
         return ucenikServiceAktivnosti.findNotUcenikAktivnosti(email);
-    }
-    @GetMapping("/nastavnici")
-    public List<String> getNastavniciMailovi() {
-        List<String> mailoviNastavnika = new ArrayList<>();
-        for(Nastavnik n :nastavnikService.findAllNastavniks()) {
-            mailoviNastavnika.add(n.getEmail());
-        }
-
-        return mailoviNastavnika;
     }
 
     @PostMapping("/dodajAktivnosti")

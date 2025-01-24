@@ -77,7 +77,7 @@ public class SecurityConfig {
             System.out.println("Logout uspješan");
 
             String microsoftLogout = "https://login.microsoftonline.com/a983c51c-e23d-4e05-b97e-fd9ccf9476c8/oauth2/v2.0/logout";
-            String postLogoutRedirect = "http://localhost:8080/";
+            String postLogoutRedirect = "http://localhost:8080";
             String logoutRedirect = microsoftLogout + "?post_logout_redirect_uri=" + URLEncoder.encode(postLogoutRedirect, "UTF-8");
 
             response.sendRedirect(logoutRedirect);
@@ -241,7 +241,7 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests(auth -> auth
-                		.requestMatchers("/ws/**", "/chat.html").permitAll() //zamijeniti ws sa stvarnim endpointom
+                		.requestMatchers("/ws/**", "/chat/**", "/chat2/**").permitAll() //zamijeniti ws sa stvarnim endpointom
                         .requestMatchers("/oauth2/authorization/**", "/login/**", "/static/**", "/index.html", "/", "/favicon.ico", "/logo192.png", "/manifest.json", "/h2-console/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("Admin")
                         .requestMatchers("/api/nastavnik/**").hasAuthority("Nastavnik")

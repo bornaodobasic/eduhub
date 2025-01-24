@@ -1,11 +1,9 @@
-/* Glavni kontejner za chat */
 .chat-container {
     display: flex;
     height: 100vh;
     font-family: Arial, sans-serif;
 }
 
-/* Glavni deo za poruke */
 .chat-main {
     flex: 1;
     display: flex;
@@ -13,40 +11,37 @@
     justify-content: space-between;
     background-color: #ffffff;
     padding: 20px;
-    overflow-y: hidden; /* Sprečava skrolovanje celog prozora */
+    overflow-y: hidden; 
 }
 
-/* Prostor za poruke sa skrolovanjem */
 .chat-messages {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding: 10px;
-    overflow-y: auto; /* Samo poruke se skroluju */
+    overflow-y: auto;
 }
 
-/* Stil za poruke */
 .message {
-    max-width: 60%; /* Ograničava širinu poruke */
+    max-width: 60%; 
     padding: 10px;
     border-radius: 10px;
-    word-wrap: break-word; /* Prelomi duge reči */
+    word-wrap: break-word; 
 }
 
 .message.sent {
-    align-self: flex-end; /* Poruke poslate od korisnika desno */
+    align-self: flex-end;
     background-color: #d1ffd1;
     text-align: right;
 }
 
 .message.received {
-    align-self: flex-start; /* Primljene poruke levo */
+    align-self: flex-start;
     background-color: #f1f1f1;
     text-align: left;
 }
 
-/* Unos poruke i dugme za slanje */
 .chat-input {
     display: flex;
     gap: 10px;
@@ -115,14 +110,13 @@
     background-color: #ff7eb3;
 }
 
-/* Grupa za kreiranje */
 .create-group-container {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 20px;
     margin-top: 20px;
-    max-height: 400px; /* Maksimalna visina kontejnera */
+    max-height: 400px;
     overflow-y: auto;
 }
 
@@ -136,14 +130,28 @@
 }
 
 .create-group-container li {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
     margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    word-wrap: break-word; 
 }
 
 .create-group-container input[type="checkbox"] {
-    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
-/* Prikaz lista grupa */
+.create-group-container span {
+    font-size: 16px; 
+    color: #333; 
+}
+
 .group-list-container ul {
     list-style-type: none;
     padding: 0;
@@ -151,13 +159,29 @@
 }
 
 .group-list-container li {
-    display: flex; /* Aligns items horizontally */
-    align-items: center; /* Vertically centers the checkbox and name */
-    gap: 10px; /* Adds space between the checkbox and the name */
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
     margin-bottom: 10px;
     padding: 10px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 4px;
-    word-wrap: break-word; /* Handles long names */
+    word-wrap: break-word; 
+}
+
+.message-time {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: gray;
+    text-align: right;
+}
+
+.selected-recipient {
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-align: center;
 }

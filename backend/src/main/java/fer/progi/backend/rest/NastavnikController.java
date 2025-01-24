@@ -11,13 +11,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import fer.progi.backend.domain.Predmet;
-import fer.progi.backend.domain.Smjer;
+
 import fer.progi.backend.service.impl.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import fer.progi.backend.domain.*;
-import fer.progi.backend.domain.Obavijest;
 import fer.progi.backend.service.NastavnikService;
 import fer.progi.backend.service.ObavijestService;
 import fer.progi.backend.service.PredmetService;
@@ -63,19 +63,37 @@ public class NastavnikController {
         return nastavnikService.dodajNastavnik(nastavnik);
     }
 
-    @GetMapping("/")
-    public List<String> getNastavniciMailovi(Authentication authentication) {
-        List<String> mailoviNastavnika = new ArrayList<>();
+    @GetMapping("")
+    public List<Map<String, String>> getNastavniciMailovi(Authentication authentication) {
+        List<Map<String, String>> nastavnici = new ArrayList<>();
 
         OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
         String email = oidcUser.getAttribute("preferred_username");
 
         for (Nastavnik n : nastavnikService.findAllNastavniks()) {
-            if (!n.getEmail().equals(email))
-                mailoviNastavnika.add(n.getEmail());
+            if (!n.getEmail().equals(email)) {
+                Map<String, String> nastavnikInfo = new HashMap<>();
+                nastavnikInfo.put("email", n.getEmail());
+                nastavnikInfo.put("ime", n.getImeNastavnik() + " " + n.getPrezimeNastavnik());
+                nastavnici.add(nastavnikInfo);
+            }
         }
 
-        return mailoviNastavnika;
+        return nastavnici;
+    }
+    
+    @GetMapping("/ucenici")
+    public List<Map<String, String>> getUceniciMailovi() {
+        List<Map<String, String>> ucenici = new ArrayList<>();
+
+        for (Ucenik u : ucenikService.findAllUceniks()) {
+            Map<String, String> ucenikInfo = new HashMap<>();
+            ucenikInfo.put("email", u.getEmail());
+            ucenikInfo.put("ime", u.getImeUcenik() + " " + u.getPrezimeUcenik());
+            ucenici.add(ucenikInfo);
+        }
+
+        return ucenici;
     }
 
     @GetMapping("/predmeti")

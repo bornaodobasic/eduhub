@@ -21,4 +21,9 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long>{
 
 		List<ChatMessage> findByImeGrupe(String imeGrupe);
 
+	    @Query("SELECT m FROM ChatMessage m WHERE " +
+		           "(m.primatelj = imeGrupe)" +
+		           "ORDER BY m.oznakaVremena ASC")
+		List<ChatMessage> findByPrimatelj(String imeGrupe);
+
 }

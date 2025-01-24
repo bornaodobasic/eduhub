@@ -2,6 +2,10 @@ package fer.progi.backend.config.websocket;
 
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 
@@ -30,6 +34,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Autowired
     private ChatServiceJpa chatService;
     
+    @Autowired
+    private ObjectMapper objectMapper;
     
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -38,10 +44,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         session.getAttributes().put("email", email); // Spremajte email u atribute sesije
         sessions.add(session); // Dodajte sesiju u aktivne veze
         System.out.println("Nova veza s korisnikom: " + email);
-//        List<ChatMessage> previousMessages = userMessages.getOrDefault(user, new ArrayList<>());
-//        for (ChatMessage message : previousMessages) {
-//            session.sendMessage(new TextMessage(message.getSadrzaj()));
-//        }
+        for(WebSocketSession s : sessions) {
+        	System.out.println(s.getAttributes());
+        }
         
     }
 
@@ -68,14 +73,15 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
-    private void sendToGrupa(ChatMessage chatMessage) {
-        TextMessage textMessage = new TextMessage(chatMessage.getSadrzaj());
+    private void sendToGrupa(ChatMessage chatMessage) throws JsonProcessingException {
+    	String jsonMessage = objectMapper.writeValueAsString(chatMessage);
+        TextMessage textMessage = new TextMessage(jsonMessage);
         List<String> members = chatService.getMembersEmails(chatMessage.getImeGrupe()); // Dohvati članove grupe
 
         for (WebSocketSession session : sessions) {
             try {
-                String sessionUserEmail = session.getUri().getQuery().split("=")[1];
-                if (members.contains(sessionUserEmail)) {
+                String sessionUserEmail = session.getAttributes().get("email").toString();
+                if (members.contains(sessionUserEmail) && !chatMessage.getPosiljatelj().equals(sessionUserEmail)) {
                     session.sendMessage(textMessage);
                     System.out.println("Poruka poslana članu grupe: " + sessionUserEmail);
                 }
@@ -94,16 +100,17 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     // Slanje poruke primatelju
     public void sendToPrimatelj(ChatMessage chatMessage) throws IOException {
-        TextMessage textMessage = new TextMessage(chatMessage.getSadrzaj());
+    	String jsonMessage = objectMapper.writeValueAsString(chatMessage);
+        TextMessage textMessage = new TextMessage(jsonMessage);
         for (WebSocketSession session : sessions) {
             try {
-                String sessionUserEmail = session.getUri().getQuery().split("=")[1];
+                String sessionUserEmail = session.getAttributes().get("email").toString();
 
                 if (sessionUserEmail.equals(chatMessage.getPrimatelj())) {
                     session.sendMessage(textMessage);
                     System.out.println("Poruka poslana primatelju: " + sessionUserEmail);
                 } else {
-                	System.out.println("Poruka je poslana, ali primatelj nije online");
+                	System.out.println("To nije primatelj");
                 }
             } catch (IOException e) {
                 System.err.println("Greška prilikom slanja poruke: " + e.getMessage());
@@ -123,7 +130,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         String[] pairs = payload.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"); // Regex za točno razdvajanje parova
 
         String primatelj = null;
-        String imeGrupe = null;
 
         for (String pair : pairs) {
             // Razdvoji ključ i vrijednost po dvotočki
@@ -139,9 +145,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                 case "primatelj":
                     primatelj = value;
                     break;
-                case "imeGrupe":
-                    imeGrupe = value;
-                    break;
                 case "sadrzaj":
                     chatMessage.setSadrzaj(value);
                     break;
@@ -153,13 +156,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             }
         }
 
-        // Logika za razlikovanje osobnog i grupnog chata
-        if (imeGrupe != null && !imeGrupe.isEmpty()) {
-            chatMessage.setImeGrupe(imeGrupe);
-            chatMessage.setPrimatelj(null);
-        } else if (primatelj != null && !primatelj.isEmpty()) {
-            chatMessage.setPrimatelj(primatelj);
-            chatMessage.setImeGrupe(null);
+        if (primatelj.contains("@")) {
+        	chatMessage.setPrimatelj(primatelj);
+        	chatMessage.setImeGrupe("null");
+        } else {
+        	chatMessage.setImeGrupe(primatelj);
+        	chatMessage.setPrimatelj("null");
+        	
         }
 
         return chatMessage;
@@ -167,4 +170,3 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
 
 }
-
