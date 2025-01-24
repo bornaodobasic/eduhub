@@ -59,33 +59,3 @@
   background-color: #181fe9;
 }
 
-
-@media (max-width: 600px) {
-  .graf-i-forma {
-    flex-direction: column; /* Stack the items vertically */
-    align-items: stretch; /* Ensure they take full width */
-  }
-
-  .graf-container {
-    flex: 1; /* Reset flex value for better stacking */
-    margin-right: 0; /* Remove side margin */
-    margin-bottom: 20px; /* Add spacing between stacked items */
-  }
-
-  .forma-container {
-    flex: 1; /* Reset flex value */
-  }
-
-  .add-button, .delete-mode-button {
-    width: 100%; /* Make buttons full-width for easier tapping */
-    padding: 12px; /* Increase padding for better touch experience */
-    margin-right: 0; /* Remove right margin */
-  }
-
-  .delete-mode-button {
-    margin-top: 10px; /* Keep small spacing between buttons */
-  }
-}
-  
-  
-
