@@ -20,7 +20,7 @@ const FileUpload = () => {
         formData.append("file", file);
 
         try {
-            const response = await fetch("http://localhost:8080/s3/upload", {
+            const response = await fetch("https://eduhub-rfsg.onrender.com", {
                 method: "POST",
                 body: formData,
             });
