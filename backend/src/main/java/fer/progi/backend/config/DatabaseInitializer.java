@@ -52,6 +52,9 @@ public class DatabaseInitializer {
 
     @Autowired
     private DjelatnikRepository djelatnikRepository;
+    
+    @Autowired
+	private ChatGroupRepository chatGroupRepository;
 
 
     @PostConstruct
@@ -368,6 +371,37 @@ public class DatabaseInitializer {
             ucenikRepository.saveAll(ucenici);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        
+        try {
+    
+            List<Razred> razredi = razredRepository.findAll();
+
+            for (Razred razred : razredi) {
+
+                String imeGrupe = razred.getNazRazred();
+                if (chatGroupRepository.existsByImeGrupe(imeGrupe)) {
+                    continue; 
+                }
+
+                ChatGroup chatGroup = new ChatGroup();
+                chatGroup.setImeGrupe(imeGrupe);
+
+                List<String> clanovi = razred.getUcenici().stream()
+                    .map(Ucenik::getEmail)
+                    .collect(Collectors.toList());
+
+                if (razred.getRazrednik() != null) {
+                    clanovi.add(razred.getRazrednik().getEmail());
+                }
+
+                chatGroup.setClanovi(clanovi);
+
+                chatGroupRepository.save(chatGroup);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Dogodila se pogreška prilikom kreiranja chat grupa: " + e.getMessage());
         }
 
 
