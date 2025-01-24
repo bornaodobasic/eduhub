@@ -4,7 +4,6 @@ import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots, FaMap} from 
 import Sidebar from "../../components/Sidebar";
 import Timetable from "../../components/Timetable";
 import UcenikPotvrde from "../../components/UcenikPotvrde";
-import MapRoute from "../../components/MapRoute";
 import UcenikAktivnosti from "../../components/UcenikAktivnosti";
 import WeatherWidger from "../../components/WeatherWidget";
 import Map from "../../components/Map";
@@ -21,6 +20,17 @@ const Ucenik = () => {
   const [obavijesti, setObavijesti] = useState([]); // Lista obavijesti
   const [latestObavijesti, setLatestObavijesti] = useState([]);
   const [userName, setUserName] = useState(null);
+  const [showMap, setShowMap] = useState(false); // Stanje koje određuje treba li prikazati mapu
+  const [showMapp, setShowMapp] = useState(false); // Stanje koje određuje treba li prikazati mapu
+
+  const handleButtonClick = () => {
+    setShowMap(!showMap); // Prebacuje stanje između true i false
+  };
+
+  const handleButtonClickk = () => {
+    setShowMapp(!showMapp); // Prebacuje stanje između true i false
+  };
+  
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -135,10 +145,21 @@ const Ucenik = () => {
                     <div>{obavijest.sadrzajObavijest}</div>
                    
                     {obavijest?.adresaLokacija && obavijest?.gradLokacija && obavijest?.drzavaLoakcija && (
-  <div>
-    <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
-    <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
-  </div>
+          <div>
+            <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
+          <div>
+              <button onClick={handleButtonClick}>
+                {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
+              </button>
+      
+            {showMap && (
+              <div>
+                <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
+            </div>
+      )}
+    </div>
+    
+      </div>
 )}
     
                     <div className="obavijest-datum">
@@ -305,21 +326,46 @@ const Ucenik = () => {
             <h1>Pozdrav, {userName}! </h1>
             <div className="latest-obavijesti">
               <h3>Najnovije Obavijesti</h3>
-
-              {latestObavijesti.length > 0 ? (
-                  latestObavijesti.map((obavijest) => (
-                      <div key={obavijest.sifObavijest} className="obavijest-item">
-                        <strong>{obavijest.naslovObavijest}</strong>
-                        <div>{obavijest.sadrzajObavijest}</div>
-                        <div className="obavijest-datum">
-                          Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
-                        </div>
-                      </div>
-                  ))
-              ) : (
-                  <p>Nema obavijesti za prikaz.</p>
-              )}
+              <div className="obavijesti-list">
+        {latestObavijesti.length > 0 ? (
+            <div>
+              {latestObavijesti.map((obavijest) => (
+                  <div key={obavijest.sifObavijest} className="obavijest-item">
+                    <strong>{obavijest.naslovObavijest}</strong>
+                    <div>{obavijest.sadrzajObavijest}</div>
+                   
+                    {obavijest?.adresaLokacija && obavijest?.gradLokacija && obavijest?.drzavaLoakcija && (
+  <div>
+    <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
+    <div>
+    <button onClick={handleButtonClickk}>
+  {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
+</button>
+      
+      {showMap && (
+        <div>
+      
+          <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
+        </div>
+      )}
+    </div>
+    
+  </div>
+)}
+    
+                    <div className="obavijest-datum">
+                      Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
+                    </div>
+                  </div>
+              ))}
             </div>
+        ) : (
+            <p>Nema obavijesti za prikaz.</p>
+        )}
+      </div>
+            </div>
+
+           
 
             <WeatherWidger />
 
@@ -376,7 +422,7 @@ const Ucenik = () => {
     if (activeSection === "Obavijesti") {
       return (
           <div>
-            <h3>Opće Obavijesti</h3>
+            <h3>Obavijesti</h3>
             {renderObavijestiList()}
           </div>
       );
@@ -406,10 +452,6 @@ const Ucenik = () => {
       );
     }
 
-    if (activeSection === "Karta") {
-      return <MapRoute />;
-    }
-    //
 
     return <h4>Odaberite sekciju iz izbornika.</h4>;
   };
@@ -422,7 +464,7 @@ const Ucenik = () => {
     { name: "Obavijesti", icon: <FaEnvelope /> },
     { name: "Potvrde", icon: <FaEnvelope /> },
     { name: "Chat", icon: <FaCommentDots /> },
-    { name: "Karta", icon: <FaMap /> }
+
   ];
 
   return (
