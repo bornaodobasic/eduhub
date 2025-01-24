@@ -31,11 +31,9 @@ public class AdminSuccessfulLogin {
         Thread.sleep(2000);
 
         WebElement username = driver.findElement(By.name("loginfmt"));
-<<<<<<<< HEAD:backend/src/test/java/fer/progi/backend/selenium/AdminSuccessfulLogin.java
         username.sendKeys("josip.jelavic@eduxhub.onmicrosoft.com");
-========
         username.sendKeys("testadmin@eduxhub.onmicrosoft.com");
->>>>>>>> origin/bigMergeFRONT:backend/src/test/java/fer/progi/backend/selenium/SeleniumAdminLogin.java
+
 
         driver.findElement(By.id("idSIButton9")).click();
         Thread.sleep(2000);
