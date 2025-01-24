@@ -57,7 +57,7 @@ public class DatabaseInitializer {
     @PostConstruct
     public void init() {
 
-        
+
 
         try {
             BufferedReader reader = new BufferedReader(
