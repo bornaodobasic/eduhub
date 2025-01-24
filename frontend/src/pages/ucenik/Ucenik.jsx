@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from 'react-router-dom';
-import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots, FaHome} from "react-icons/fa";
+import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots, FaHome,FaArrowLeft} from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import Timetable from "../../components/Timetable";
 import UcenikPotvrde from "../../components/UcenikPotvrde";
 import UcenikAktivnosti from "../../components/UcenikAktivnosti";
-import WeatherWidger from "../../components/WeatherWidget";
+import WeatherWidget from "../../components/WeatherWidget";
 import Map from "../../components/Map";
+
 
 import "./Ucenik.css";
 
@@ -143,25 +144,26 @@ const Ucenik = () => {
                   <div key={obavijest.sifObavijest} className="obavijest-item">
                     <strong>{obavijest.naslovObavijest}</strong>
                     <div>{obavijest.sadrzajObavijest}</div>
-                   
+
                     {obavijest?.adresaLokacija && obavijest?.gradLokacija && obavijest?.drzavaLoakcija && (
-          <div>
-            <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
-          <div>
-              <button className="karte-button" onClick={handleButtonClick}>
-                {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
-              </button>
-      
-            {showMap && (
-              <div>
-                <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
-            </div>
-      )}
-    </div>
-    
-      </div>
-)}
-    
+                        <div>
+                          <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
+                          <div>
+                            <button className="karte-button" onClick={handleButtonClick}>
+                              {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
+                            </button>
+
+                            {showMap && (
+                                <div>
+                                  <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija}
+                                       country={obavijest.drzavaLoakcija}></Map>
+                                </div>
+                            )}
+                          </div>
+
+                        </div>
+                    )}
+
                     <div className="obavijest-datum">
                       Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
                     </div>
@@ -171,9 +173,16 @@ const Ucenik = () => {
         ) : (
             <p>Nema obavijesti za prikaz.</p>
         )}
-      </div>
-  );
 
+        <button
+            className="add-button"
+            onClick={() => setSelectedSubject(null)}
+        >
+          Povratak
+        </button>
+      </div>
+
+  );
 
 
   useEffect(() => {
@@ -292,31 +301,45 @@ const Ucenik = () => {
 
 
 
+
   const renderMaterials = () => (
-      <div className="materials-grid">
-        {materials.length > 0 ? (
-            materials.map((material) => (
-                <div key={material} className="material-card">
-                  <div className="material-icon">
-                    <img src="/path/to/pdf-icon.png" alt="PDF" />
+      <div className="materials-container">
+        <div className="materials-grid">
+          {materials.length > 0 ? (
+              materials.map((material) => (
+                  <div key={material} className="material-card">
+                    <div className="material-icon">
+                      <img src="/path/to/pdf-icon.png" alt="PDF"/>
+                    </div>
+                    <div className="material-details">
+                      <a
+                          href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="material-link"
+                      >
+                        {material.split("_").pop()}
+                      </a>
+                    </div>
                   </div>
-                  <div className="material-details">
-                    <a
-                        href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="material-link"
-                    >
-                      {material.split("_").pop()}
-                    </a>
-                  </div>
-                </div>
-            ))
-        ) : (
-            <p>Nema materijala za ovaj predmet.</p>
-        )}
+              ))
+          ) : (
+              <p>Nema materijala za ovaj predmet.</p>
+          )}
+        </div>
+        <button
+            className="add-button"
+            onClick={() => setSelectedSubject(null)}
+        >
+          Natrag
+        </button>
+
+
+
+
       </div>
   );
+
 
   const renderContent = () => {
     if (activeSection === "Naslovnica") {
@@ -368,7 +391,7 @@ const Ucenik = () => {
 
            
 
-            <WeatherWidger />
+            <WeatherWidget />
 
           </div>
       );
