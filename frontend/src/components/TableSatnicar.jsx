@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { FaTrashAlt, FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
+import KorisnikForm from "./KorisnikForm";
 
 const TableSatnicar = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);  
   const [sortConfig, setSortConfig] = useState({ key: "prezimeSatnicar", direction: "asc" });
+   const [prikaziFormu, setPrikaziFormu] = useState(false);
   
+    const toggleForma = () => {
+      setPrikaziFormu(!prikaziFormu);
+    };
   
   
     // Sortiranje podataka
@@ -36,7 +41,7 @@ const TableSatnicar = () => {
       return <FaSort />;
     };
 
-  useEffect(() => {
+
     const fetchSatnicari = async () => {
       try {
         const response = await fetch("/api/admin/satnicar");
@@ -50,8 +55,12 @@ const TableSatnicar = () => {
       }
     };
 
-    fetchSatnicari();
-  }, []);
+
+      useEffect(() => {
+        fetchSatnicari();
+      }, []);
+
+ 
 
   const handleDelete = async (email) => {
     if (!window.confirm(`Jeste li sigurni da želite obrisati satničara s emailom: ${email}?`)) return;
@@ -71,6 +80,14 @@ const TableSatnicar = () => {
   if (error) return <p className="error">{error}</p>;
 
   return (
+    <div>
+      <button className="add-button" onClick={toggleForma}>
+       
+      {prikaziFormu ? 'Gotovo' : 'Dodaj satničara'}
+      </button>
+      {prikaziFormu && <KorisnikForm korisnik="satnicar" onUserAdded={fetchSatnicari} />}
+
+  
     <div className="table-container">
       <h2 className="table-title">Popis svih satničara</h2>
       <table className="table">
@@ -100,6 +117,7 @@ const TableSatnicar = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

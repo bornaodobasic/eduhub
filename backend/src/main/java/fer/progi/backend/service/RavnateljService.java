@@ -1,6 +1,7 @@
 package fer.progi.backend.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import fer.progi.backend.domain.Admin;
@@ -17,6 +18,7 @@ public interface RavnateljService {
 	boolean createIfNeeded(AddDTO addDTO);
 	List<Ravnatelj> findAllRavnateljs();
 	void deleteRavnatelj(String email);
+
 	
 
 }

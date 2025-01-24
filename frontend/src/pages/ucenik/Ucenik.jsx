@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from 'react-router-dom';
-import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots, FaMap} from "react-icons/fa";
+import { FaBook, FaTasks, FaCalendarAlt, FaEnvelope, FaCommentDots, FaHome,FaArrowLeft} from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import Timetable from "../../components/Timetable";
 import UcenikPotvrde from "../../components/UcenikPotvrde";
-import MapRoute from "../../components/MapRoute";
 import UcenikAktivnosti from "../../components/UcenikAktivnosti";
-import WeatherWidger from "../../components/WeatherWidget";
+import WeatherWidget from "../../components/WeatherWidget";
 import Map from "../../components/Map";
+
 
 import "./Ucenik.css";
 
@@ -21,6 +21,17 @@ const Ucenik = () => {
   const [obavijesti, setObavijesti] = useState([]); // Lista obavijesti
   const [latestObavijesti, setLatestObavijesti] = useState([]);
   const [userName, setUserName] = useState(null);
+  const [showMap, setShowMap] = useState(false); // Stanje koje određuje treba li prikazati mapu
+  const [showMapp, setShowMapp] = useState(false); // Stanje koje određuje treba li prikazati mapu
+
+  const handleButtonClick = () => {
+    setShowMap(!showMap); // Prebacuje stanje između true i false
+  };
+
+  const handleButtonClickk = () => {
+    setShowMapp(!showMapp); // Prebacuje stanje između true i false
+  };
+
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -133,14 +144,26 @@ const Ucenik = () => {
                   <div key={obavijest.sifObavijest} className="obavijest-item">
                     <strong>{obavijest.naslovObavijest}</strong>
                     <div>{obavijest.sadrzajObavijest}</div>
-                   
+
                     {obavijest?.adresaLokacija && obavijest?.gradLokacija && obavijest?.drzavaLoakcija && (
-  <div>
-    <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
-    <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
-  </div>
-)}
-    
+                        <div>
+                          <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
+                          <div>
+                            <button className="karte-button" onClick={handleButtonClick}>
+                              {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
+                            </button>
+
+                            {showMap && (
+                                <div>
+                                  <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija}
+                                       country={obavijest.drzavaLoakcija}></Map>
+                                </div>
+                            )}
+                          </div>
+
+                        </div>
+                    )}
+
                     <div className="obavijest-datum">
                       Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
                     </div>
@@ -150,9 +173,16 @@ const Ucenik = () => {
         ) : (
             <p>Nema obavijesti za prikaz.</p>
         )}
-      </div>
-  );
 
+        <button
+            className="add-button"
+            onClick={() => setSelectedSubject(null)}
+        >
+          Povratak
+        </button>
+      </div>
+
+  );
 
 
   useEffect(() => {
@@ -271,55 +301,95 @@ const Ucenik = () => {
 
 
 
+
   const renderMaterials = () => (
-      <div className="materials-grid">
-        {materials.length > 0 ? (
-            materials.map((material) => (
-                <div key={material} className="material-card">
-                  <div className="material-icon">
-                    <img src="/path/to/pdf-icon.png" alt="PDF" />
+      <div className="materials-container">
+        <div className="materials-grid">
+          {materials.length > 0 ? (
+              materials.map((material) => (
+                  <div key={material} className="material-card">
+                    <div className="material-icon">
+                      <img src="/path/to/pdf-icon.png" alt="PDF"/>
+                    </div>
+                    <div className="material-details">
+                      <a
+                          href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="material-link"
+                      >
+                        {material.split("_").pop()}
+                      </a>
+                    </div>
                   </div>
-                  <div className="material-details">
-                    <a
-                        href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="material-link"
-                    >
-                      {material.split("_").pop()}
-                    </a>
-                  </div>
-                </div>
-            ))
-        ) : (
-            <p>Nema materijala za ovaj predmet.</p>
-        )}
+              ))
+          ) : (
+              <p>Nema materijala za ovaj predmet.</p>
+          )}
+        </div>
+        <button
+            className="add-button"
+            onClick={() => setSelectedSubject(null)}
+        >
+          Povratak
+        </button>
+
+
+
+
       </div>
   );
+
 
   const renderContent = () => {
     if (activeSection === "Naslovnica") {
       return (
           <div>
 
-            <h1>Pozdrav, {userName}! </h1>
+            <h2>Pozdrav, {userName}! </h2>
             <div className="latest-obavijesti">
-              <h3>Najnovije Obavijesti</h3>
 
-              {latestObavijesti.length > 0 ? (
-                  latestObavijesti.map((obavijest) => (
-                      <div key={obavijest.sifObavijest} className="obavijest-item">
-                        <strong>{obavijest.naslovObavijest}</strong>
-                        <div>{obavijest.sadrzajObavijest}</div>
-                        <div className="obavijest-datum">
-                          Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
-                        </div>
-                      </div>
-                  ))
-              ) : (
-                  <p>Nema obavijesti za prikaz.</p>
-              )}
+              <div className="obavijesti-list">
+              <h3>Najnovije Obavijesti</h3>
+        {latestObavijesti.length > 0 ? (
+            <div>
+              {latestObavijesti.map((obavijest) => (
+                  <div key={obavijest.sifObavijest} className="obavijest-item">
+                    <strong>{obavijest.naslovObavijest}</strong>
+                    <div>{obavijest.sadrzajObavijest}</div>
+
+                    {obavijest?.adresaLokacija && obavijest?.gradLokacija && obavijest?.drzavaLoakcija && (
+  <div>
+    <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
+    <div>
+    <button className="karte-button" onClick={handleButtonClickk}>
+  {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
+</button>
+
+      {showMapp && (
+        <div>
+
+          <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
+        </div>
+      )}
+    </div>
+
+  </div>
+)}
+
+                    <div className="obavijest-datum">
+                      Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
+                    </div>
+                  </div>
+              ))}
             </div>
+        ) : (
+            <p>Nema obavijesti za prikaz.</p>
+        )}
+      </div>
+            </div>
+
+
 
             <WeatherWidget />
 
@@ -376,7 +446,7 @@ const Ucenik = () => {
     if (activeSection === "Obavijesti") {
       return (
           <div>
-            <h3>Opće Obavijesti</h3>
+            <h3>Obavijesti</h3>
             {renderObavijestiList()}
           </div>
       );
@@ -406,23 +476,19 @@ const Ucenik = () => {
       );
     }
 
-    if (activeSection === "Karta") {
-      return <MapRoute />;
-    }
-    //
 
     return <h4>Odaberite sekciju iz izbornika.</h4>;
   };
 
   const menuItems = [
-    { name: "Naslovnica", icon: <FaBook /> },
+    { name: "Naslovnica", icon: <FaHome /> },
     { name: "Predmeti", icon: <FaBook /> },
     { name: "Aktivnosti", icon: <FaTasks /> },
     { name: "Raspored", icon: <FaCalendarAlt /> },
     { name: "Obavijesti", icon: <FaEnvelope /> },
     { name: "Potvrde", icon: <FaEnvelope /> },
     { name: "Chat", icon: <FaCommentDots /> },
-    { name: "Karta", icon: <FaMap /> }
+
   ];
 
   return (

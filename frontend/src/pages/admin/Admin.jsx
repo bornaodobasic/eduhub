@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaUserGraduate, FaChalkboardTeacher, FaUserTie, FaClock, FaUsers, FaUserShield, FaSignOutAlt } from "react-icons/fa";
+import { FaUserGraduate, FaChalkboardTeacher, FaUserTie, FaClock, FaUsers, FaUserShield, FaHome } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import TableUcenik from "../../components/TableUcenik";
 import "./Admin.css";
@@ -37,7 +37,7 @@ const Admin = () => {
 
 
   const menuItems = [
-    { name: "Naslovnica", icon: <FaUserGraduate /> },
+    { name: "Naslovnica", icon: <FaHome /> },
     { name: "Učenici", icon: <FaUserGraduate /> },
     { name: "Nastavnici", icon: <FaChalkboardTeacher /> },
     { name: "Ravnatelji", icon: <FaUserTie /> },
@@ -51,57 +51,39 @@ const Admin = () => {
       case "Naslovnica":
         return (
           <div>
-              <h1>Pozdrav, {userName}! </h1>
+              <h2>Pozdrav, {userName}! </h2>
                <WeatherWidget />
           </div>
         );
       case "Učenici":
         return (
             <div className="content-container">
-              <div className="top-section">
-                 <UcenikForm />
-              </div>
                 <TableUcenik />
             </div>
           );
       case "Nastavnici":
         return (
           <div className="content-container">
-            <div className="top-section">
-               <KorisnikForm korisnik="nastavnik" />
-            </div>
               <TableNastavnik />
           </div>
         );
       case "Ravnatelji": return (
         <div className="content-container">
-          <div className="top-section">
-             <KorisnikForm korisnik="ravnatelj" />
-          </div>
             <TableRavnatelj />
         </div>
       );
       case "Satničari": return (
         <div className="content-container">
-          <div className="top-section">
-             <KorisnikForm korisnik="satnicar" />
-          </div>
             <TableSatnicar />
         </div>
       );
       case "Djelatnici": return (
         <div className="content-container">
-          <div className="top-section">
-             <KorisnikForm korisnik="djelatnik" />
-          </div>
             <TableDjelatnik />
         </div>
       );
       case "Admini": return (
         <div className="content-container">
-          <div className="top-section">
-             <KorisnikForm korisnik="admin" />
-          </div>
             <TableAdmin />
         </div>
       );

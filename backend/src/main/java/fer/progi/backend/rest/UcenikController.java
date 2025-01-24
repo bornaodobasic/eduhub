@@ -79,7 +79,7 @@ public class UcenikController {
 
         return ucenici;
     }
-    
+
     @GetMapping("/nastavnici")
     public List<Map<String, String>> getNastavniciMailovi() {
         List<Map<String, String>> nastavnici = new ArrayList<>();

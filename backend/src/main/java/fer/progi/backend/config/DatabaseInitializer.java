@@ -54,7 +54,7 @@ public class DatabaseInitializer {
 
     @Autowired
     private DjelatnikRepository djelatnikRepository;
-    
+
     @Autowired
 	private ChatGroupRepository chatGroupRepository;
 
@@ -389,9 +389,9 @@ public class DatabaseInitializer {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         try {
-    
+
             List<Razred> razredi = razredRepository.findAll();
             List<Ucenik> ucenici = ucenikRepository.findAll();
 
@@ -399,7 +399,7 @@ public class DatabaseInitializer {
 
                 String imeGrupe = razred.getNazRazred();
                 if (chatGroupRepository.existsByImeGrupe(imeGrupe)) {
-                    continue; 
+                    continue;
                 }
 
                 ChatGroup chatGroup = new ChatGroup();
@@ -410,7 +410,7 @@ public class DatabaseInitializer {
                 	if(u.getRazred().getNazRazred().equals(razred.getNazRazred())) {
                 		clanovi.add(u.getEmail());
                 	}
-                	
+
                 }
 
                 if (razred.getRazrednik() != null) {

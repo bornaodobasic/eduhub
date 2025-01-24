@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { FaTrashAlt, FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
+import KorisnikForm from "./KorisnikForm";
 
 const TableRavnatelj = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: "prezimeRavnatelj", direction: "asc" });
-    
+    const [prikaziFormu, setPrikaziFormu] = useState(false);
+   
+     const toggleForma = () => {
+       setPrikaziFormu(!prikaziFormu);
+     }; 
     
     
       // Sortiranje podataka
@@ -36,7 +41,6 @@ const TableRavnatelj = () => {
         return <FaSort />;
       };
 
-  useEffect(() => {
     const fetchRavnatelji = async () => {
       try {
         const response = await fetch("/api/admin/ravnatelj");
@@ -50,8 +54,12 @@ const TableRavnatelj = () => {
       }
     };
 
-    fetchRavnatelji();
-  }, []);
+
+      useEffect(() => {
+        fetchRavnatelji();
+      }, []);
+
+
 
   const handleDelete = async (email) => {
     if (!window.confirm(`Jeste li sigurni da želite obrisati ravnatelja s emailom: ${email}?`)) return;
@@ -71,6 +79,14 @@ const TableRavnatelj = () => {
   if (error) return <p className="error">{error}</p>;
 
   return (
+    <div>
+      <button className="add-button" onClick={toggleForma}>
+       
+      {prikaziFormu ? 'Gotovo' : 'Dodaj ravnatelja'}
+      </button>
+      {prikaziFormu && <KorisnikForm korisnik="ravnatelj" onUserAdded={fetchRavnatelji} />}
+
+   
     <div className="table-container">
       <h2 className="table-title">Popis svih ravnatelja</h2>
       <table className="table">
@@ -100,6 +116,7 @@ const TableRavnatelj = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import "./UcenikForm.css";
 
-const UcenikForm = () => {
+const UcenikForm = ({ onUserAdded }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -27,7 +27,9 @@ const UcenikForm = () => {
             if (!response.ok) throw new Error("Greška prilikom dodavanja učenika.");
 
             alert("Učenik dodan.");
-            window.location.reload();
+            if (onUserAdded) {
+              onUserAdded();
+          }
             
         } catch (error) {
             alert(`Greška: ${error.message}`);
@@ -39,26 +41,21 @@ const UcenikForm = () => {
       <form onSubmit={handleSubmit} className="student-form">
         <div className="form-group">
           <input type="text" name="imeUcenik" placeholder="Ime" required /> 
-          <input type="email" name="email" placeholder="Email" required />
-        </div>
-        <div className="form-group">
           <input type="text" name="prezimeUcenik" placeholder="Prezime" required />
-          <input type="text" name="oib" placeholder="OIB" required />
-          </div>
-        <div className="form-group">
+          <input type="email" name="email" placeholder="Email" required />  
           <input type="date" name="datumRodenja" required />
-          <input type="text" name="razred" placeholder="Razred" required />
-        </div>
-        <div className="form-group"> 
-        <input type="text" name="spol" placeholder="Spol (M/Ž)" required />
+          <input type="text" name="oib" placeholder="OIB" required />
+          <input type="text" name="spol" placeholder="Spol (M/Ž)" required />
+          <input type="text" name="razred" placeholder="Razred" required />  
           <select name="predmet" required>
                         <option value="Vjeronauk">Vjeronauk</option>
                         <option value="Etika">Etika</option>
                     </select>
         </div>
-        <button type="submit" className="add-button-ucenik">
+        <button type="submit" className="add-button">
           Dodaj učenika
         </button>
+        
       </form>
     </div>
   );

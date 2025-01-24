@@ -1,4 +1,4 @@
-const KorisnikForm = ({ korisnik }) => {
+const KorisnikForm = ({ korisnik, onUserAdded }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -18,8 +18,12 @@ const KorisnikForm = ({ korisnik }) => {
 
             if (!response.ok) throw new Error("Greška prilikom dodavanja korisnika.");
 
-            alert(`${korisnik} dodan.`);
-            window.location.reload();
+            alert(`${korisnik.charAt(0).toUpperCase() + korisnik.slice(1)} dodan.`);
+
+           //fetch korisnike
+           if (onUserAdded) {
+            onUserAdded();
+        }
         } catch (error) {
             alert(`Greška: ${error.message}`);
         }
@@ -35,9 +39,12 @@ const KorisnikForm = ({ korisnik }) => {
                     <input type="email" name="email" placeholder="Email" required />
                 </div>
     
-                <button type="submit" className="add-button-korisnik">
+        <div>
+        <button type="submit" className="add-button">
                         Dodaj {korisnik}a
                 </button>
+        </div>
+               
             </form>
         </div>
         

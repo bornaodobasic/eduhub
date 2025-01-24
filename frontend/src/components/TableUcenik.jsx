@@ -1,4 +1,5 @@
 import { FaEye, FaTrashAlt, FaArrowLeft, FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
+import UcenikForm from "./UcenikForm";
 import "./TableUcenik.css";
 import { useState, useEffect } from "react";
 
@@ -14,7 +15,11 @@ const TableUcenik = () => {
   const [imePrezime, setImePrezime] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: "prezimeUcenik", direction: "asc" });
+ const [prikaziFormu, setPrikaziFormu] = useState(false);
 
+  const toggleForma = () => {
+    setPrikaziFormu(!prikaziFormu);
+  };
 
 
   // Sortiranje podataka
@@ -166,7 +171,7 @@ const TableUcenik = () => {
         <h2>
           <FaArrowLeft className="back-icon" onClick={handleBack} /> Aktivnosti učenika: {imePrezime}
         </h2>
-        <button onClick={() => setShowForm(!showForm)}>
+        <button className="add-button" onClick={() => setShowForm(!showForm)}>
           {showForm ? "Sakrij aktivnosti" : "Dodaj aktivnosti"}
         </button>
         {showForm && (
@@ -184,10 +189,11 @@ const TableUcenik = () => {
                 </label>
               ))}
             </div>
-            <button onClick={handleAdd}>Dodaj</button>
+            <button className="add-button" onClick={handleAdd}>Dodaj</button>
           </div>
         )}
         <div className="table-container">
+        <div className="table-scroll">
           <table className="table">
             <thead>
               <tr>
@@ -211,12 +217,20 @@ const TableUcenik = () => {
             </tbody>
           </table>
         </div>
+        </div>
       </div>
     );
   }
   
 
   return (
+    <div>
+<button className="add-button" onClick={toggleForma}>
+        
+{prikaziFormu ? 'Gotovo' : 'Dodaj učenika'}
+      </button>
+      {prikaziFormu && <UcenikForm onUserAdded={fetchUcenici} />}
+
     <div className="table-container">
       <h2 className="table-title">Popis svih učenika</h2>
       <table className="table">
@@ -250,6 +264,7 @@ const TableUcenik = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FaSchool, FaChartBar, FaChalkboard, FaBell, FaTrashAlt } from "react-icons/fa";
+import { FaListAlt, FaBook, FaBell, FaTrashAlt, FaHome } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import TableUcionice from "../../components/TableUcionice";
 import GrafUcionice from "../../components/GrafUcionice";
 import UcioniceForm from "../../components/UcioniceForm";
 import Izvjestaj from "../../components/Izvjestaj";
 import WeatherWidget from "../../components/WeatherWidget";
+import Map from "../../components/Map";
 import "./Ravnatelj.css";
 
 const Ravnatelj = () => {
@@ -14,6 +15,21 @@ const Ravnatelj = () => {
   const [obavijesti, setObavijesti] = useState([]);
   const [deleteMode, setDeleteMode] = useState(false); 
   const [userName, setUserName] = useState(null);
+  const [showMap, setShowMap] = useState(false); // Stanje koje određuje treba li prikazati mapu
+  const [prikaziFormu, setPrikaziFormu] = useState(false);
+  
+    const toggleForma = () => {
+      setPrikaziFormu(!prikaziFormu);
+    };
+  
+    const [prikaziGraf, setPrikaziGraf] = useState(false);
+  
+    const toggleGraf = () => {
+      setPrikaziGraf(!prikaziGraf);
+    };
+  const handleButtonClick = () => {
+    setShowMap(!showMap); // Prebacuje stanje između true i false
+  };
     
     useEffect(() => {
       const fetchUserName = async () => {
@@ -43,10 +59,9 @@ const Ravnatelj = () => {
   });
 
   const menuItems = [
-    { name: "Naslovnica", icon: <FaSchool /> },
-    { name: "Učionice", icon: <FaSchool /> },
-    { name: "Učenici", icon: <FaChartBar /> },
-    { name: "Izvještaj", icon: <FaChalkboard /> },
+    { name: "Naslovnica", icon: <FaHome /> },
+    { name: "Učionice", icon: <FaBook /> },
+    { name: "Izvještaj", icon: <FaListAlt /> },
     { name: "Obavijesti", icon: <FaBell /> },
   ];
 
@@ -156,18 +171,42 @@ const Ravnatelj = () => {
     }
   };
 
+
   const renderNotification = (obavijest) => {
     const isTerenska = obavijest.adresaLokacija;
 
     return (
-      <div key={obavijest.sifObavijest} className="notification-item">
-        <h3 className="notification-title">{obavijest.naslovObavijest}</h3>
-        <p className="notification-content">{obavijest.sadrzajObavijest}</p>
-        {isTerenska && <button className="karte-button">Karte</button>}
-        <p className="notification-date">
-          {new Date(obavijest.datumObavijest).toLocaleDateString("hr-HR")}
-        </p>
-        {deleteMode && (
+     
+  <div className="obavijesti-list">
+  {obavijesti.length > 0 ? (
+      <div>
+        {obavijesti.map((obavijest) => (
+            <div key={obavijest.sifObavijest} className="obavijest-item">
+              <strong>{obavijest.naslovObavijest}</strong>
+              <div>{obavijest.sadrzajObavijest}</div>
+             
+              {obavijest?.adresaLokacija && obavijest?.gradLokacija && obavijest?.drzavaLoakcija && (
+    <div>
+      <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
+    <div>
+        <button className="karte-button" onClick={handleButtonClick}>
+          {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
+        </button>
+
+      {showMap && (
+        <div>
+          <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
+      </div>
+)}
+</div>
+
+</div>
+)}
+
+              <div className="obavijest-datum">
+                Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
+              </div>
+              {deleteMode && (
           <button
             className="delete-button"
             onClick={() => deleteObavijest(obavijest.sifObavijest)}
@@ -175,10 +214,21 @@ const Ravnatelj = () => {
             <FaTrashAlt />
           </button>
         )}
-        <hr className="notification-divider" />
+            </div>
+        ))}
       </div>
+  ) : (
+      <p>Nema obavijesti za prikaz.</p>
+  )}
+</div>
+
+      
+
+      
     );
   };
+
+  
 
 
   const renderObavijestiContent = () => {
@@ -200,6 +250,8 @@ const Ravnatelj = () => {
             {obavijesti.map(renderNotification)}
           </div>
         </div>
+
+        
       );
     }
 
@@ -292,7 +344,7 @@ const Ravnatelj = () => {
       case "Naslovnica":
         return (
           <div>
-              <h1>Pozdrav, {userName}! </h1>
+              <h2>Pozdrav, {userName}! </h2>
                <WeatherWidget />
           </div>
         );
@@ -300,18 +352,28 @@ const Ravnatelj = () => {
         return (
           <div className="ucionice-section">
             <div className="graf-i-forma">
-              <div className="graf-container">
-                <GrafUcionice />
-              </div>
+
               <div className="forma-container">
-                <UcioniceForm onAddUcionica={handleAddUcionica} />
+
+                 <button className="add-button" onClick={toggleForma}>
+                   {prikaziFormu ? 'Gotovo' : 'Dodaj učionicu'}
+                 </button>
+                  {prikaziFormu &&  <UcioniceForm onAddUcionica={handleAddUcionica} /> }
+               
               </div>
+              <div className="graf-container">
+
+                 <button className="add-button" onClick={toggleGraf}>
+                   {prikaziGraf ? 'Sakrij graf' : 'Prikaži graf'}
+                 </button>
+                  {prikaziGraf &&  <GrafUcionice />}
+               
+              </div>
+
             </div>
             <TableUcionice />
           </div>
         );
-      case "Učenici":
-        return <h4>Učenici dolaze uskoro!</h4>;
       case "Izvještaj":
         return <Izvjestaj />;
       case "Obavijesti":

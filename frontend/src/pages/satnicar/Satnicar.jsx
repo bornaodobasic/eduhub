@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { FaSchool, FaBell, FaCalendarAlt } from "react-icons/fa";
+import { FaBook, FaBell, FaCalendarAlt, FaHome } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import WeatherWidget from "../../components/WeatherWidget";
-
+import Zauzece from "../../components/Zauzece";
 import Map from "../../components/Map";
+import { IoReturnUpBackOutline } from "react-icons/io5";
 
 const Satnicar = () => {
   const [activeSection, setActiveSection] = useState("Naslovnica"); const [userName, setUserName] = useState(null);
@@ -28,9 +29,9 @@ const Satnicar = () => {
   
 
   const menuItems = [
-    { name: "Naslovnica", icon: <FaCalendarAlt /> },
+    { name: "Naslovnica", icon: <FaHome /> },
     { name: "Raspored", icon: <FaCalendarAlt /> },
-    { name: "Obavijesti", icon: <FaBell /> },
+    { name: "Učionice", icon: <FaBook /> },
   ];
 
 
@@ -57,17 +58,24 @@ const Satnicar = () => {
       case "Naslovnica":
         return (
           <div>
-              <h1>Pozdrav, {userName}! </h1>
+              <h2>Pozdrav, {userName}! </h2>
                <WeatherWidget />
           </div>
         );
       case "Raspored":
-        return  <button className="generate-schedule-button" onClick={handleGenerateSchedule}>
+        return  <button className="add-button" onClick={handleGenerateSchedule}>
                  Generiraj Raspored
                 </button>
       
-      case "Obavijesti":
-        return <Map />;
+
+      case "Učionice":
+        return (
+          <div>
+              <h2>Tjedno zauzeće učionica </h2>
+              <Zauzece />;
+          </div>
+        );
+     
         
       default:
         return <h4>Odaberite sekciju iz izbornika.</h4>;

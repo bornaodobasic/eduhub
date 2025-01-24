@@ -4,8 +4,14 @@
     padding: 2vw;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sjena oko tablice */
+    overflow: auto; 
   }
   
+  .table-scroll {
+    overflow-x: auto; /* Omogućuje horizontalno skrolanje samo za tablicu */
+    width: 100%; /* Osigurava da skrol ne prelazi granice roditelja */
+}
+
   .table-title {
     margin-bottom: 1rem;
     font-size: 1.5rem;
@@ -89,3 +95,6 @@
   }
   
   
+
+
+

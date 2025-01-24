@@ -6,6 +6,7 @@ import java.util.Set;
 import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Predmet;
 import fer.progi.backend.dto.AddDTO;
+import fer.progi.backend.dto.RasporedDTO;
 
 public interface NastavnikService {
 	
@@ -24,4 +25,6 @@ public interface NastavnikService {
 	List<Predmet> findNastavnikPredmeti(String email);
 
 	Optional<Nastavnik> findByEmail(String email);
+
+
 }

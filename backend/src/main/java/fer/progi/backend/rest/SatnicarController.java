@@ -2,7 +2,12 @@
 package fer.progi.backend.rest;
 
 import java.util.List;
+import java.util.Map;
 
+import fer.progi.backend.domain.Ucionica;
+import fer.progi.backend.service.RazredPredmetNastavnikService;
+import fer.progi.backend.service.*;
+import fer.progi.backend.service.impl.SatnicarServiceJpa;
 import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Ucenik;
 import fer.progi.backend.service.*;
@@ -14,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fer.progi.backend.domain.Nastavnik;
 import fer.progi.backend.domain.Satnicar;
+import fer.progi.backend.domain.Ucenik;
+import fer.progi.backend.service.SatnicarService;
 
 
 @RestController
@@ -30,12 +38,19 @@ public class SatnicarController {
 
     @Autowired
     private SatService satService;
+
     @Autowired
     private UcenikService ucenikService;
     @Autowired
     private NastavnikService nastavnikService;
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private UcionicaService ucionicaService;
+    @Autowired
+    private SatnicarServiceJpa satnicarServiceJpa;
+
 
     @GetMapping("")
     public List<Satnicar> listSatnicar() {
@@ -51,6 +66,12 @@ public class SatnicarController {
     public void dodijeli() {
         razredPredmetNastavnikService.dodijeliNastavnike();
     }
+
+    @GetMapping("/zauzece")
+    public Map<String, Double> zauzece() {
+        return satnicarServiceJpa.pregledZauzecaUcionica();
+    }
+
 
     @GetMapping("/raspored")
     public void raspored() {

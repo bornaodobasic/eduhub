@@ -60,5 +60,7 @@ public class RavnateljServiceJpa implements RavnateljService{
 		Ravnatelj ravnatelj = ravnateljRepo.findByEmail(email).orElse(null);
 		ravnateljRepo.delete(ravnatelj);
 	}
+	
+	
 		
 }

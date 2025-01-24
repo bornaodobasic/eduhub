@@ -23,16 +23,16 @@ const Chat = () => {
             .then(response => response.text())
             .then(email => {
                 setCurrentUserEmail(email.trim());
-                const ws = new WebSocket(`wss://eduhub-rfsg.onrender.com/chat?email=${encodeURIComponent(email.trim())}`);
+                const ws = new WebSocket(`wss://eduhub-rfsg.onrender.com/chat2?email=${encodeURIComponent(email.trim())}`);
                 setSocket(ws);
-    
+
                 ws.onmessage = event => {
                     console.log('Primljeni podaci putem WebSocketa:', event.data);
                     try {
                         const message = typeof event.data === 'string' && event.data.startsWith('{')
                             ? JSON.parse(event.data)
                             : { sadrzaj: event.data };
-    
+
                         setMessages(prevMessages => [...prevMessages, message]);
 
                     } catch (error) {
@@ -47,9 +47,26 @@ const Chat = () => {
         };
     }, []);
 
+        useEffect(() => {
+            messages.forEach(msg => {
+                if (msg.posiljatelj && !senderNames[msg.posiljatelj]) {
+                    fetch(`/api/chat/getUserName/${msg.posiljatelj}`)
+                        .then(response => response.text())
+                        .then(name => {
+                            setSenderNames(prev => ({
+                                ...prev,
+                                [msg.posiljatelj]: name
+                            }));
+                        })
+                        .catch(error => console.error('Greška pri dohvaćanju imena pošiljatelja:', error));
+                }
+            });
+        }, [messages, senderNames]);
+
+
     useEffect(() => {
         if (recipientType === 'nastavnik') {
-            fetch('/api/nastavnik')
+            fetch('/api/nastavnik/')
                 .then(response => response.json())
                 .then(data => setRecipients(data))
                 .catch(error => console.error('Error fetching nastavnici:', error));
@@ -113,19 +130,6 @@ const Chat = () => {
             oznakaVremena: new Date().toISOString()
         };
         console.log('Slanje poruke:', message);
-        if (currentUserEmail && !senderNames[currentUserEmail]) {
-            console.log(`Dodavanje imena pošiljatelja za ${currentUserEmail}`);
-
-            fetch(`/api/chat/getUserName/${currentUserEmail}`)
-                .then(response => response.text())
-                .then(name => {
-                    setSenderNames(prev => ({
-                        ...prev,
-                        [currentUserEmail]: name
-                    }));
-                })
-                .catch(error => console.error('Greška pri dohvaćanju imena pošiljatelja:', error));
-        }
         if (socket) socket.send(JSON.stringify(message));
         setMessages(prevMessages => [...prevMessages, message]);
         setMessageInput('');
@@ -163,7 +167,7 @@ const Chat = () => {
             .then(response => response.json())
             .then(data => {
                 setGroups(data);
-                if (recipientType === 'grupe') setRecipients(data); 
+                if (recipientType === 'grupe') setRecipients(data);
             })
             .catch(error => console.error('Error loading groups:', error));
     };
@@ -179,16 +183,16 @@ const Chat = () => {
         console.log("Raw timestamp:", timestamp);
         try {
             let date;
-            
+
             if (Array.isArray(timestamp)) {
-                date = new Date(timestamp[0], timestamp[1] - 1, timestamp[2], timestamp[3], timestamp[4], timestamp[5], timestamp[6] / 1000000); 
-            } 
+                date = new Date(timestamp[0], timestamp[1] - 1, timestamp[2], timestamp[3], timestamp[4], timestamp[5], timestamp[6] / 1000000);
+            }
             else if (typeof timestamp === 'string') {
                 date = new Date(timestamp);
             }
-            
+
             if (isNaN(date)) throw new Error("Invalid Date");
-    
+
             return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         } catch (error) {
             console.error("Error formatting time:", error);
@@ -217,13 +221,13 @@ const Chat = () => {
                                 setMessages(prevMessages =>
                                     prevMessages.map((m, i) =>
                                             i === index ? { ...m, showTime: !m.showTime } : m
-                                    )       
+                                    )
                                 )
                             }
                         >
                             <p>
                                 {recipientType === 'grupe' && msg.posiljatelj !== currentUserEmail ? (
-                                    <strong>{senderNames[msg.posiljatelj].name || msg.posiljatelj}: </strong>
+                                    <strong>{senderNames[msg.posiljatelj] || msg.posiljatelj}: </strong> // Display sender name if it's a group message
                                 ) : (
                                     msg.posiljatelj === currentUserEmail ? 'Vi: ' : ''
                                     )}

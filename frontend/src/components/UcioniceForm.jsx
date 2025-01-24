@@ -28,13 +28,13 @@ const UcioniceForm = () => {
 
     return (
         <div className="form-container">
-            <form onSubmit={handleSubmit} className="korisnik-form">
+            <form onSubmit={handleSubmit} className="student-form">
                 <div className="form-group">
                     <input type="text" name="oznakaUc" placeholder="Oznaka učionice" required />
                     <input type="number" name="kapacitet" placeholder="Kapacitet" required />
                 </div>
 
-                <button type="submit" className="add-button-korisnik">
+                <button type="submit" className="add-button">
                     Dodaj učionicu
                 </button>
             </form>

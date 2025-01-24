@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { FaChartBar, FaChalkboard, FaComments } from "react-icons/fa";
+import { FaChartBar, FaChalkboard, FaComments, FaHome } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import TableUceniciNastavnik from "../../components/TableUceniciNastavnik";
-import Timetable from "../../components/Timetable";
+import TimetableNast from "../../components/TimetableNast";
 import WeatherWidget from "../../components/WeatherWidget";
 import "./Nastavnik.css";
 import {Navigate} from "react-router-dom";
@@ -496,7 +496,7 @@ const renderObavijestiForm = () => (
     if (activeSection === "Naslovnica") {
       return (
         <div>
-            <h1>Pozdrav, {userName}! </h1>
+            <h2>Pozdrav, {userName}! </h2>
              <WeatherWidget />
         </div>
       );
@@ -547,14 +547,14 @@ const renderObavijestiForm = () => (
           </div>
         );
       }
-      return subjects.length > 0 ? renderSubjects() : <h4>Učitavanje predmeta...</h4>;
+      return subjects.length > 0 ? renderSubjects() : <h4>Nemate dodijeljenih predmeta.</h4>;
     }
 
     if (activeSection === "Raspored") {
       
                 return (
                     <div className="content-container">
-                        {userEmail ? <Timetable email={userEmail} /> : <p>Loading timetable...</p>}
+                        {userEmail ? <TimetableNast email={userEmail} /> : <p>Loading timetable...</p>}
                     </div>
                 );
       }
@@ -571,7 +571,7 @@ const renderObavijestiForm = () => (
   };
 
   const menuItems = [
-    { name: "Naslovnica", icon: <FaChartBar /> },
+    { name: "Naslovnica", icon: <FaHome /> },
     { name: "Predmeti", icon: <FaChartBar /> },
     { name: "Raspored", icon: <FaChalkboard /> },
     { name: "Chat", icon: <FaComments /> },

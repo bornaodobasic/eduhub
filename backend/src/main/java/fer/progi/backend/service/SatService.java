@@ -1,6 +1,7 @@
 package fer.progi.backend.service;
 
 import fer.progi.backend.domain.Sat;
+import fer.progi.backend.rest.RasporedDTO;
 
 import java.time.DayOfWeek;
 import java.util.List;
@@ -11,4 +12,6 @@ public interface SatService {
     DayOfWeek findDay(int sat);
     List<Sat> listAll();
     void dodijeliRazrednike();
+	
+	
 }

@@ -11,7 +11,7 @@
     justify-content: space-between;
     background-color: #ffffff;
     padding: 20px;
-    overflow-y: hidden; 
+    overflow-y: hidden;
 }
 
 .chat-messages {
@@ -24,10 +24,10 @@
 }
 
 .message {
-    max-width: 60%; 
+    max-width: 60%;
     padding: 10px;
     border-radius: 10px;
-    word-wrap: break-word; 
+    word-wrap: break-word;
 }
 
 .message.sent {
@@ -71,7 +71,6 @@
     background-color: #ff7eb3;
 }
 
-/* Sidebar sa desne strane */
 .chat-sidebar {
     width: 25%;
     background-color: #f4f4f4;
@@ -132,13 +131,13 @@
 .create-group-container li {
     display: flex;
     align-items: center;
-    gap: 10px; 
+    gap: 10px;
     margin-bottom: 10px;
     padding: 10px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 4px;
-    word-wrap: break-word; 
+    word-wrap: break-word;
 }
 
 .create-group-container input[type="checkbox"] {
@@ -148,8 +147,8 @@
 }
 
 .create-group-container span {
-    font-size: 16px; 
-    color: #333; 
+    font-size: 16px;
+    color: #333;
 }
 
 .group-list-container ul {
@@ -159,15 +158,15 @@
 }
 
 .group-list-container li {
-    display: flex; 
-    align-items: center; 
-    gap: 10px; 
+    display: flex;
+    align-items: center;
+    gap: 10px;
     margin-bottom: 10px;
     padding: 10px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 4px;
-    word-wrap: break-word; 
+    word-wrap: break-word;
 }
 
 .message-time {
@@ -184,4 +183,38 @@
     border-radius: 5px;
     margin-bottom: 10px;
     text-align: center;
+}
+@media (max-width: 768px) {
+    .chat-container {
+        flex-direction: column;
+    }
+
+    .chat-sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    .chat-main {
+        padding: 10px;
+    }
+
+    .chat-input {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .chat-input textarea {
+        min-height: 40px;
+    }
+
+    .chat-input button {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    .message {
+        max-width: 90%;
+    }
 }
