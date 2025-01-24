@@ -321,7 +321,7 @@ const Ucenik = () => {
               )}
             </div>
 
-            <WeatherWidger />
+            <WeatherWidget />
 
           </div>
       );
