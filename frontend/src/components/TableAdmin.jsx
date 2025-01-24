@@ -41,7 +41,7 @@ const TableAdmin = () => {
           return <FaSort />;
         };
 
-  useEffect(() => {
+
     const fetchAdmini = async () => {
       try {
         const response = await fetch("/api/admin/admin");
@@ -55,8 +55,10 @@ const TableAdmin = () => {
       }
     };
 
-    fetchAdmini();
-  }, []);
+
+      useEffect(() => {
+        fetchAdmini();
+      }, []);
 
   const handleView = (id) => {
     console.log(`Pregled admina sa ID: ${id}`);
@@ -85,7 +87,8 @@ const TableAdmin = () => {
        
        {prikaziFormu ? 'Gotovo' : 'Dodaj admina'}
       </button>
-      {prikaziFormu &&  <KorisnikForm korisnik="admin" />}
+      {prikaziFormu && <KorisnikForm korisnik="admin" onUserAdded={fetchAdmini} />}
+
  
     <div className="table-container">
       <h2 className="table-title">Popis svih admina</h2>

@@ -171,7 +171,7 @@ const TableUcenik = () => {
         <h2>
           <FaArrowLeft className="back-icon" onClick={handleBack} /> Aktivnosti učenika: {imePrezime}
         </h2>
-        <button onClick={() => setShowForm(!showForm)}>
+        <button className="add-button" onClick={() => setShowForm(!showForm)}>
           {showForm ? "Sakrij aktivnosti" : "Dodaj aktivnosti"}
         </button>
         {showForm && (
@@ -189,7 +189,7 @@ const TableUcenik = () => {
                 </label>
               ))}
             </div>
-            <button onClick={handleAdd}>Dodaj</button>
+            <button className="add-button" onClick={handleAdd}>Dodaj</button>
           </div>
         )}
         <div className="table-container">
@@ -227,7 +227,8 @@ const TableUcenik = () => {
         
 {prikaziFormu ? 'Gotovo' : 'Dodaj učenika'}
       </button>
-      {prikaziFormu &&  <UcenikForm />}
+      {prikaziFormu && <UcenikForm onUserAdded={fetchUcenici} />}
+
     <div className="table-container">
       <h2 className="table-title">Popis svih učenika</h2>
       <table className="table">

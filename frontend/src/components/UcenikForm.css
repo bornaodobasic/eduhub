@@ -1,0 +1,32 @@
+.form-container {
+  display: flex;
+  padding: 20px;
+}
+
+
+.korisnik-form input[type="text"],
+.korisnik-form input[type="email"] {
+  width: auto;
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.korisnik-form {
+  display: flex;
+  flex-direction: column; /* Postavlja formu vertikalno */
+  justify-content: flex-start;
+}
+
+.korisnik-form .form-group {
+  display: flex;
+  flex-direction: row; /* Input polja su u jednom redu */
+  gap: 10px;
+}
+
+.korisnik-form .add-button {
+  align-self: flex-start; /* Poravnava gumb na lijevu stranu */
+}
+

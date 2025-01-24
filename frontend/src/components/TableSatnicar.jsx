@@ -41,7 +41,7 @@ const TableSatnicar = () => {
       return <FaSort />;
     };
 
-  useEffect(() => {
+
     const fetchSatnicari = async () => {
       try {
         const response = await fetch("/api/admin/satnicar");
@@ -55,8 +55,12 @@ const TableSatnicar = () => {
       }
     };
 
-    fetchSatnicari();
-  }, []);
+
+      useEffect(() => {
+        fetchSatnicari();
+      }, []);
+
+ 
 
   const handleDelete = async (email) => {
     if (!window.confirm(`Jeste li sigurni da želite obrisati satničara s emailom: ${email}?`)) return;
@@ -81,7 +85,8 @@ const TableSatnicar = () => {
        
       {prikaziFormu ? 'Gotovo' : 'Dodaj satničara'}
       </button>
-      {prikaziFormu &&  <KorisnikForm korisnik="satnicar" />}
+      {prikaziFormu && <KorisnikForm korisnik="satnicar" onUserAdded={fetchSatnicari} />}
+
   
     <div className="table-container">
       <h2 className="table-title">Popis svih satničara</h2>

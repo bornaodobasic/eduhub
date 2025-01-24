@@ -193,7 +193,7 @@ const TableNastavnik = () => {
         <h2>
           <FaArrowLeft className="back-icon" onClick={handleBack} /> Predmeti nastavnika: {imePrezime}
         </h2>
-        <button onClick={() => setShowForm(!showForm)}>
+        <button className="add-button" onClick={() => setShowForm(!showForm)}>
           {showForm ? "Sakrij predmete" : "Dodaj predmete"}
         </button>
         {showForm && (
@@ -221,7 +221,7 @@ const TableNastavnik = () => {
                 ))}
               </div>
             ))}
-            <button onClick={handleAdd}>Dodaj</button>
+            <button className="add-button" onClick={handleAdd}>Dodaj</button>
           </div>
         )}
         <div className="table-container">
@@ -265,7 +265,7 @@ const TableNastavnik = () => {
         <button className="add-button" onClick={toggleForma}>
         {prikaziFormu ? 'Gotovo' : 'Dodaj nastavnika'}
       </button>
-      {prikaziFormu &&  <KorisnikForm korisnik="nastavnik" />}
+      {prikaziFormu && <KorisnikForm korisnik="nastavnik" onUserAdded={fetchNastavnici} />}
    
     <div className="table-container">
       <h2 className="table-title">Popis svih nastavnika</h2>

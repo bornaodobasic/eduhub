@@ -41,7 +41,6 @@ const TableRavnatelj = () => {
         return <FaSort />;
       };
 
-  useEffect(() => {
     const fetchRavnatelji = async () => {
       try {
         const response = await fetch("/api/admin/ravnatelj");
@@ -55,8 +54,12 @@ const TableRavnatelj = () => {
       }
     };
 
-    fetchRavnatelji();
-  }, []);
+
+      useEffect(() => {
+        fetchRavnatelji();
+      }, []);
+
+
 
   const handleDelete = async (email) => {
     if (!window.confirm(`Jeste li sigurni da želite obrisati ravnatelja s emailom: ${email}?`)) return;
@@ -81,7 +84,8 @@ const TableRavnatelj = () => {
        
       {prikaziFormu ? 'Gotovo' : 'Dodaj ravnatelja'}
       </button>
-      {prikaziFormu &&  <KorisnikForm korisnik="ravnatelj" />}
+      {prikaziFormu && <KorisnikForm korisnik="ravnatelj" onUserAdded={fetchRavnatelji} />}
+
    
     <div className="table-container">
       <h2 className="table-title">Popis svih ravnatelja</h2>

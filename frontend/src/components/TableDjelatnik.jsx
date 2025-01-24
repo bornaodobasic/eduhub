@@ -42,7 +42,6 @@ const TableDjelatnik = () => {
           return <FaSort />;
         };
 
-  useEffect(() => {
     const fetchDjelatnici = async () => {
       try {
         const response = await fetch("/api/admin/djelatnik");
@@ -56,8 +55,11 @@ const TableDjelatnik = () => {
       }
     };
 
-    fetchDjelatnici();
-  }, []);
+
+      useEffect(() => {
+        fetchDjelatnici();
+      }, []);
+
 
   const handleDelete = async (email) => {
     if (!window.confirm(`Jeste li sigurni da želite obrisati djelatnika s emailom: ${email}?`)) return;
@@ -82,7 +84,8 @@ const TableDjelatnik = () => {
        
  {prikaziFormu ? 'Gotovo' : 'Dodaj djelatnika'}
       </button>
-      {prikaziFormu &&  <KorisnikForm korisnik="djelatnik" />}
+      {prikaziFormu && <KorisnikForm korisnik="djelatnik" onUserAdded={fetchDjelatnici} />}
+
  
     <div className="table-container">
       <h2 className="table-title">Popis svih djelatnika</h2>
