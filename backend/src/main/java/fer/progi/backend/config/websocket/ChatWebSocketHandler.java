@@ -81,7 +81,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         for (WebSocketSession session : sessions) {
             try {
                 String sessionUserEmail = session.getAttributes().get("email").toString();
-                if (members.contains(sessionUserEmail)) {
+                if (members.contains(sessionUserEmail) && !chatMessage.getPosiljatelj().equals(sessionUserEmail)) {
                     session.sendMessage(textMessage);
                     System.out.println("Poruka poslana članu grupe: " + sessionUserEmail);
                 }
@@ -130,7 +130,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         String[] pairs = payload.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"); // Regex za točno razdvajanje parova
 
         String primatelj = null;
-        String imeGrupe = null;
 
         for (String pair : pairs) {
             // Razdvoji ključ i vrijednost po dvotočki
@@ -146,9 +145,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                 case "primatelj":
                     primatelj = value;
                     break;
-                case "imeGrupe":
-                    imeGrupe = value;
-                    break;
                 case "sadrzaj":
                     chatMessage.setSadrzaj(value);
                     break;
@@ -160,13 +156,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             }
         }
 
-        // Logika za razlikovanje osobnog i grupnog chata
-        if (imeGrupe != null && !imeGrupe.isEmpty()) {
-            chatMessage.setImeGrupe(imeGrupe);
-            chatMessage.setPrimatelj(null);
-        } else if (primatelj != null && !primatelj.isEmpty()) {
-            chatMessage.setPrimatelj(primatelj);
-            chatMessage.setImeGrupe(null);
+        if (primatelj.contains("@")) {
+        	chatMessage.setPrimatelj(primatelj);
+        	chatMessage.setImeGrupe("null");
+        } else {
+        	chatMessage.setImeGrupe(primatelj);
+        	chatMessage.setPrimatelj("null");
+        	
         }
 
         return chatMessage;
