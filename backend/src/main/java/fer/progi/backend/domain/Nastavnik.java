@@ -18,7 +18,7 @@ public class Nastavnik {
 	private String imeNastavnik;
 	private String prezimeNastavnik;
 	
-	//@Column(unique=true)
+	@Column(unique=true)
 	private String email;
 
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)

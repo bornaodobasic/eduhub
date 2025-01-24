@@ -50,7 +50,7 @@ public class AdminSuccessfulLogin {
 
         String actual = driver.findElement(By.tagName("h1")).getText();
         String expected = "Pozdrav, Josip Jelavić!";
-        Assert.assertNotEquals(actual, expected);
+        Assert.assertEquals(actual, expected);
 
     }
 
