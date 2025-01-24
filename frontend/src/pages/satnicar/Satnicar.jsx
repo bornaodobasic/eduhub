@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { FaSchool, FaBell, FaCalendarAlt } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import WeatherWidget from "../../components/WeatherWidget";
-
+import Zauzece from "../../components/Zauzece";
 import Map from "../../components/Map";
+import { IoReturnUpBackOutline } from "react-icons/io5";
 
 const Satnicar = () => {
   const [activeSection, setActiveSection] = useState("Naslovnica"); const [userName, setUserName] = useState(null);
@@ -29,8 +30,9 @@ const Satnicar = () => {
 
   const menuItems = [
     { name: "Naslovnica", icon: <FaCalendarAlt /> },
-    { name: "Raspored", icon: <FaCalendarAlt /> },
     { name: "Obavijesti", icon: <FaBell /> },
+    { name: "Raspored", icon: <FaCalendarAlt /> },
+    { name: "Učionice", icon: <FaBell /> },
   ];
 
 
@@ -68,6 +70,15 @@ const Satnicar = () => {
       
       case "Obavijesti":
         return <Map />;
+
+      case "Učionice":
+        return (
+          <div>
+              <h2>Tjedno zauzeće učionica </h2>
+              <Zauzece />;
+          </div>
+        );
+     
         
       default:
         return <h4>Odaberite sekciju iz izbornika.</h4>;

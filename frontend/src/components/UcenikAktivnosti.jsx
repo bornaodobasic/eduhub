@@ -55,6 +55,7 @@ const UcenikAktivnosti = ({ userEmail }) => {
       alert("Aktivnosti su dodane.");
       fetchAktivnosti();
       setSelectedAktivnosti([]);
+      fetchDostupneAktivnosti();
     } catch (error) {
       console.error(error.message);
     }

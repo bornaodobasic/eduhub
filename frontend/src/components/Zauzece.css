@@ -1,0 +1,23 @@
+.charts-container {
+    display: flex;
+    flex-wrap: wrap; /* Omogućuje prelamanje redova */
+    justify-content: center;
+    gap: 20px; /* Razmak između grafikona */
+    margin: 20px;
+  }
+  
+  .chart-item {
+    display: flex;
+    flex-direction: column; /* Grafikon i naziv ispod */
+    align-items: center;
+    text-align: center;
+    width: 150px; /* Širina svakog grafikona */
+  }
+  
+  .chart-label {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+  }
+  
