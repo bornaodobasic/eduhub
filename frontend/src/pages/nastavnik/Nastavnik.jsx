@@ -547,7 +547,7 @@ const renderObavijestiForm = () => (
           </div>
         );
       }
-      return subjects.length > 0 ? renderSubjects() : <h4>Učitavanje predmeta...</h4>;
+      return subjects.length > 0 ? renderSubjects() : <h4>Nemate dodijeljenih predmeta.</h4>;
     }
 
     if (activeSection === "Raspored") {

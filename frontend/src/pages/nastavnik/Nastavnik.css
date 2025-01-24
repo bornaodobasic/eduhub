@@ -369,3 +369,9 @@
     color: #666;
   }
 }
+
+@media (max-width: 768px) {
+  .materials-grid {
+    grid-template-columns: 1fr; /* Jedan stupac na manjim ekranima */
+  }
+}
