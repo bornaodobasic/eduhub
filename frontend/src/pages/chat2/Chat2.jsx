@@ -25,14 +25,14 @@ const Chat = () => {
                 setCurrentUserEmail(email.trim());
                 const ws = new WebSocket(`wss://eduhub-rfsg.onrender.com/chat2?email=${encodeURIComponent(email.trim())}`);
                 setSocket(ws);
-    
+
                 ws.onmessage = event => {
                     console.log('Primljeni podaci putem WebSocketa:', event.data);
                     try {
                         const message = typeof event.data === 'string' && event.data.startsWith('{')
                             ? JSON.parse(event.data)
                             : { sadrzaj: event.data }; // Pretpostavka za slučaj kada nije JSON
-    
+
                         setMessages(prevMessages => [...prevMessages, message]);
                     } catch (error) {
                         console.error('Greška pri parsiranju podataka:', error, event.data);
@@ -40,7 +40,7 @@ const Chat = () => {
                 };
                 ws.onclose = () => console.log('WebSocket closed.');
             });
-    
+
         return () => {
             if (socket) socket.close();
         };
@@ -61,7 +61,7 @@ const Chat = () => {
             }
         });
     }, [messages, senderNames]);
-    
+
 
     useEffect(() => {
         if (recipientType === 'nastavnik') {
@@ -171,7 +171,7 @@ const Chat = () => {
             .then(response => response.json())
             .then(data => {
                 setGroups(data);
-                if (recipientType === 'grupe') setRecipients(data); 
+                if (recipientType === 'grupe') setRecipients(data);
             })
             .catch(error => console.error('Error loading groups:', error));
     };
@@ -187,16 +187,16 @@ const Chat = () => {
         console.log("Raw timestamp:", timestamp);
         try {
             let date;
-            
+
             if (Array.isArray(timestamp)) {
-                date = new Date(timestamp[0], timestamp[1] - 1, timestamp[2], timestamp[3], timestamp[4], timestamp[5], timestamp[6] / 1000000); 
-            } 
+                date = new Date(timestamp[0], timestamp[1] - 1, timestamp[2], timestamp[3], timestamp[4], timestamp[5], timestamp[6] / 1000000);
+            }
             else if (typeof timestamp === 'string') {
                 date = new Date(timestamp);
             }
-            
+
             if (isNaN(date)) throw new Error("Invalid Date");
-    
+
             return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         } catch (error) {
             console.error("Error formatting time:", error);
@@ -207,14 +207,14 @@ const Chat = () => {
     return (
         <div className="chat-container">
             <div className="chat-main">
-            {selectedRecipient && (
-                <div className="selected-recipient">
-                    <h3>
-                        {recipientType === 'grupe'
-                            ? selectedRecipient
-                            : recipients.find(r => r.email === selectedRecipient)?.ime || ""}
-                    </h3>
-                </div>
+                {selectedRecipient && (
+                    <div className="selected-recipient">
+                        <h3>
+                            {recipientType === 'grupe'
+                                ? selectedRecipient
+                                : recipients.find(r => r.email === selectedRecipient)?.ime || ""}
+                        </h3>
+                    </div>
                 )}
                 <div className="chat-messages">
                     {messages.map((msg, index) => (
@@ -224,8 +224,8 @@ const Chat = () => {
                             onClick={() =>
                                 setMessages(prevMessages =>
                                     prevMessages.map((m, i) =>
-                                            i === index ? { ...m, showTime: !m.showTime } : m
-                                    )       
+                                        i === index ? { ...m, showTime: !m.showTime } : m
+                                    )
                                 )
                             }
                         >
@@ -234,7 +234,7 @@ const Chat = () => {
                                     <strong>{senderNames[msg.posiljatelj] || msg.posiljatelj}: </strong>
                                 ) : (
                                     msg.posiljatelj === currentUserEmail ? 'Vi: ' : ''
-                                    )}
+                                )}
                                 {msg.sadrzaj}
                             </p>
                             {msg.showTime && <small className="message-time">{formatTime(msg.oznakaVremena)}</small>}
@@ -242,17 +242,17 @@ const Chat = () => {
                     ))}
                 </div>
 
-            <div className="chat-input">
+                <div className="chat-input">
                     <textarea
                         value={messageInput}
                         onChange={e => setMessageInput(e.target.value)}
                         placeholder="Unesite poruku..."
                     />
-                <button onClick={sendMessage}>Pošaljite</button>
+                    <button onClick={sendMessage}>Pošaljite</button>
+                </div>
             </div>
-        </div>
 
-    <div className="chat-sidebar">
+            <div className="chat-sidebar">
                 <div className="form-group">
                     <h3>Poruka za:</h3>
                     <select
@@ -339,16 +339,16 @@ const Chat = () => {
                     </div>
                 )}
 
-        {showGroups && (
-            <div className="group-list-container">
-                <ul>
-                    {groups.map(group => (
-                        <li key={group}>{group}</li>
-                    ))}
-                </ul>
+                {showGroups && (
+                    <div className="group-list-container">
+                        <ul>
+                            {groups.map(group => (
+                                <li key={group}>{group}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
-        )}
-    </div>
         </div>
     );
 };

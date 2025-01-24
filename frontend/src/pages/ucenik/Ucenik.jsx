@@ -24,6 +24,40 @@ const Ucenik = () => {
   const [showMap, setShowMap] = useState(false); // Stanje koje određuje treba li prikazati mapu
   const [showMapp, setShowMapp] = useState(false); // Stanje koje određuje treba li prikazati mapu
 
+
+
+  const handleDownload = async (material) => {
+    try {
+      const url = `/api/ucenik/${selectedSubject}/materijali/download?suffix=${encodeURIComponent(material)}`;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to download material");
+      }
+
+      const blob = await response.blob();
+
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+
+      link.download = material || "downloaded_file";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error("Error downloading material:", error);
+    }
+  };
+
   const handleButtonClick = () => {
     setShowMap(!showMap); // Prebacuje stanje između true i false
   };
@@ -133,7 +167,7 @@ const Ucenik = () => {
       console.error("Greška pri dohvaćanju obavijesti:", error);
     }
   };
-  
+
 
 
   const renderObavijestiList = () => (
@@ -173,13 +207,6 @@ const Ucenik = () => {
         ) : (
             <p>Nema obavijesti za prikaz.</p>
         )}
-
-        <button
-            className="add-button"
-            onClick={() => setSelectedSubject(null)}
-        >
-          Povratak
-        </button>
       </div>
 
   );
@@ -311,14 +338,16 @@ const Ucenik = () => {
                     <div className="material-icon">
                       <img src="/path/to/pdf-icon.png" alt="PDF"/>
                     </div>
-                    <div className="material-details">
+                    <div className="material-details" onClick={() => handleDownload(material)}>
                       <a
                           href={`https://eduhub-materials.s3.amazonaws.com/${material}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="material-link"
                       >
+
                         {material.split("_").pop()}
+
                       </a>
                     </div>
                   </div>
@@ -350,43 +379,43 @@ const Ucenik = () => {
             <div className="latest-obavijesti">
 
               <div className="obavijesti-list">
-              <h3>Najnovije Obavijesti</h3>
-        {latestObavijesti.length > 0 ? (
-            <div>
-              {latestObavijesti.map((obavijest) => (
-                  <div key={obavijest.sifObavijest} className="obavijest-item">
-                    <strong>{obavijest.naslovObavijest}</strong>
-                    <div>{obavijest.sadrzajObavijest}</div>
+                <h3>Najnovije Obavijesti</h3>
+                {latestObavijesti.length > 0 ? (
+                    <div>
+                      {latestObavijesti.map((obavijest) => (
+                          <div key={obavijest.sifObavijest} className="obavijest-item">
+                            <strong>{obavijest.naslovObavijest}</strong>
+                            <div>{obavijest.sadrzajObavijest}</div>
 
-                    {obavijest?.adresaLokacija && obavijest?.gradLokacija && obavijest?.drzavaLoakcija && (
-  <div>
-    <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
-    <div>
-    <button className="karte-button" onClick={handleButtonClickk}>
-  {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
-</button>
+                            {obavijest?.adresaLokacija && obavijest?.gradLokacija && obavijest?.drzavaLoakcija && (
+                                <div>
+                                  <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
+                                  <div>
+                                    <button className="karte-button" onClick={handleButtonClickk}>
+                                      {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
+                                    </button>
 
-      {showMapp && (
-        <div>
+                                    {showMapp && (
+                                        <div>
 
-          <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
-        </div>
-      )}
-    </div>
+                                          <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
+                                        </div>
+                                    )}
+                                  </div>
 
-  </div>
-)}
+                                </div>
+                            )}
 
-                    <div className="obavijest-datum">
-                      Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
+                            <div className="obavijest-datum">
+                              Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
+                            </div>
+                          </div>
+                      ))}
                     </div>
-                  </div>
-              ))}
-            </div>
-        ) : (
-            <p>Nema obavijesti za prikaz.</p>
-        )}
-      </div>
+                ) : (
+                    <p>Nema obavijesti za prikaz.</p>
+                )}
+              </div>
             </div>
 
 
