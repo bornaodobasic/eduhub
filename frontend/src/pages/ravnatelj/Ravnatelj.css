@@ -1,61 +1,93 @@
 .graf-i-forma {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.graf-container {
+  flex: 3;
+  margin-right: 20px;
+}
+
+.forma-container {
+  flex: 1;
+}
+
+
+.add-button {
+  background-color: #f0ad4e;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  width: 120px; /* Set a consistent width */
+  text-align: center; /* Center-align text inside the button */
+}
+
+.add-button:hover {
+  background-color: #ec971f;
+}
+
+.delete-mode-button {
+  margin-top: 10px;
+  background-color: #d9534f;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-mode-button:hover {
+  background-color: #c9302c;
+}
+
+
+
+.karte-button {
+  background-color: #1f26ec;
+  color: white;
+  padding: 5px 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.karte-button:hover {
+  background-color: #181fe9;
+}
+
+
+@media (max-width: 600px) {
+  .graf-i-forma {
+    flex-direction: column; /* Stack the items vertically */
+    align-items: stretch; /* Ensure they take full width */
   }
-  
+
   .graf-container {
-    flex: 3;
-    margin-right: 20px;
+    flex: 1; /* Reset flex value for better stacking */
+    margin-right: 0; /* Remove side margin */
+    margin-bottom: 20px; /* Add spacing between stacked items */
   }
-  
+
   .forma-container {
-    flex: 1;
+    flex: 1; /* Reset flex value */
   }
 
-  
-  .add-button {
-    background-color: #f0ad4e;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
+  .add-button, .delete-mode-button {
+    width: 100%; /* Make buttons full-width for easier tapping */
+    padding: 12px; /* Increase padding for better touch experience */
+    margin-right: 0; /* Remove right margin */
   }
-  
-  .add-button:hover {
-    background-color: #ec971f;
-  }
-  
+
   .delete-mode-button {
-    margin-top: 10px;
-    background-color: #d9534f;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    margin-top: 10px; /* Keep small spacing between buttons */
   }
-  
-  .delete-mode-button:hover {
-    background-color: #c9302c;
-  }
+}
   
   
 
-  .karte-button {
-    background-color: #1f26ec;
-    color: white;
-    padding: 5px 5px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
-  }
-  
-  .karte-button:hover {
-    background-color: #181fe9;
-  }
-  
