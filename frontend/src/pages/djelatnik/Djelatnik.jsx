@@ -1,6 +1,7 @@
 import React, { useState , useEffect} from "react";
-import { FaSchool, FaChartBar, FaChalkboard, FaHome} from "react-icons/fa";
+import { FaSchool, FaChartBar, FaListAlt, FaHome} from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
+import IzvjestajDjelatnik from "../../components/IzvjestajDjelatnik";
 import WeatherWidget from "../../components/WeatherWidget";
 
 
@@ -30,9 +31,7 @@ const Djelatnik = () => {
 
   const menuItems = [
     { name: "Naslovnica", icon: <FaHome /> },
-    { name: "Nekaj", icon: <FaSchool /> },
-    { name: "Nesto", icon: <FaChartBar /> },
-    { name: "Raspored", icon: <FaChalkboard /> },
+    { name: "Izvještaj", icon: <FaListAlt /> },
   ];
 
   const renderContent = () => {
@@ -43,15 +42,9 @@ const Djelatnik = () => {
               <h2>Pozdrav, {userName}! </h2>
                <WeatherWidget />
           </div>
-        );
-      case "Nekaj":
-        return <h4>Nekaj dolaze uskoro!</h4>;
-        
-      case "Nesto":
-        return <h4>Nesto dolaze uskoro!</h4>;
-      
-      case "Raspored":
-        return <h4>Raspored dolazi uskoro!</h4>;
+        );    
+        case "Izvještaj":
+          return <IzvjestajDjelatnik />;
       default:
         return <h4>Odaberite sekciju iz izbornika.</h4>;
     }

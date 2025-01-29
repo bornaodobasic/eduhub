@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Data
+@EqualsAndHashCode(exclude = "razrednik")
 public class Razred implements Serializable {
 	
 	@Id
@@ -26,5 +28,6 @@ public class Razred implements Serializable {
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "razrednik_id", referencedColumnName = "id", unique = true)
+	@JsonManagedReference
 	private Nastavnik razrednik;
 }

@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import fer.progi.backend.domain.Obavijest;
@@ -192,24 +193,56 @@ public class RavnateljController {
     }
 
 
-    @PostMapping("/obavijesti")
-    public ResponseEntity<String> dodajObavijest(
-            @RequestBody ObavijestDTO obavijestDTO) {
+    @PostMapping("/opcaObavijest")
+    public ResponseEntity<String> dodajOpcaObavijest(
+            @RequestParam String naslovObavijest,
+            @RequestParam String sadrzajObavijest,
+            Authentication authentication) {
+
 
         Date datumObavijest = new Date();
 
+
         obavijestService.dodajObavijest(
-                obavijestDTO.getNaslov(),
-                obavijestDTO.getSadrzaj(),
+                naslovObavijest,
+                sadrzajObavijest,
                 datumObavijest,
                 null,
                 null,
                 null,
-                obavijestDTO.getOdredisteAdresa(),
-                obavijestDTO.getGradOdrediste(),
-                obavijestDTO.getDrzavaOdrediste());
+                null,
+                null,
+                null);
 
         return ResponseEntity.ok("Obavijest uspješno dodana");
+    }
+
+
+    @PostMapping("/terenskaObavijest")
+    public ResponseEntity<String> dodajTerenskaObavijest(
+            @RequestParam String naslovObavijest,
+            @RequestParam String sadrzajObavijest,
+            @RequestParam String adresaLokacija,
+            @RequestParam String gradLokacija,
+            @RequestParam String drzavaLokacija,
+            Authentication authentication) {
+
+
+        Date datumObavijest = new Date();
+
+
+        obavijestService.dodajObavijest(
+                naslovObavijest,
+                sadrzajObavijest,
+                datumObavijest,
+                null,
+                null,
+                null,
+                adresaLokacija,
+                gradLokacija,
+                drzavaLokacija);
+
+        return ResponseEntity.ok("Obavijest o terenskoj nastavi uspješno dodana");
     }
 
     @GetMapping("/obavijesti")

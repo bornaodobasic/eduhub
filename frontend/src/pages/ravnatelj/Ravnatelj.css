@@ -1,61 +1,66 @@
 .graf-i-forma {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
-  }
-  
-  .graf-container {
-    flex: 3;
-    margin-right: 20px;
-  }
-  
-  .forma-container {
-    flex: 1;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
 
-  
-  .add-button {
-    background-color: #f0ad4e;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
-  }
-  
-  .add-button:hover {
-    background-color: #ec971f;
-  }
-  
-  .delete-mode-button {
-    margin-top: 10px;
-    background-color: #d9534f;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .delete-mode-button:hover {
-    background-color: #c9302c;
-  }
-  
-  
+.graf-container {
+  flex: 3;
+  margin-right: 20px;
+}
 
-  .karte-button {
-    background-color: #1f26ec;
-    color: white;
-    padding: 5px 5px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
-  }
-  
-  .karte-button:hover {
-    background-color: #181fe9;
-  }
+.forma-container {
+  flex: 1;
+}
+
+.button-group{
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.add-button {
+  background-color: #f0ad4e;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.add-button:hover {
+  background-color: #ec971f;
+}
+
+.delete-mode-button {
+  margin-top: 10px;
+  background-color: #d9534f;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-mode-button:hover {
+  background-color: #c9302c;
+}
+
+
+
+.karte-button {
+  background-color: #1f26ec;
+  color: white;
+  padding: 5px 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.karte-button:hover {
+  background-color: #181fe9;
+}
   

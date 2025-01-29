@@ -17,7 +17,185 @@ const Ravnatelj = () => {
   const [userName, setUserName] = useState(null);
   const [showMap, setShowMap] = useState(false); // Stanje koje određuje treba li prikazati mapu
   const [prikaziFormu, setPrikaziFormu] = useState(false);
+  const [activeForm, setActiveForm] = useState(null);
   
+
+    const [obavijestNaslov, setObavijestNaslov] = useState("");
+    const [obavijestSadrzaj, setObavijestSadrzaj] = useState("");
+    const [ulica, setUlica] = useState("");
+    const [grad, setGrad] = useState("");
+    const [drzava, setDrzava] = useState("");
+
+
+    const handleSendObavijest = async () => {
+      if (!obavijestNaslov || !obavijestSadrzaj) {
+        alert("Molimo unesite sve podatke!");
+        return;
+      }
+    
+      // Kreiranje podataka u formatu `application/x-www-form-urlencoded`
+      const formData = new URLSearchParams();
+      formData.append("naslovObavijest", obavijestNaslov);
+      formData.append("sadrzajObavijest", obavijestSadrzaj);
+
+    
+      try {
+        const response = await fetch("/api/ravnatelj/opcaObavijest", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded", // Ključno za @RequestParam
+          },
+          body: formData.toString(),
+        });
+    
+        if (response.ok) {
+          alert("Obavijest uspješno poslana!");
+          fetchObavijesti();
+          setObavijestNaslov("");
+          setObavijestSadrzaj("");
+        } else {
+          alert("Greška prilikom slanja obavijesti.");
+        }
+      } catch (error) {
+        console.error("Greška pri slanju obavijesti:", error);
+        alert("Došlo je do greške!");
+      }
+    };
+  
+    const handleSendTerenskaObavijest = async () => {
+      if (!obavijestNaslov || !obavijestSadrzaj || !ulica || !grad || !drzava) {
+        alert("Molimo unesite sve podatke!");
+        return;
+      }
+    
+      // Kreiranje podataka u formatu `application/x-www-form-urlencoded`
+      const formData = new URLSearchParams();
+      formData.append("naslovObavijest", obavijestNaslov);
+      formData.append("sadrzajObavijest", obavijestSadrzaj);
+      formData.append("adresaLokacija", ulica);
+      formData.append("gradLokacija", grad);
+      formData.append("drzavaLokacija", drzava);
+
+    
+      try {
+        const response = await fetch("/api/ravnatelj/terenskaObavijest", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded", // Ključno za @RequestParam
+          },
+          body: formData.toString(),
+        });
+    
+        if (response.ok) {
+          alert("Obavijest o terenskoj nastavi uspješno poslana!");
+          fetchObavijesti();
+          setObavijestNaslov("");
+          setObavijestSadrzaj("");
+        } else {
+          alert("Greška prilikom slanja obavijesti.");
+        }
+      } catch (error) {
+        console.error("Greška pri slanju obavijesti:", error);
+        alert("Došlo je do greške!");
+      }
+    };
+    
+const renderObavijestiForm = () => (
+  <div className="obavijesti-form">
+    <h2>Dodaj novu obavijest</h2>
+    <div className="form-group">
+      <label htmlFor="naslov">Naslov obavijesti:</label>
+      <input
+        type="text"
+        id="naslov"
+        value={obavijestNaslov}
+        onChange={(e) => setObavijestNaslov(e.target.value)}
+        placeholder="Unesite naslov obavijesti"
+      />
+    </div>
+    <div className="form-group">
+      <label htmlFor="sadrzaj">Sadržaj obavijesti:</label>
+      <textarea
+        id="sadrzaj"
+        value={obavijestSadrzaj}
+        onChange={(e) => setObavijestSadrzaj(e.target.value)}
+        placeholder="Unesite sadržaj obavijesti"
+        rows="5"
+      ></textarea>
+    </div>
+    <button
+      onClick={handleSendObavijest}
+      disabled={!obavijestNaslov || !obavijestSadrzaj}
+    >
+      Pošalji obavijest
+    </button>
+  </div>
+);
+
+const renderTerenskaObavijestiForm = () => (
+  <div className="obavijesti-form">
+    <h2>Dodaj novu obavijest o terenskoj nastavi</h2>
+    <div className="form-group">
+      <label htmlFor="naslov">Naslov obavijesti:</label>
+      <input
+        type="text"
+        id="naslov"
+        value={obavijestNaslov}
+        onChange={(e) => setObavijestNaslov(e.target.value)}
+        placeholder="Unesite naslov obavijesti"
+      />
+    </div>
+    <div className="form-group">
+      <label htmlFor="sadrzaj">Sadržaj obavijesti:</label>
+      <textarea
+        id="sadrzaj"
+        value={obavijestSadrzaj}
+        onChange={(e) => setObavijestSadrzaj(e.target.value)}
+        placeholder="Unesite sadržaj obavijesti"
+        rows="5"
+      ></textarea>
+    </div>
+    <div className="form-group">
+      <label htmlFor="ulica">Ulica:</label>
+      <input
+        type="text"
+        id="ulica"
+        value={ulica}
+        onChange={(e) => setUlica(e.target.value)}
+        placeholder="Unesite ulicu odredišta"
+      />
+    </div>
+    <div className="form-group">
+      <label htmlFor="grad">Grad:</label>
+      <input
+        type="text"
+        id="grad"
+        value={grad}
+        onChange={(e) => setGrad(e.target.value)}
+        placeholder="Unesite grad odredišta"
+      />
+    </div>
+    <div className="form-group">
+      <label htmlFor="drzava">Država:</label>
+      <input
+        type="text"
+        id="drzava"
+        value={drzava}
+        onChange={(e) => setDrzava(e.target.value)}
+        placeholder="Unesite državu odredišta"
+      />
+    </div>
+    <button
+      onClick={handleSendTerenskaObavijest}
+      disabled={!obavijestNaslov || !obavijestSadrzaj || !ulica || !grad || !drzava}
+    >
+      Pošalji obavijest
+    </button>
+  </div>
+);
+
+
+
     const toggleForma = () => {
       setPrikaziFormu(!prikaziFormu);
     };
@@ -105,10 +283,6 @@ const Ravnatelj = () => {
     fetchObavijesti();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
 
   const handleAddUcionica = async (newUcionica) => {
     try {
@@ -128,49 +302,6 @@ const Ravnatelj = () => {
       alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
     }
   };
-
-  const handleAddObavijest = async () => {
-    const payload =
-      obavijestType === "opca"
-        ? {
-            naslov: formData.naslovObavijest,
-            sadrzaj: formData.sadrzajObavijest,
-          }
-        : {
-            naslov: formData.naslovObavijest,
-            sadrzaj: formData.sadrzajObavijest,
-            odredisteAdresa: formData.adresaLokacija,
-            gradOdrediste: formData.gradLokacija,
-            drzavaOdrediste: formData.drzavaLokacija,
-          };
-
-    try {
-      const response = await fetch("/api/ravnatelj/obavijesti", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        alert("Obavijest uspješno dodana!");
-        setFormData({
-          naslovObavijest: "",
-          sadrzajObavijest: "",
-          adresaLokacija: "",
-          gradLokacija: "",
-          drzavaLokacija: "",
-        });
-        setObavijestType(null);
-        fetchObavijesti();
-      } else {
-        alert("Došlo je do greške pri dodavanju obavijesti.");
-      }
-    } catch (error) {
-      console.error("Greška pri dodavanju obavijesti:", error);
-      alert("Došlo je do greške pri komunikaciji s poslužiteljem.");
-    }
-  };
-
 
   const renderNotification = (obavijest) => {
     const isTerenska = obavijest.adresaLokacija;
@@ -229,116 +360,6 @@ const Ravnatelj = () => {
   };
 
   
-
-
-  const renderObavijestiContent = () => {
-    if (!obavijestType) {
-      return (
-        <div className="obavijesti-section">
-          <div className="action-buttons">
-            <button className="add-button" onClick={() => setObavijestType("opca")}>
-              Dodaj Opću Obavijest
-            </button>
-            <button className="add-button" onClick={() => setObavijestType("terenska")}>
-              Dodaj Obavijest o Terenskoj Nastavi
-            </button>
-          </div>
-          <button className="delete-mode-button" onClick={() => setDeleteMode((prev) => !prev)}>
-            {deleteMode ? "Gotovo" : "Obriši Obavijesti"}
-          </button>
-          <div className="obavijesti-list">
-            {obavijesti.map(renderNotification)}
-          </div>
-        </div>
-
-        
-      );
-    }
-
-    return (
-      <div className="obavijesti-form">
-        <h4>
-          {obavijestType === "opca" ? "Dodaj Opću Obavijest" : "Dodaj Obavijest o Terenskoj Nastavi"}
-        </h4>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleAddObavijest();
-          }}
-        >
-
-        <div className="form-group">
-          <label htmlFor="naslov">
-            Naslov obavijesti:
-            <input
-              type="text"
-              name="naslovObavijest"
-              value={formData.naslovObavijest}
-              placeholder="Unesite naslov obavijesti"
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          </div>
-
-          <div className="form-group">
-          <label htmlFor="sadrzaj">
-            Sadržaj obavijesti:
-            <textarea
-              name="sadrzajObavijest"
-              value={formData.sadrzajObavijest}
-              onChange={handleInputChange}
-              placeholder="Unesite sadržaj obavijesti"
-            rows="5"
-              required
-            />
-          </label>
-          </div>
-
-
-          {obavijestType === "terenska" && (
-            <>
-              <label>
-                <input
-                  type="text"
-                  name="adresaLokacija"
-                  value={formData.adresaLokacija}
-                  onChange={handleInputChange}
-                  placeholder="Adresa odredišta"
-                  required
-                />
-              </label>
-              <label>
-                <input
-                  type="text"
-                  name="gradLokacija"
-                  value={formData.gradLokacija}
-                  onChange={handleInputChange}
-                  placeholder="Grad"
-                  required
-                />
-              </label>
-              <label>
-                <input
-                  type="text"
-                  name="drzavaLokacija"
-                  value={formData.drzavaLokacija}
-                  onChange={handleInputChange}
-                  placeholder="Država"
-                  required
-                />
-              </label>
-            </>
-          )}
-          <button type="submit">Dodaj Obavijest</button>
-          <button type="button" onClick={() => setObavijestType(null)}>
-            Poništi
-          </button>
-        </form>
-      </div>
-    );
-  };
-
   const renderContent = () => {
     switch (activeSection) {
       case "Naslovnica":
@@ -376,8 +397,31 @@ const Ravnatelj = () => {
         );
       case "Izvještaj":
         return <Izvjestaj />;
-      case "Obavijesti":
-        return renderObavijestiContent();
+      case "Obavijesti":{
+        return (
+          <div >
+            <div className="button-group">
+              <button className="add-button" onClick={() => setActiveForm("obavijest")}>
+                Dodaj opću obavijest
+              </button>
+              <button className="add-button" onClick={() => setActiveForm("terenska")}>
+                Dodaj obavijest o terenskoj nastavi
+              </button>
+            </div>
+    
+            {activeForm === "obavijest" && renderObavijestiForm()}
+            {activeForm === "terenska" && renderTerenskaObavijestiForm()}
+
+
+            <button className="delete-mode-button" onClick={() => setDeleteMode((prev) => !prev)}>
+            {deleteMode ? "Gotovo" : "Obriši Obavijesti"}
+          </button>
+          <div className="obavijesti-list">
+            {renderNotification(obavijesti)}
+          </div>
+          </div>
+        );
+        }
       default:
         return <h4>Odaberite sekciju iz izbornika.</h4>;
     }

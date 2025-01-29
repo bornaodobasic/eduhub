@@ -23,40 +23,47 @@ const Ucenik = () => {
   const [userName, setUserName] = useState(null);
   const [showMap, setShowMap] = useState(false); // Stanje koje određuje treba li prikazati mapu
   const [showMapp, setShowMapp] = useState(false); // Stanje koje određuje treba li prikazati mapu
+  const [razrednik, setRazrednik] = useState([])
 
 
 
-  const handleDownload = async (material) => {
-    try {
-      const url = `/api/ucenik/${selectedSubject}/materijali/download?suffix=${encodeURIComponent(material)}`;
+const handleDownload = async (material) => {
+  try {
+    // Backend URL
+    const url = `/api/ucenik/${selectedSubject}/materijali/download?suffix=${encodeURIComponent(material)}`;
 
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    // Fetch request to backend
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      if (!response.ok) {
-        throw new Error("Failed to download material");
-      }
-
-      const blob = await response.blob();
-
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-
-      link.download = material || "downloaded_file";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      window.URL.revokeObjectURL(downloadUrl);
-    } catch (error) {
-      console.error("Error downloading material:", error);
+    if (!response.ok) {
+      throw new Error("Failed to download material");
     }
-  };
+
+    // Read response as a Blob
+    const blob = await response.blob();
+
+    // Create a URL for the Blob and trigger download
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+
+    // Use the material as the filename or set a default
+    link.download = material || "downloaded_file";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    // Release the Blob URL after download
+    window.URL.revokeObjectURL(downloadUrl);
+  } catch (error) {
+    console.error("Error downloading material:", error);
+  }
+};
 
   const handleButtonClick = () => {
     setShowMap(!showMap); // Prebacuje stanje između true i false
@@ -65,7 +72,7 @@ const Ucenik = () => {
   const handleButtonClickk = () => {
     setShowMapp(!showMapp); // Prebacuje stanje između true i false
   };
-
+  
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -167,7 +174,7 @@ const Ucenik = () => {
       console.error("Greška pri dohvaćanju obavijesti:", error);
     }
   };
-
+  
 
 
   const renderObavijestiList = () => (
@@ -304,6 +311,29 @@ const Ucenik = () => {
     setActiveTab("Materijali");
   }, [activeSection]);
 
+  useEffect(() => {
+    fetch('/api/ucenik/razred', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', 
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.text(); 
+      })
+      .then((data) => {
+        setRazrednik(data);
+      })
+      .catch((error) => {
+        console.error('There was a problem with the fetch operation:', error);
+
+      });
+  }, []);
+
 
 
   const renderSubjects = () => (
@@ -345,9 +375,9 @@ const Ucenik = () => {
                           rel="noopener noreferrer"
                           className="material-link"
                       >
-
-                        {material.split("_").pop()}
-
+                
+                          {material.split("_").pop()}
+                               
                       </a>
                     </div>
                   </div>
@@ -376,49 +406,50 @@ const Ucenik = () => {
           <div>
 
             <h2>Pozdrav, {userName}! </h2>
+            <h3>{razrednik}</h3>
             <div className="latest-obavijesti">
-
+              
               <div className="obavijesti-list">
-                <h3>Najnovije Obavijesti</h3>
-                {latestObavijesti.length > 0 ? (
-                    <div>
-                      {latestObavijesti.map((obavijest) => (
-                          <div key={obavijest.sifObavijest} className="obavijest-item">
-                            <strong>{obavijest.naslovObavijest}</strong>
-                            <div>{obavijest.sadrzajObavijest}</div>
-
-                            {obavijest?.adresaLokacija && obavijest?.gradLokacija && obavijest?.drzavaLoakcija && (
-                                <div>
-                                  <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
-                                  <div>
-                                    <button className="karte-button" onClick={handleButtonClickk}>
-                                      {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
-                                    </button>
-
-                                    {showMapp && (
-                                        <div>
-
-                                          <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
-                                        </div>
-                                    )}
-                                  </div>
-
-                                </div>
-                            )}
-
-                            <div className="obavijest-datum">
-                              Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
-                            </div>
-                          </div>
-                      ))}
+              <h3>Najnovije Obavijesti</h3>
+        {latestObavijesti.length > 0 ? (
+            <div>
+              {latestObavijesti.map((obavijest) => (
+                  <div key={obavijest.sifObavijest} className="obavijest-item">
+                    <strong>{obavijest.naslovObavijest}</strong>
+                    <div>{obavijest.sadrzajObavijest}</div>
+                   
+                    {obavijest?.adresaLokacija && obavijest?.gradLokacija && obavijest?.drzavaLoakcija && (
+  <div>
+    <div>{obavijest.adresaLokacija}, {obavijest.gradLokacija}, {obavijest.drzavaLoakcija}</div>
+    <div>
+    <button className="karte-button" onClick={handleButtonClickk}>
+  {showMap ? 'Sakrij Karte' : 'Prikaži Karte'}
+</button>
+      
+      {showMapp && (
+        <div>
+      
+          <Map street={obavijest.adresaLokacija} city={obavijest.gradLokacija} country={obavijest.drzavaLoakcija}></Map>
+        </div>
+      )}
+    </div>
+    
+  </div>
+)}
+    
+                    <div className="obavijest-datum">
+                      Datum: {new Date(obavijest.datumObavijest).toLocaleString("hr-HR")}
                     </div>
-                ) : (
-                    <p>Nema obavijesti za prikaz.</p>
-                )}
-              </div>
+                  </div>
+              ))}
+            </div>
+        ) : (
+            <p>Nema obavijesti za prikaz.</p>
+        )}
+      </div>
             </div>
 
-
+           
 
             <WeatherWidget />
 
@@ -431,6 +462,7 @@ const Ucenik = () => {
       if (selectedSubject) {
         return (
             <div>
+              <h2>{selectedSubject}</h2>
               <nav className="subject-navbar">
                 <button
                     className={`nav-btn ${activeTab === "Materijali" ? "active" : ""}`}

@@ -63,6 +63,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         // Provjeri je li poruka namijenjena grupi ili pojedincu
         if (chatMessage.getImeGrupe() != null) {
+        	System.out.println("Zašto uđe ovdje");
         	groupMessages.computeIfAbsent(chatMessage.getImeGrupe(), k -> new ArrayList<>()).add(chatMessage);
             chatService.saveMessage(chatMessage);
             sendToGrupa(chatMessage); // Pošalji poruku grupi
@@ -158,10 +159,10 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         if (primatelj.contains("@")) {
         	chatMessage.setPrimatelj(primatelj);
-        	chatMessage.setImeGrupe("null");
+        	chatMessage.setImeGrupe(null);
         } else {
         	chatMessage.setImeGrupe(primatelj);
-        	chatMessage.setPrimatelj("null");
+        	chatMessage.setPrimatelj(null);
         	
         }
 

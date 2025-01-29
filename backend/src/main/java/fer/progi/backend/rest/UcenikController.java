@@ -60,6 +60,9 @@ public class UcenikController {
 
     @Autowired
     private ObavijestService obavijestService;
+    
+    @Autowired
+    private SatService satService;
 
     @GetMapping("")
     public List<Map<String, String>> getUceniciMailovi(Authentication authentication) {
@@ -381,6 +384,23 @@ public class UcenikController {
     @GetMapping("/{email}/raspored")
     public List<RasporedDTO> getRaspored(@PathVariable String email) {
         return ucenikService.getRaspored(email);
+    }
+    
+    @GetMapping("/razred")
+    public String getRazred(Authentication authentication) {
+    	OidcUser oidcUser = (OidcUser) authentication.getPrincipal();
+        String email = oidcUser.getAttribute("preferred_username");
+        
+        if(satService.listAll().isEmpty()) {
+        	return ucenikService.findByEmailUcenik(email).get().getRazred().getNazRazred()+ ", smjer: "
+            		+ ucenikService.findByEmailUcenik(email).get().getRazred().getSmjer().getNazivSmjer()
+            		+ ", razrednik još nije dodjeljen";
+        }
+        
+        return ucenikService.findByEmailUcenik(email).get().getRazred().getNazRazred()+ ", smjer: "
+        		+ ucenikService.findByEmailUcenik(email).get().getRazred().getSmjer().getNazivSmjer()
+        		+", razrednik: " + ucenikService.findByEmailUcenik(email).get().getRazred().getRazrednik().getImeNastavnik() + " " 
+                + ucenikService.findByEmailUcenik(email).get().getRazred().getRazrednik().getPrezimeNastavnik();
     }
 
 
